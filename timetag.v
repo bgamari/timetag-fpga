@@ -1,4 +1,4 @@
-module testingigo_all(
+module timetag(
 	fx2_clk,
 	request_length, length,
 	data_avail, data, data_accepted,

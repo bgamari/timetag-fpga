@@ -1,4 +1,4 @@
-module fx2_counter(
+module fx2_timetag(
 	fx2_clk,
 	fx2_flags,
 	fx2_SLWR,
@@ -54,7 +54,7 @@ altpll0 b2v_inst2(
 );*/
 assign clk = fx2_clk;
 
-testingigo_all b2v_inst(
+timetag b2v_inst(
 	.fx2_clk(fx2_clk),
 	.cmd_wr(cmd_avail),
 	.cmd_in(cmd),
