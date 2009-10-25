@@ -24,7 +24,7 @@ wire running;
 // Bidirs
 
 // Instantiate the UUT
-testingigo_all uut(
+timetag uut(
 	.fx2_clk(fx2_clk),
 	.request_length(request_length),
 	.length(length),
