@@ -1,4 +1,3 @@
-// set time scale
 `timescale 1ns/1ns
 
 module timetag_bench();
@@ -43,71 +42,87 @@ timetag uut(
 // This just prints the results in the ModelSim text window
 // You can leave this out if you want
 initial
-begin
-	//$monitor($time, "A=%b,B=%b, c_in=%b, c_out=%b, sum = %b\n",A,B,C0,C4,S);
-end
+	$monitor($time, "  cmd(%b %x) data(%b %x) cmd_avail=%b cmd_ack=%b cmd_data=%x state=",
+		cmd_wr, cmd_in,
+		data_avail, data,
+		uut.cmd_avail, uut.cmd_ack, uut.cmd_data, uut.cmd_parser.state
+	);
 
 // Clocks
+initial clk = 0;
 always #2 clk = ~clk;
+initial fx2_clk = 0;
 always #6 fx2_clk = ~fx2_clk;
 
 // Simulate photons
 initial detectors = 4'b0000;
 always begin
-	if (4'b1111 == $random) begin
+	#100 detectors[0] = 1'b1;
+	#5  detectors[0] = 1'b0;
+end
+
+/*
+initial begin
+	if ((4'b1111 & $random) == 4'b0)
+	begin
 		detectors[0] = 1'b1;
 		#10 detectors[0] = 1'b0;
 	end
-end
+end*/
 
 // These statements conduct the actual circuit test
 initial begin
-	// Set initial count
-	#100 ;
-	#2  cmd_in=8'h05; cmd_wr=1;
-	#2  cmd_in=8'h04;
-	#2  cmd_in=8'h00;
-	#2  cmd_in=8'h00;
-	#2  cmd_in=8'h00;
-	#2  cmd_in=8'h40;
-	#2  cmd_in=8'h02;
-	#2  cmd_wr=0;
+	$display($time, "     Starting...");
 
-	// Set low count
+	$display($time, "  Setting initial count");
 	#100 ;
-	#2  cmd_in=8'h05; cmd_wr=1;
-	#2  cmd_in=8'h04;
-	#2  cmd_in=8'h00;
-	#2  cmd_in=8'h00;
-	#2  cmd_in=8'h00;
-	#2  cmd_in=8'h20;
-	#2  cmd_in=8'h04;
-	#2  cmd_wr=0;
+	#12  cmd_in=8'h05; cmd_wr=1;
+	#12  cmd_in=8'h04;
+	#12  cmd_in=8'h00;
+	#12  cmd_in=8'h00;
+	#12  cmd_in=8'h00;
+	#12  cmd_in=8'h40;
+	#12  cmd_in=8'h02;
+	#12  cmd_wr=0;
 
-	// Set high count
+	$display($time, "  Setting low count");
 	#100 ;
-	#2  cmd_in=8'h05; cmd_wr=1;
-	#2  cmd_in=8'h04;
-	#2  cmd_in=8'h00;
-	#2  cmd_in=8'h00;
-	#2  cmd_in=8'h00;
-	#2  cmd_in=8'h10;
-	#2  cmd_in=8'h08;
-	#2  cmd_wr=0;
+	#12  cmd_in=8'h05; cmd_wr=1;
+	#12  cmd_in=8'h04;
+	#12  cmd_in=8'h00;
+	#12  cmd_in=8'h00;
+	#12  cmd_in=8'h00;
+	#12  cmd_in=8'h20;
+	#12  cmd_in=8'h04;
+	#12  cmd_wr=0;
 
-	// Start detectors
+	$display($time, "  Setting high count");
 	#100 ;
-	#2  cmd_in=8'h01; cmd_wr=1;
-	#2  cmd_in=8'h01;
-	#2  cmd_in=8'h01;
-	#2  cmd_wr=0;
+	#12  cmd_in=8'h05; cmd_wr=1;
+	#12  cmd_in=8'h04;
+	#12  cmd_in=8'h00;
+	#12  cmd_in=8'h00;
+	#12  cmd_in=8'h00;
+	#12  cmd_in=8'h10;
+	#12  cmd_in=8'h08;
+	#12  cmd_wr=0;
 
-	// Start pulse sequencers
+	$display($time, "  Starting detectors");
 	#100 ;
-	#2  cmd_in=8'h01; cmd_wr=1;
-	#2  cmd_in=8'h02;
-	#2  cmd_in=8'h01;
-	#2  cmd_wr=0;
+	#12  cmd_in=8'h01; cmd_wr=1;
+	#12  cmd_in=8'h01;
+	#12  cmd_in=8'h01;
+	#12  cmd_wr=0;
+
+	$display($time, "  Starting pulse sequencers");
+	#100 ;
+	#12  cmd_in=8'h01; cmd_wr=1;
+	#12  cmd_in=8'h02;
+	#12  cmd_in=8'h01;
+	#12  cmd_wr=0;
+
+
+	data_accepted = 1;
 end
 
 endmodule
