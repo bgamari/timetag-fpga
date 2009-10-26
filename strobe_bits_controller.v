@@ -16,27 +16,21 @@ input [7:0] data;
 output data_ack;
 output [7:0] out;
 
-reg [1:0] state;
-reg [7:0] out;
+reg [0:0] state;
+
+initial state = 1'b0;
 
 always @(posedge clk)
 case (state)
-	2'b00:	if (mask_bit)			// It's us, sample data
-		begin
-			out <= data;
-			state <= 2'b01;
-		end
+	1'b00:	if (mask_bit)			// It's us, sample data
+			state <= 1'b1;
 		
-	2'b01:					// Acknowledge byte, enable output
-		state <= 2'b10;
-
-	2'b10:
-	begin
-		state <= 2'b00;
-		out <= 8'b0;
-	end
+	1'b1:					// Acknowledge byte
+		state <= 1'b0;
 endcase
 
 assign data_ack = state[0];
+assign out = (state == 1'b0 && mask_bit) ? data : 8'b0;
 
 endmodule
+

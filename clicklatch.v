@@ -13,6 +13,8 @@ output out;
 reg state;
 reg out;
 
+initial out = 0;
+
 always @ (posedge clock)
 begin
 	if (click == 1'b1 && state == 1'b0)

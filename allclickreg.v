@@ -18,6 +18,9 @@ reg [38:0] timer;
 reg ready;
 reg [43:0] data;
 
+initial ready = 1'b0;
+initial timer = 39'd0;
+
 always @ (posedge clk)
 begin
 	if (channel != 3'b0  || (timer == 1'b0 && operate))
@@ -32,7 +35,7 @@ begin
 		ready <= 1'b0;
 		data <= 43'b0;
 	end	
-	timer <= clear ? 38'b0 : timer + 38'b1;
+	timer <= clear ? 39'b0 : timer + 1'b1;
 end
 
 endmodule

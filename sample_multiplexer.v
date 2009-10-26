@@ -18,13 +18,16 @@ wire [7:0] data;
 reg [1:0] state;
 reg [2:0] byte_idx;
 
-initial state = 3'b0;
+initial state = 2'b00;
 
 always @(posedge clk)
 case (state)
 	2'b00:				// Wait for sample to become available
 		if (sample_rdy)
+		begin
 			state <= 2'b01;
+			byte_idx <= 3'b000;
+		end
 
 	2'b01:				// Send bytes
 		if (data_ack)
@@ -32,7 +35,7 @@ case (state)
 			if (byte_idx == 3'd5)
 				state <= 2'b10;
 			else
-				byte_idx <= byte_idx + 3'd1;
+				byte_idx <= byte_idx + 3'b1;
 		end
 
 	2'b10:				// Acknowledge sample

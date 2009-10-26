@@ -48,6 +48,7 @@ cmd_fifo fifo(
 );
 
 
+initial state = 0;
 always @(posedge clk)
 case (state)
 	0:							// Wait for command

@@ -33,6 +33,8 @@ pulse_sequencer seq(
 	.out(out)
 );
 
+initial state = 4'b0000;
+
 always @(posedge clk)
 case (state)
 	4'b0000:								// Wait until we are signalled
