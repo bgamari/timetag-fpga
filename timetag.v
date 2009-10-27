@@ -137,6 +137,7 @@ end
 
 assign sample_rdy = (count == 0);
 assign sample = 48'hfeeddeadbeed;
+assign cmd_ack[7] = 1'b1;
 
 `endif
 
