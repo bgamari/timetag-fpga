@@ -55,6 +55,8 @@ strobe_bits_controller apdtimer_controller(
 	.out(timer_cmd)
 );
 
+`define TEST_OUTPUT 1
+`ifdef TEST_OUTPUT
 apdtimer_all apdtimer(
 	.clk(clk),
 	.detectors(detectors),
@@ -120,6 +122,24 @@ cntrl_pulse_sequencer pulseseq0(
 	.out(laser_en[0])
 );
 assign sample[47:44] = laser_en[3:0];
+
+`else
+
+reg [31:0] count;
+initial count = 0;
+always @(posedge clk)
+begin
+	if (count == 0)
+		count <= 32'd480000;
+	else
+		count <= count - 1;
+end
+
+assign sample_rdy = (count == 0);
+assign sample = 48'hfeeddeadbeed;
+
+`endif
+
 
 
 wire samp_buf_full;
