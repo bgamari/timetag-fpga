@@ -51,7 +51,7 @@ set_global_assignment -name MISC_FILE "C:/Documents and Settings/Ben/Desktop/tim
 # Analysis & Synthesis Assignments
 # ================================
 set_global_assignment -name FAMILY "Cyclone II"
-set_global_assignment -name TOP_LEVEL_ENTITY testingigo_all
+set_global_assignment -name TOP_LEVEL_ENTITY fx2_timetag
 set_global_assignment -name CYCLONE_OPTIMIZATION_TECHNIQUE SPEED
 set_global_assignment -name MUX_RESTRUCTURE OFF
 set_global_assignment -name ADV_NETLIST_OPT_SYNTH_WYSIWYG_REMAP ON
@@ -100,8 +100,8 @@ set_global_assignment -name SIMULATION_MODE FUNCTIONAL
 
 # end ENTITY(fx2_counter)
 # -----------------------
-set_location_assignment PIN_79 -to debug[0]
-set_location_assignment PIN_92 -to debug[1]
+set_location_assignment PIN_79 -to debug[0] -disable
+set_location_assignment PIN_92 -to debug[1] -disable
 set_global_assignment -name IGNORE_CLOCK_SETTINGS ON
 set_global_assignment -name FMAX_REQUIREMENT "48 MHz"
 set_global_assignment -name RESERVE_ASDO_AFTER_CONFIGURATION "AS INPUT TRI-STATED"
@@ -131,10 +131,10 @@ set_location_assignment PIN_89 -to detectors[0]
 set_location_assignment PIN_73 -to detectors[1]
 set_location_assignment PIN_74 -to detectors[2]
 set_location_assignment PIN_75 -to detectors[3]
-set_location_assignment PIN_92 -to laser_en[0] -disable
-set_location_assignment PIN_93 -to laser_en[1] -disable
-set_location_assignment PIN_97 -to laser_en[2] -disable
-set_location_assignment PIN_79 -to laser_en[3] -disable
+set_location_assignment PIN_92 -to laser_en[0]
+set_location_assignment PIN_93 -to laser_en[1]
+set_location_assignment PIN_97 -to laser_en[2]
+set_location_assignment PIN_79 -to laser_en[3]
 set_location_assignment PIN_63 -to push_button -disable
 set_location_assignment PIN_72 -to led[0]
 set_location_assignment PIN_71 -to led[1]
@@ -145,26 +145,23 @@ set_location_assignment PIN_30 -to fx2_FIFOADR[0]
 set_location_assignment PIN_28 -to fx2_FIFOADR[1]
 set_location_assignment PIN_70 -to running
 set_location_assignment PIN_17 -to fx2_clk
-set_instance_assignment -name CLOCK_SETTINGS "FX2 Clock" -to fx2_clk
-set_instance_assignment -name CLOCK_SETTINGS "External clock" -to ext_clk
-set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to fx2_clk
-set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to ext_clk
-set_location_assignment PIN_93 -to debug[2]
-set_location_assignment PIN_97 -to debug[3]
+set_location_assignment PIN_93 -to debug[2] -disable
+set_location_assignment PIN_97 -to debug[3] -disable
 set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE testingigo_all.vwf
+set_global_assignment -name VERILOG_FILE fx2_timetag.v
+set_global_assignment -name SDC_FILE testingigo_all.sdc
+set_global_assignment -name VERILOG_FILE timetag.v
 set_global_assignment -name VERILOG_FILE timetag_bench.v
 set_global_assignment -name VERILOG_FILE apdtimer_all.v
 set_global_assignment -name VERILOG_FILE altpll0.v
 set_global_assignment -name VERILOG_FILE strobe_bits_controller.v
 set_global_assignment -name VERILOG_FILE sample_multiplexer.v
-set_global_assignment -name VERILOG_FILE testingigo_all.v
 set_global_assignment -name VERILOG_FILE FX2_bidir.v
 set_global_assignment -name VERILOG_FILE allclickreg.v
 set_global_assignment -name VERILOG_FILE clicklatch.v
 set_global_assignment -name VERILOG_FILE runonce.v
 set_global_assignment -name VERILOG_FILE summator.v
 set_global_assignment -name VERILOG_FILE pulseseq.v
-set_global_assignment -name AHDL_FILE cmd_parser_dcfifo.tdf
 set_global_assignment -name VECTOR_WAVEFORM_FILE testingigo_all.vwf
 set_global_assignment -name VECTOR_WAVEFORM_FILE apdtimer.vwf
 set_global_assignment -name VECTOR_WAVEFORM_FILE allclickreg.vwf
@@ -172,7 +169,6 @@ set_global_assignment -name VECTOR_WAVEFORM_FILE multiplex_sample_test.vwf
 set_global_assignment -name VERILOG_FILE leddriver.v
 set_global_assignment -name VERILOG_FILE fx2_bidir_test.v
 set_global_assignment -name VERILOG_FILE fx2_test.v
-set_global_assignment -name VERILOG_FILE fx2_counter.v
 set_global_assignment -name VERILOG_FILE cmd_parser.v
 set_global_assignment -name VERILOG_FILE cntrl_pulse_sequencer.v
 set_global_assignment -name VECTOR_WAVEFORM_FILE cntrl_pulse_sequencer.vwf
@@ -182,3 +178,12 @@ set_global_assignment -name QIP_FILE cmd_fifo.qip
 set_global_assignment -name QIP_FILE sample_fifo.qip
 set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
 set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_instance_assignment -name CLOCK_SETTINGS "FX2 Clock" -to fx2_clk
+set_instance_assignment -name CLOCK_SETTINGS "External clock" -to ext_clk
+set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to fx2_clk
+set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to ext_clk
+set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS OFF
+set_global_assignment -name USE_TIMEQUEST_TIMING_ANALYZER ON
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
