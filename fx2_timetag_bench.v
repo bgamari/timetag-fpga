@@ -36,6 +36,8 @@ always begin
 	#5  detectors[0] = 1'b0;
 end
 
+wire [7:0] cmd;
+wire cmd_wr, cmd_commit, cmd_sent;
 fx2_test_fixture fx2(
 	.ifclk(fx2_clk),
 	.fd(fd),
@@ -46,8 +48,10 @@ fx2_test_fixture fx2(
 	.pktend(pktend),
 	.flags(flags),
 	
-	.ext_clk(clk),
-	.detectors(detectors)
+	.cmd_data(cmd),
+	.cmd_wr(cmd_wr),
+	.cmd_commit(cmd_commit),
+	.cmd_sent(cmd_sent)
 );
 
 // Instantiate the UUT
@@ -92,49 +96,49 @@ initial begin
 
 	$display($time, "  Setting initial count");
 	#100 ;
-	#12  cmd_in=8'h05; cmd_wr=1;
-	#12  cmd_in=8'h04;
-	#12  cmd_in=8'h00;
-	#12  cmd_in=8'h00;
-	#12  cmd_in=8'h00;
-	#12  cmd_in=8'h40;
-	#12  cmd_in=8'h02;
+	#12  cmd=8'h05; cmd_wr=1;
+	#12  cmd=8'h04;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h40;
+	#12  cmd=8'h02;
 	#12  cmd_wr=0;
 
 	$display($time, "  Setting low count");
 	#100 ;
-	#12  cmd_in=8'h05; cmd_wr=1;
-	#12  cmd_in=8'h04;
-	#12  cmd_in=8'h00;
-	#12  cmd_in=8'h00;
-	#12  cmd_in=8'h00;
-	#12  cmd_in=8'h20;
-	#12  cmd_in=8'h04;
+	#12  cmd=8'h05; cmd_wr=1;
+	#12  cmd=8'h04;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h20;
+	#12  cmd=8'h04;
 	#12  cmd_wr=0;
 
 	$display($time, "  Setting high count");
 	#100 ;
-	#12  cmd_in=8'h05; cmd_wr=1;
-	#12  cmd_in=8'h04;
-	#12  cmd_in=8'h00;
-	#12  cmd_in=8'h00;
-	#12  cmd_in=8'h00;
-	#12  cmd_in=8'h10;
-	#12  cmd_in=8'h08;
+	#12  cmd=8'h05; cmd_wr=1;
+	#12  cmd=8'h04;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h10;
+	#12  cmd=8'h08;
 	#12  cmd_wr=0;
 
 	$display($time, "  Starting detectors");
 	#100 ;
-	#12  cmd_in=8'h01; cmd_wr=1;
-	#12  cmd_in=8'h01;
-	#12  cmd_in=8'h01;
+	#12  cmd=8'h01; cmd_wr=1;
+	#12  cmd=8'h01;
+	#12  cmd=8'h01;
 	#12  cmd_wr=0;
 
 	$display($time, "  Starting pulse sequencers");
 	#100 ;
-	#12  cmd_in=8'h01; cmd_wr=1;
-	#12  cmd_in=8'h02;
-	#12  cmd_in=8'h01;
+	#12  cmd=8'h01; cmd_wr=1;
+	#12  cmd=8'h02;
+	#12  cmd=8'h01;
 	#12  cmd_wr=0;
 
 
