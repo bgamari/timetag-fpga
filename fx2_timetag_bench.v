@@ -5,13 +5,10 @@ module fx2_timetag_bench();
 reg clk;
 wire fx2_clk;
 wire [7:0] fd;
-reg slrd;
-reg slwr;
-reg sloe;
-reg pktend;
-wire [3:0] flags;
+wire [2:0] flags;
 
 
+wire [1:0] fifoadr;
 wire [15:0] length;
 reg request_length;
 
@@ -36,8 +33,10 @@ always begin
 	#5  detectors[0] = 1'b0;
 end
 
-wire [7:0] cmd;
-wire cmd_wr, cmd_commit, cmd_sent;
+reg [7:0] cmd;
+reg cmd_wr, cmd_commit;
+wire cmd_sent;
+
 fx2_test_fixture fx2(
 	.ifclk(fx2_clk),
 	.fd(fd),
@@ -65,7 +64,7 @@ fx2_timetag uut(
 	.fx2_FD(fd),
 	.fx2_FIFOADR(fifoadr),
 
-	.clk(clk),
+	.ext_clk(clk),
 	.detectors(detectors),
 	.laser_en(laser_en),
 	.running(running)
@@ -74,10 +73,9 @@ fx2_timetag uut(
 // This just prints the results in the ModelSim text window
 // You can leave this out if you want
 initial
-	$monitor($time, "  cmd(%b %x) data(%b %x) cmd_avail=%b cmd_ack=%b cmd_data=%x state=",
-		cmd_wr, cmd_in,
-		data_avail, data,
-		uut.cmd_avail, uut.cmd_ack, uut.cmd_data, uut.cmd_parser.state
+	$monitor($time, "  cmd(%b %x) data(%b %x)",
+		cmd_wr, cmd,
+		data_avail, data
 	);
 
 

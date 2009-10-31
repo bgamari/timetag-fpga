@@ -3,7 +3,7 @@ module fx2_test_fixture(
 	ifclk, fd, slrd, slwr, sloe, fifoadr, pktend, flags,
 
 	// "Host" interface
-	cmd_data, cmd_wr, cmd_commit, cmd_sent,
+	cmd_data, cmd_wr, cmd_commit, cmd_sent
 );
 
 output ifclk;
@@ -12,8 +12,12 @@ input slwr;
 input sloe;
 input [1:0] fifoadr;
 input pktend;
-input [3:0] flags;
+output [2:0] flags;
 inout [7:0] fd;
+
+input [7:0] cmd_data;
+input cmd_wr, cmd_commit;
+output cmd_sent;
 
 reg ifclk;
 wire [7:0] in_data [0:3];
@@ -37,7 +41,7 @@ out_fifo ep2(
 	.empty(flags[0]),
 
 	.data_in(cmd_data),
-	.data_in_wr(cmd_wr),
+	.data_wr(cmd_wr),
 	.commit(cmd_commit),
 	.send_done(cmd_sent)
 );

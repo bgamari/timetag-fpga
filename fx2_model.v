@@ -11,6 +11,7 @@ input slwr;
 input [1:0] fifoadr;
 input pktend;
 output [7:0] data;
+output full;
 
 always @(posedge ifclk)
 begin
@@ -27,19 +28,19 @@ endmodule
 
 // OUT (host->device) endpoint FIFO:
 module out_fifo(
-	ifclk, fifoadr, data, slrd, empty
-	data_in, data_in_wr, commit, send_done
+	ifclk, fifoadr, data, slrd, empty,
+	data_in, data_wr, commit, send_done
 ); 
 parameter FIFOADR = 2;
 
 input ifclk;
 input slrd;
 input [1:0] fifoadr;
-input [7:0] data;
+output [7:0] data;
 output empty;
 
 input [7:0] data_in;
-input data_in_wr;
+input data_wr;
 input commit;
 output send_done;
 
@@ -48,7 +49,6 @@ reg [8:0] staged_length;
 reg [8:0] length; // Amount of data in buffer
 reg [8:0] tail; // Read-out index
 reg [8:0] head; // Read-in index
-reg send_done;
 
 always @(posedge ifclk)
 begin
@@ -85,6 +85,7 @@ end
 assign data = buffer[tail];
 assign send_done = (head == length) && (length != 0);
 assign empty = (length == 0);
+
 endmodule
 
 
