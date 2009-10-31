@@ -22,7 +22,7 @@ initial state = 1'b0;
 
 always @(posedge clk)
 case (state)
-	1'b00:	if (mask_bit)			// It's us, sample data
+	1'b0:	if (mask_bit)			// It's us, sample data
 			state <= 1'b1;
 		
 	1'b1:					// Acknowledge byte
