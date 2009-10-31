@@ -7,7 +7,9 @@ module fx2_bidir(
 	fx2_clk, fx2_fd, fx2_slrd, fx2_slwr, fx2_flags, 
 	fx2_sloe, fx2_wu2, fx2_fifoadr, fx2_pktend,
 	fpga_word, fpga_word_avail, fpga_word_accepted,
-	cmd, cmd_wr, length, request_length, state
+	cmd, cmd_wr,
+	length, request_length,
+	state
 );
 
 //************************************************************************
@@ -19,7 +21,7 @@ input [15:0] length;
 output fpga_word_accepted;
 output [7:0] cmd;
 output cmd_wr;
-output request_legnth;
+output request_length;
 
 //************************************************************************
 //FX2 interface
@@ -131,7 +133,7 @@ assign fifo_dataout_oe = ((state==4'b1011) && fpga_word_avail && fifo2_empty && 
 		      || (state==4'b1110);
 						
 assign fifo_pktend = (state==4'b1111)
-		 || ((state==4'b1010) && (LENGTH < 16'b0000001000000000));
+		 || ((state==4'b1010) && (length < 16'b0000001000000000));
 
 //request length of the data collected prior to computers data query
 assign request_length = (state==4'b0001);

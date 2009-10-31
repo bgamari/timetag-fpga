@@ -57,12 +57,12 @@ fx2_test_fixture fx2(
 fx2_timetag uut(
 	.fx2_clk(fx2_clk),
 	.fx2_flags(flags),
-	.fx2_SLWR(slwr),
-	.fx2_SLRD(slrd),
-	.fx2_SLOE(sloe),
-	.fx2_PKTEND(pktend),
-	.fx2_FD(fd),
-	.fx2_FIFOADR(fifoadr),
+	.fx2_slwr(slwr),
+	.fx2_slrd(slrd),
+	.fx2_sloe(sloe),
+	.fx2_pktend(pktend),
+	.fx2_fd(fd),
+	.fx2_fifoadr(fifoadr),
 
 	.ext_clk(clk),
 	.detectors(detectors),

@@ -1,13 +1,13 @@
 module fx2_timetag(
 	fx2_clk,
 	fx2_flags,
-	fx2_SLWR,
-	fx2_SLRD,
-	fx2_SLOE,
-	fx2_WU2,
-	fx2_PKTEND,
-	fx2_FD,
-	fx2_FIFOADR,
+	fx2_slwr,
+	fx2_slrd,
+	fx2_sloe,
+	fx2_wu2,
+	fx2_pktend,
+	fx2_fd,
+	fx2_fifoadr,
 
 	ext_clk,
 	laser_en,
@@ -21,13 +21,13 @@ output [3:0] debug;
 
 input	fx2_clk;
 input	[2:0] fx2_flags;
-output	fx2_SLWR;
-output	fx2_SLRD;
-output	fx2_SLOE;
-output	fx2_WU2;
-output	fx2_PKTEND;
-inout	[7:0] fx2_FD;
-output	[1:0] fx2_FIFOADR;
+output	fx2_slwr;
+output	fx2_slrd;
+output	fx2_sloe;
+output	fx2_wu2;
+output	fx2_pktend;
+inout	[7:0] fx2_fd;
+output	[1:0] fx2_fifoadr;
 
 input	ext_clk;
 input	[3:0] detectors;
@@ -74,25 +74,25 @@ timetag b2v_inst(
 );
 
 
-FX2_bidir b2v_inst1(
-	.FX2_CLK(fx2_clk),
-	.FX2_FD(fx2_FD),
-	.FX2_flags(fx2_flags),
-	.FX2_SLRD(fx2_SLRD),
-	.FX2_SLWR(fx2_SLWR),
-	.FX2_SLOE(fx2_SLOE),
-	.FX2_WU2(fx2_WU2),
-	.FX2_PKTEND(fx2_PKTEND),
+fx2_bidir fx2_if(
+	.fx2_clk(fx2_clk),
+	.fx2_fd(fx2_fd),
+	.fx2_flags(fx2_flags),
+	.fx2_slrd(fx2_slrd),
+	.fx2_slwr(fx2_slwr),
+	.fx2_sloe(fx2_sloe),
+	.fx2_wu2(fx2_wu2),
+	.fx2_pktend(fx2_pktend),
 	
-	.FPGA_WORD_AVAILABLE(data_available),
-	.FPGA_WORD(data),
-	.FPGA_WORD_ACCEPTED(data_accepted),
+	.fpga_word(data),
+	.fpga_word_avail(data_available),
+	.fpga_word_accepted(data_accepted),
 	
-	.CMD(cmd),
-	.CMD_WR(cmd_avail),
-	.REQUEST_LENGTH(request_length),
-	.LENGTH(length),
-	.FX2_FIFOADR(fx2_FIFOADR),
+	.cmd(cmd),
+	.cmd_wr(cmd_avail),
+	.request_length(request_length),
+	.length(length),
+	.fx2_fifoadr(fx2_fifoadr),
 	.state(debug)
 );
 
@@ -113,7 +113,7 @@ leddriver b2v_inst6(
 leddriver	b2v_inst7(
 	.clk(fx2_clk),
 	.in(data_available),
-	.out(LED[1]));
+	.out(led[1]));
 */
 
 endmodule

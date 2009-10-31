@@ -3,7 +3,7 @@ LIB_FILES= \
 	  cmd_parser.v cntrl_pulse_sequencer.v \
 	  pulseseq.v \
 	  sample_fifo_bb.v sample_multiplexer.v strobe_bits_controller.v \
-	  summator.v timetag.v fx2_timetag.v FX2_bidir.v leddriver.v
+	  summator.v timetag.v fx2_timetag.v fx2_bidir.v leddriver.v
 
 TIMETAG_BENCH_FILES=timetag_bench.v
 
