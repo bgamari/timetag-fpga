@@ -10,19 +10,18 @@ input ifclk;
 input slwr;
 input [1:0] fifoadr;
 input pktend;
-output [7:0] data;
+input [7:0] data;
 output full;
 
 always @(posedge ifclk)
 begin
 	if (fifoadr == FIFOADR && slwr)
-		$display("%2b IN %x", FIFOADR, buffer[tail]);
+		$display("%2b IN %x", FIFOADR, data);
 	if (fifoadr == FIFOADR && pktend)
-		$display("%2b: PKTEND");
+		$display("%2b: PKTEND", FIFOADR);
 end
 
 assign full = 0;
-assign data = buffer[tail];
 endmodule
 
 

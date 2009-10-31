@@ -52,7 +52,8 @@ in_fifo ep6(
 	.fifoadr(fifoadr),
 	.data(in_data[2]),
 	.slwr(slwr),
-	.full(flags[1])
+	.full(flags[1]),
+	.pktend(pktend)
 );
 defparam ep6.FIFOADR = 10;
 
