@@ -22,11 +22,12 @@ output cmd_sent;
 reg ifclk;
 wire [7:0] in_data [0:3];
 wire [7:0] out_data = fd;
+wire [2:0] nflags;
 
 initial ifclk = 0;
 always #6 ifclk = ~ifclk;
 
-assign fd = ~sloe ? 8'bZZZZZZZZ : 
+assign fd = sloe ? 8'bZZZZZZZZ :  // sloe is active-low
 	(fifoadr == 2'b00) ? in_data[0] :
 	(fifoadr == 2'b01) ? in_data[1] :
 	(fifoadr == 2'b10) ? in_data[2] :
@@ -37,8 +38,8 @@ out_fifo ep2(
 	.ifclk(ifclk),
 	.fifoadr(fifoadr),
 	.data(out_data),
-	.slrd(slrd),
-	.empty(flags[0]),
+	.rd(~slrd),
+	.empty(nflags[0]),
 
 	.data_in(cmd_data),
 	.data_wr(cmd_wr),
@@ -51,10 +52,12 @@ in_fifo ep6(
 	.ifclk(ifclk),
 	.fifoadr(fifoadr),
 	.data(in_data[2]),
-	.slwr(slwr),
-	.full(flags[1]),
+	.wr(~slwr),
+	.full(nflags[1]),
 	.pktend(pktend)
 );
 defparam ep6.FIFOADR = 10;
+
+assign flags = ~nflags;
 
 endmodule
