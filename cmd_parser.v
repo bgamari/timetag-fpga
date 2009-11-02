@@ -8,7 +8,7 @@ module cmd_parser(
 	cmd_in, cmd_wr,
 	
 	cmd_mask,
-	data_ack, data
+	data, data_ack
 );
 
 input fx2_clk;
@@ -18,8 +18,8 @@ input 	[7:0] cmd_in;
 input	cmd_wr;
 
 output 	[7:0] cmd_mask;
-input	[7:0] data_ack;
 output 	[7:0] data;
+input	data_ack;
 
 reg	[7:0] mask;
 reg 	[7:0] length;
@@ -88,7 +88,7 @@ assign data = (state == 3) ? in_data : 8'b0;
 
 assign in_req =  ((state == 0) && (~in_empty))
 		|| ((state == 2) && (in_avail == length))
-		|| ((state == 3) && (data_ack != 8'b0));
+		|| ((state == 3) && data_ack);
 
 //assign clr = (state == 4); // TODO: This shouldn't be necessary but unfortunately is
 
