@@ -51,17 +51,17 @@ cmd_fifo fifo(
 initial state = 0;
 always @(posedge clk)
 case (state)
-	0:							// Wait for command
+	0:					// Wait for command
 		if (~in_empty)
 			state <= 1;
 	
-	1:							// Get command length
+	1:					// Get command length
 	begin
 		length <= in_data;
 		state <= 2;
 	end
 		
-	2:							// Wait until we have entire command
+	2:					// Wait until we have entire command in FIFO
 		if (in_avail == length)
 		begin
 			mask <= in_data;
@@ -69,28 +69,28 @@ case (state)
 			sent <= 0;
 		end
 		
-	3:							// Send command data
+	3:					// Send command data
 	begin
-		if (sent == length)	//   Done receiving command, move along
+		if (sent == length)		//   Done receiving command, move along
 			state <= 4;
 			
 		if (in_req)
 			sent <= sent + 8'b1;
 	end
 	
-	4:							// Clear buffer?
+	4:					// Clear buffer (only for debugging)
 		state <= 0;
 endcase
 
 
-assign cmd_mask = (state == 3) ? mask : 8'b0;
-assign data = (state == 3) ? in_data : 8'b0;
+assign cmd_mask = ((state == 3) && (sent != length)) ? mask : 8'b0;
+assign data = (state == 3) ? in_data : 8'hZZ;
 
 assign in_req =  ((state == 0) && (~in_empty))
 		|| ((state == 2) && (in_avail == length))
 		|| ((state == 3) && data_ack);
 
-//assign clr = (state == 4); // TODO: This shouldn't be necessary but unfortunately is
+//assign clr = (state == 4); // Clear buffer
 
 endmodule
 
