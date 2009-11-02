@@ -39,7 +39,6 @@ wire    clk;
 wire	[7:0] data;
 wire	data_available;
 wire	[15:0] length;
-wire	PKTEND;
 wire	request_length;
 wire	cmd_avail;
 wire	[7:0] cmd;
