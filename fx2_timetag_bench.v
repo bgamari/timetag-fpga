@@ -32,6 +32,10 @@ always #2 clk = ~clk;
 		#100 detectors[0] = 1'b1;
 		#5  detectors[0] = 1'b0;
 	end
+	always begin
+		#80  detectors[1] = 1'b1;
+		#5  detectors[1] = 1'b0;
+	end
 `endif
 
 reg [7:0] cmd;
