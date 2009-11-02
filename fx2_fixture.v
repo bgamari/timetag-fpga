@@ -47,7 +47,7 @@ out_fifo ep2(
 	.data_commit(cmd_commit),
 	.send_done(cmd_sent)
 );
-defparam ep2.FIFOADR = 00;
+defparam ep2.FIFOADR = 2'b00;
 
 in_fifo ep6(
 	.ifclk(ifclk),
@@ -55,9 +55,9 @@ in_fifo ep6(
 	.data(in_data),
 	.wr(~slwr),
 	.full(nflags[1]),
-	.pktend(pktend)
+	.pktend(~pktend)
 );
-defparam ep6.FIFOADR = 10;
+defparam ep6.FIFOADR = 2'b10;
 
 assign flags = ~nflags;
 
