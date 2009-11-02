@@ -57,6 +57,7 @@ strobe_bits_controller apdtimer_controller(
 
 `define TEST_OUTPUT 1
 `ifdef TEST_OUTPUT
+
 apdtimer_all apdtimer(
 	.clk(clk),
 	.detectors(detectors),
@@ -69,7 +70,6 @@ apdtimer_all apdtimer(
 	.running(running)
 );
 
-
 wire	[7:0] seqop_cmd;
 strobe_bits_controller pulse_seq_operate_controller(
 	.clk(clk),
@@ -81,37 +81,7 @@ strobe_bits_controller pulse_seq_operate_controller(
 
 reg pulse_seq_operate;
 always @(posedge clk)
-	if (seqop_cmd[1])
-		pulse_seq_operate <= 1'b0;
-	else if (seqop_cmd[0])
-		pulse_seq_operate <= 1'b1;
-
-cntrl_pulse_sequencer pulseseq3(
-	.clk(clk),
-	.operate(pulse_seq_operate),
-	.mask_bit(cmd_avail[5]),
-	.cmd_data(cmd_data),
-	.data_ack(cmd_ack[5]),
-	.out(laser_en[3])
-);
-
-cntrl_pulse_sequencer pulseseq2(
-	.clk(clk),
-	.operate(pulse_seq_operate),
-	.mask_bit(cmd_avail[4]),
-	.cmd_data(cmd_data),
-	.data_ack(cmd_ack[4]),
-	.out(laser_en[2])
-);
-
-cntrl_pulse_sequencer pulseseq1(
-	.clk(clk),
-	.operate(pulse_seq_operate),
-	.mask_bit(cmd_avail[3]),
-	.cmd_data(cmd_data),
-	.data_ack(cmd_ack[3]),
-	.out(laser_en[1])
-);
+	pulse_seq_operate = (pulse_seq_operate | seqop_cmd[0]) & ~seqop_cmd[1];
 
 cntrl_pulse_sequencer pulseseq0(
 	.clk(clk),
@@ -121,6 +91,31 @@ cntrl_pulse_sequencer pulseseq0(
 	.data_ack(cmd_ack[2]),
 	.out(laser_en[0])
 );
+cntrl_pulse_sequencer pulseseq1(
+	.clk(clk),
+	.operate(pulse_seq_operate),
+	.mask_bit(cmd_avail[3]),
+	.cmd_data(cmd_data),
+	.data_ack(cmd_ack[3]),
+	.out(laser_en[1])
+);
+cntrl_pulse_sequencer pulseseq2(
+	.clk(clk),
+	.operate(pulse_seq_operate),
+	.mask_bit(cmd_avail[4]),
+	.cmd_data(cmd_data),
+	.data_ack(cmd_ack[4]),
+	.out(laser_en[2])
+);
+cntrl_pulse_sequencer pulseseq3(
+	.clk(clk),
+	.operate(pulse_seq_operate),
+	.mask_bit(cmd_avail[5]),
+	.cmd_data(cmd_data),
+	.data_ack(cmd_ack[5]),
+	.out(laser_en[3])
+);
+
 assign sample[47:44] = laser_en[3:0];
 
 `else
@@ -140,7 +135,6 @@ assign sample = 48'hfeeddeadbeed;
 assign cmd_ack[7] = 1'b1;
 
 `endif
-
 
 
 wire samp_buf_full;
