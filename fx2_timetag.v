@@ -13,7 +13,6 @@ module fx2_timetag(
 	laser_en,
 	detectors,
 	led,
-	running,
 
 	debug
 );
@@ -33,7 +32,6 @@ input	ext_clk;
 input	[3:0] detectors;
 output	[3:0] laser_en;
 output	[1:0] led;
-output  running;
 
 wire    clk;
 wire	[7:0] data;
@@ -62,7 +60,6 @@ timetag b2v_inst(
 	.detectors(detectors),
 	//.detectors({3'b0, detectors[0]}),
 	.laser_en(laser_en),
-	.running(running),
 
 	.data_avail(data_available),
 	.data(data),

@@ -19,7 +19,6 @@ reg data_accepted;
 
 reg [3:0] detectors;
 wire [3:0] laser_en;
-wire running;
 
 
 // External Clock
@@ -66,8 +65,7 @@ fx2_timetag uut(
 
 	.ext_clk(clk),
 	.detectors(detectors),
-	.laser_en(laser_en),
-	.running(running)
+	.laser_en(laser_en)
 );
 
 // This just prints the results in the ModelSim text window
