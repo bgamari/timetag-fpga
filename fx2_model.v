@@ -33,6 +33,7 @@ module out_fifo(
 	data_in, data_wr, data_commit, send_done
 ); 
 parameter FIFOADR = 2;
+parameter EMPTY_LEVEL = 1;
 
 input ifclk;
 input rd;
@@ -85,9 +86,9 @@ begin
 	end
 end
 
-assign data = buffer[tail];
-assign empty = (length == 0);
-assign send_done = (tail == length-1) && ~empty;
+assign data = (length != 0) ? buffer[tail] : 8'hZZ;
+assign send_done = (tail == length) && (length != 0);
+assign empty = ((length-tail) <= EMPTY_LEVEL);
 
 endmodule
 
