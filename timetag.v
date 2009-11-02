@@ -7,10 +7,7 @@ module timetag(
 	clk,
 	detectors,
 	laser_en,
-	running
 );
-
-output  running;
 
 input	fx2_clk;
 output	data_avail;
@@ -58,16 +55,18 @@ strobe_bits_controller apdtimer_controller(
 `define TEST_OUTPUT 1
 `ifdef TEST_OUTPUT
 
+reg timer_operate = 0;
+always @(posedge clk)
+	timer_operate = (timer_operate | timer_cmd[0]) & ~timer_cmd[1];
+
 apdtimer_all apdtimer(
 	.clk(clk),
 	.detectors(detectors),
-	.start_det(timer_cmd[0]),
-	.stop_det(timer_cmd[1]),
+	.operate(timer_operate),
 	.reset_counter(timer_cmd[2]),
 
 	.data_rdy(sample_rdy),
-	.data(sample[43:0]),
-	.running(running)
+	.data(sample[43:0])
 );
 
 wire	[7:0] seqop_cmd;
@@ -79,7 +78,7 @@ strobe_bits_controller pulse_seq_operate_controller(
 	.out(seqop_cmd)
 );
 
-reg pulse_seq_operate;
+reg pulse_seq_operate = 0;
 always @(posedge clk)
 	pulse_seq_operate = (pulse_seq_operate | seqop_cmd[0]) & ~seqop_cmd[1];
 
