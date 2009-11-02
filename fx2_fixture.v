@@ -1,4 +1,5 @@
-// FX2 model
+`timescale 1ns/1ns
+
 module fx2_test_fixture(
 	ifclk, fd, slrd, slwr, sloe, fifoadr, pktend, flags,
 
@@ -20,30 +21,30 @@ input cmd_wr, cmd_commit;
 output cmd_sent;
 
 reg ifclk;
-wire [7:0] in_data [0:3];
-wire [7:0] out_data = fd;
+wire [7:0] out_data [0:3];
+wire [7:0] in_data = fd;
 wire [2:0] nflags;
 
 initial ifclk = 0;
 always #6 ifclk = ~ifclk;
 
 assign fd = sloe ? 8'bZZZZZZZZ :  // sloe is active-low
-	(fifoadr == 2'b00) ? in_data[0] :
-	(fifoadr == 2'b01) ? in_data[1] :
-	(fifoadr == 2'b10) ? in_data[2] :
-	(fifoadr == 2'b11) ? in_data[3] :
+	(fifoadr == 2'b00) ? out_data[0] :
+	(fifoadr == 2'b01) ? out_data[1] :
+	(fifoadr == 2'b10) ? out_data[2] :
+	(fifoadr == 2'b11) ? out_data[3] :
 	7'b0;
 
 out_fifo ep2(
 	.ifclk(ifclk),
 	.fifoadr(fifoadr),
-	.data(out_data),
+	.data(out_data[0]),
 	.rd(~slrd),
 	.empty(nflags[0]),
 
 	.data_in(cmd_data),
 	.data_wr(cmd_wr),
-	.commit(cmd_commit),
+	.data_commit(cmd_commit),
 	.send_done(cmd_sent)
 );
 defparam ep2.FIFOADR = 00;
@@ -51,7 +52,7 @@ defparam ep2.FIFOADR = 00;
 in_fifo ep6(
 	.ifclk(ifclk),
 	.fifoadr(fifoadr),
-	.data(in_data[2]),
+	.data(in_data),
 	.wr(~slwr),
 	.full(nflags[1]),
 	.pktend(pktend)
