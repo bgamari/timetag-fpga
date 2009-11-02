@@ -33,7 +33,7 @@ assign fd = sloe ? 8'bZZZZZZZZ :  // sloe is active-low
 	(fifoadr == 2'b01) ? out_data[1] :
 	(fifoadr == 2'b10) ? out_data[2] :
 	(fifoadr == 2'b11) ? out_data[3] :
-	7'b0;
+	7'bZZ;
 
 out_fifo ep2(
 	.ifclk(ifclk),
