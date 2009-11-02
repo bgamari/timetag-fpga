@@ -66,10 +66,8 @@ case (state)
 	end
 	
 	4'b1100:								// Commit setting
-		state <= 4'b1101;
-
-	4'b1101:								// Acknowledge last byte
 		state <= 4'b0000;
+
 endcase
 
 assign setting[3:0] = (state == 4'b1100) ? cmd_data[3:0] : 4'b0;
