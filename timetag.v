@@ -6,7 +6,7 @@ module timetag(
 
 	clk,
 	detectors,
-	laser_en,
+	laser_en
 );
 
 input	fx2_clk;
