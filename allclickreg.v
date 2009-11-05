@@ -23,7 +23,7 @@ initial timer = 39'd0;
 
 always @ (posedge clk)
 begin
-	if (channel != 3'b0  || (timer == 1'b0 && operate))
+	if (channel != 4'b0  || (timer == 1'b0 && operate))
 	begin
 		data[38:0] <= timer[38:0];
 		data[39] <= (timer==1'b0) ? 1'b1 : 1'b0;
