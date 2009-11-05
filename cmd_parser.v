@@ -85,7 +85,7 @@ endcase
 
 
 assign cmd_mask = ((state == 3) && (sent != length)) ? mask : 8'b0;
-assign data = (state == 3) ? in_data : 8'hZZ;
+assign data = (state == 3) ? in_data : 8'hXX;
 
 assign in_req =  ((state == 0) && (~in_empty))
 		|| ((state == 2) && (in_avail == length))
