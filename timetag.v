@@ -32,6 +32,8 @@ wire    sample_rdy;
 wire	[7:0] cmd_avail;
 wire	[7:0] cmd_data;
 wire	[7:0] cmd_ack;
+assign cmd_ack[7:6] = 0;
+
 cmd_parser cmd_parser(
 	.fx2_clk(fx2_clk),
 	.clk(clk),
