@@ -31,7 +31,7 @@ wire    sample_rdy;
 // Internal command tracking signals
 wire	[7:0] cmd_avail;
 wire	[7:0] cmd_data;
-wor	cmd_ack;
+wire	[7:0] cmd_ack;
 cmd_parser cmd_parser(
 	.fx2_clk(fx2_clk),
 	.clk(clk),
@@ -40,7 +40,7 @@ cmd_parser cmd_parser(
 
 	.cmd_mask(cmd_avail),
 	.data(cmd_data),
-	.data_ack(cmd_ack)
+	.data_ack(cmd_ack != 0)
 );
 
 wire	[7:0] timer_cmd;
@@ -48,7 +48,7 @@ strobe_bits_controller apdtimer_controller(
 	.clk(clk),
 	.mask_bit(cmd_avail[0]),
 	.data(cmd_data),
-	.data_ack(cmd_ack),
+	.data_ack(cmd_ack[0]),
 	.out(timer_cmd)
 );
 
@@ -74,7 +74,7 @@ strobe_bits_controller pulse_seq_operate_controller(
 	.clk(clk),
 	.mask_bit(cmd_avail[1]),
 	.data(cmd_data),
-	.data_ack(cmd_ack),
+	.data_ack(cmd_ack[1]),
 	.out(seqop_cmd)
 );
 
@@ -87,7 +87,7 @@ cntrl_pulse_sequencer pulseseq0(
 	.operate(pulse_seq_operate),
 	.mask_bit(cmd_avail[2]),
 	.cmd_data(cmd_data),
-	.data_ack(cmd_ack),
+	.data_ack(cmd_ack[2]),
 	.out(laser_en[0])
 );
 cntrl_pulse_sequencer pulseseq1(
@@ -95,7 +95,7 @@ cntrl_pulse_sequencer pulseseq1(
 	.operate(pulse_seq_operate),
 	.mask_bit(cmd_avail[3]),
 	.cmd_data(cmd_data),
-	.data_ack(cmd_ack),
+	.data_ack(cmd_ack[3]),
 	.out(laser_en[1])
 );
 cntrl_pulse_sequencer pulseseq2(
@@ -103,7 +103,7 @@ cntrl_pulse_sequencer pulseseq2(
 	.operate(pulse_seq_operate),
 	.mask_bit(cmd_avail[4]),
 	.cmd_data(cmd_data),
-	.data_ack(cmd_ack),
+	.data_ack(cmd_ack[4]),
 	.out(laser_en[2])
 );
 cntrl_pulse_sequencer pulseseq3(
@@ -111,7 +111,7 @@ cntrl_pulse_sequencer pulseseq3(
 	.operate(pulse_seq_operate),
 	.mask_bit(cmd_avail[5]),
 	.cmd_data(cmd_data),
-	.data_ack(cmd_ack),
+	.data_ack(cmd_ack[5]),
 	.out(laser_en[3])
 );
 
@@ -131,7 +131,7 @@ end
 
 assign sample_rdy = (count == 0);
 assign sample = 48'hfeeddeadbeed;
-assign cmd_ack = 1'b1;
+//assign cmd_ack = 1'b1;
 
 `endif
 
