@@ -13,10 +13,17 @@ input pktend;
 input [7:0] data;
 output full;
 
+reg [31:0] outf;
+initial
+	outf = $fopen("data.out", "w");
+
 always @(posedge ifclk)
 begin
 	if ((fifoadr == FIFOADR) && wr)
+	begin
 		$display("%2b: IN %x", FIFOADR, data);
+		$fwrite(outf, data);
+	end
 	if ((fifoadr == FIFOADR) && pktend)
 		$display("%2b: PKTEND", FIFOADR);
 end
