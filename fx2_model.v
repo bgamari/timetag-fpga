@@ -22,7 +22,7 @@ begin
 	if ((fifoadr == FIFOADR) && wr)
 	begin
 		$display("%2b: IN %x", FIFOADR, data);
-		$fwrite(outf, data);
+		$fwrite(outf, "%02x\n", data);
 	end
 	if ((fifoadr == FIFOADR) && pktend)
 		$display("%2b: PKTEND", FIFOADR);

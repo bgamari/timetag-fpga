@@ -25,18 +25,19 @@ wire running;
 // Instantiate the UUT
 timetag uut(
 	.fx2_clk(fx2_clk),
-	.request_length(request_length),
-	.length(length),
-	.data_avail(data_avail),
-	.data(data),
-	.data_accepted(data_accepted),
 	.cmd_wr(cmd_wr),
 	.cmd_in(cmd_in),
-	
+
 	.clk(clk),
 	.detectors(detectors),
 	.laser_en(laser_en),
-	.running(running)
+
+	.data_avail(data_avail),
+	.data(data),
+	.data_accepted(data_accepted),
+
+	.request_length(request_length),
+	.length(length)
 );
 
 // This just prints the results in the ModelSim text window
