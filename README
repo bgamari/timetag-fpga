@@ -1,0 +1,37 @@
+data format:
+  bits 38-0:  timer
+  bit  39:    timer reset
+  bits 43-40: channels
+  bits 47-44: laser_en status
+
+
+command format:
+  byte 0:    Data Length = N
+  byte 1:    Unit mask
+  bytes 2-N: Data
+
+
+timetag unit masks:
+  0x00: apd_timer
+    Byte 0:
+      bit 0: Start detector
+      bit 1: Stop detector
+      bit 2: Reset counter
+  
+  0x01: pulse sequencer enable
+    Byte 0:
+      bit 0: Start
+      bit 1: Stop
+  
+  0x02: pulse sequencer 0 configure
+  0x04: pulse sequencer 1 configure
+  0x08: pulse sequencer 2 configure
+  0x10: pulse_sequencer 3 configure
+    Byte 0: Configuration option
+      0x0=Initial state
+      0x1=Initial count
+      0x2=High count
+      0x4=Low count
+  
+    Bytes 1-4: Value
+
