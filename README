@@ -28,7 +28,7 @@ General structure:
 
 data format:
   bits 35:0	timer
-  bit  36	timer reset
+  bit  36	timer wraparound
   bits 40:37	channels
   bit  41	sample lost
   bits 47-44	laser_en status
