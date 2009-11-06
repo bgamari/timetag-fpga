@@ -14,7 +14,7 @@ input	reset_counter;
 input	[3:0] detectors;
 
 output	data_rdy;
-output	[43:0] data;
+output	[40:0] data;
 
 wire	[3:0] ch;
 
@@ -25,7 +25,8 @@ allclickreg	timer(
 	.operate(operate),
 	.channel(ch),
 	.ready(data_rdy),
-	.data(data));
+	.data(data)
+);
 
 
 clicklatch	latch0(

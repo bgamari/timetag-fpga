@@ -22,7 +22,7 @@ output 	[7:0] data;
 input	data_ack;
 
 reg	[7:0] mask;
-reg 	[7:0] length;
+reg [7:0] length;
 reg	[2:0] state;
 reg	[7:0] sent;
 
@@ -31,6 +31,7 @@ wire [7:0] in_data;
 wire [7:0] in_avail;
 wire in_empty;
 wire in_req;
+wire [7:0] data;
 wire data_req;
 wire clr;
 
@@ -84,7 +85,7 @@ endcase
 
 
 assign cmd_mask = ((state == 3) && (sent != length)) ? mask : 8'b0;
-assign data = (state == 3) ? in_data : 8'hZZ;
+assign data = (state == 3) ? in_data : 8'hXX;
 
 assign in_req =  ((state == 0) && (~in_empty))
 		|| ((state == 2) && (in_avail == length))

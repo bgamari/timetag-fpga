@@ -6,7 +6,7 @@ module timetag(
 
 	clk,
 	detectors,
-	laser_en,
+	laser_en
 );
 
 input	fx2_clk;
@@ -32,6 +32,8 @@ wire    sample_rdy;
 wire	[7:0] cmd_avail;
 wire	[7:0] cmd_data;
 wire	[7:0] cmd_ack;
+assign cmd_ack[7:6] = 0;
+
 cmd_parser cmd_parser(
 	.fx2_clk(fx2_clk),
 	.clk(clk),
@@ -66,8 +68,9 @@ apdtimer_all apdtimer(
 	.reset_counter(timer_cmd[2]),
 
 	.data_rdy(sample_rdy),
-	.data(sample[43:0])
+	.data(sample[40:0])
 );
+
 
 wire	[7:0] seqop_cmd;
 strobe_bits_controller pulse_seq_operate_controller(
@@ -135,11 +138,28 @@ assign sample = 48'hfeeddeadbeed;
 
 `endif
 
+//////////////////////////////
+// Sample FIFO
+
 
 wire samp_buf_full;
 wire samp_buf_rdnext;
 wire samp_buf_empty;
 wire [47:0] samp_buf_out;
+
+reg samp_lost;
+initial samp_lost = 0;
+assign sample[41] = samp_lost;
+
+// Track dropped samples
+always @(posedge clk)
+begin
+	if (sample_rdy && samp_buf_full)
+		samp_lost <= 1;
+	else if (sample_rdy && ~samp_buf_full)
+		samp_lost <= 0;
+end
+
 sample_fifo samp_buf(
 	.wrclk(clk),
 	.wrreq(sample_rdy & ~samp_buf_full),
@@ -151,6 +171,7 @@ sample_fifo samp_buf(
 	.rdempty(samp_buf_empty),
 	.q(samp_buf_out)
 );
+
 
 sample_multiplexer multiplexer(
 	.clk(fx2_clk),
