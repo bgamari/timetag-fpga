@@ -11,32 +11,32 @@ input clear;
 input operate;
 
 output ready; 
-output [43:0] data;
+output [40:0] data;
 
-reg [38:0] timer;
+reg [35:0] timer;
 
 reg ready;
-reg [43:0] data;
+reg [40:0] data;
 
 initial ready = 1'b0;
-initial timer = 39'd0;
+initial timer = 36'd0;
 
 always @ (posedge clk)
 begin
 	if (channel != 3'b0  || (timer == 1'b0 && operate))
 	begin
-		//data[38:0] <= timer[38:0];
-		data[38:0] <= 39'h7F_DEAD_BEEF;		// for debugging
-		data[39] <= (timer==1'b0) ? 1'b1 : 1'b0;
-		data[43:40] <= channel;
+		//data[35:0] <= timer[35:0];
+		data[35:0] <= 36'hA_DEAD_BEEF;		// for debugging
+		data[36] <= (timer==1'b0) ? 1'b1 : 1'b0;
+		data[40:37] <= channel;
 		ready <= 1'b1;
 	end
 	else
 	begin
 		ready <= 1'b0;
-		data <= 43'b0;
+		data <= 40'bZ;
 	end	
-	timer <= clear ? 39'b0 : timer + 1'b1;
+	timer <= clear ? 36'b0 : timer + 1'b1;
 end
 
 endmodule
