@@ -21,8 +21,10 @@ reg [3:0] old_delta;
 reg ready;
 reg [46:0] data;
 
+initial data = 47'b0;
 initial ready = 1'b0;
 initial timer = 36'd0;
+initial old_delta = 4'b0;
 
 always @(posedge clk)
 begin
