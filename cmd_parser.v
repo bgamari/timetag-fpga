@@ -22,7 +22,7 @@ output 	[7:0] data;
 input	data_ack;
 
 reg	[7:0] mask;
-reg [7:0] length;
+reg	[7:0] length;
 reg	[2:0] state;
 reg	[7:0] sent;
 
