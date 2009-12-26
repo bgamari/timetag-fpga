@@ -25,8 +25,8 @@ always @ (posedge clk)
 begin
 	if (channel != 4'b0  || (timer == 1'b0 && operate))
 	begin
-		//data[35:0] <= timer[35:0];
-		data[35:0] <= 36'hA_DEAD_BEEF;		// for debugging
+		data[35:0] <= timer[35:0];
+		//data[35:0] <= 36'hA_DEAD_BEEF;		// for debugging
 		data[36] <= (timer==1'b0) ? 1'b1 : 1'b0;
 		data[40:37] <= channel;
 		ready <= 1'b1;
