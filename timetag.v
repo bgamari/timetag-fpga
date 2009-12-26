@@ -119,8 +119,6 @@ cntrl_pulse_sequencer pulseseq3(
 	.out(laser_en[3])
 );
 
-assign sample[47:44] = laser_en[3:0];
-
 `else
 
 reg [31:0] count;
@@ -150,7 +148,7 @@ wire [47:0] samp_buf_out;
 
 reg samp_lost;
 initial samp_lost = 0;
-assign sample[41] = samp_lost;
+assign sample[47] = samp_lost;
 
 // Track dropped samples
 always @(posedge clk)
