@@ -33,32 +33,32 @@ Byte Bit       76543210 7654 3210 76543210 76543210 76543210 76543210
               ┌────────┬────┬────┬────────┬────────┬────────┬────────┐
               │        │         │        │        │        │        │
               └────────┴────┴────┴────────┴────────┴────────┴────────┘
-                 ╷╷╷╷╷╷ ╷╷╷╷    ╷      ╷        ╷        ╷        ╷
-                 ││││││ ││││    │      │        │        │        │
-                 ││││││ ││││  36:32  31:24    23:16    15:8      7:0
-                 ││││││ ││││╰───────────────────┬────────────────────╯
-                 ││││││ ││││                Timestamp
-                 ││││││ ││││
-                 ││││││ │││╰─ bit 36: timer wraparound
-                 ││││││ ││╰── bit 37: channel 0
-                 ││││││ │╰─── bit 38: channel 1
-                 ││││││ ╰──── bit 39: channel 2
-                 │││││╰────── bit 40: channel 3
-                 │││││
-                 ││││╰─────── bit 41: sample lost
-                 ││││
-                 │││╰──────── bit 44: laser_en 0
-                 ││╰───────── bit 45: laser_en 1
-                 │╰────────── bit 46: laser_en 2
-                 ╰─────────── bit 47: laser_en 3
+               ╷╷╷      ╷╷╷╷   ╷       ╷        ╷        ╷       ╷
+               │││      ││││   │       │        │        │       │
+               │││      ││││ 36:32   31:24    23:16    15:8     7:0
+               │││      ││││╰───────────────────┬────────────────────╯
+               │││      ││││                Timestamp
+               │││      ││││
+               │││      │││╰─ bit 36: strobe/delta channel 0
+               │││      ││╰── bit 37: strobe delta channel 1
+               │││      │╰─── bit 38: strobe delta channel 2
+               │││      ╰──── bit 39: strobe delta channel 3
+               │││     
+               ││╰─────────── bit 45: record type (0=channel, 1=output)
+               │╰──────────── bit 46: timer wraparound
+               │        
+               ╰───────────── bit 47: sample lost
 
 Bit 0 of timestamp is least-significant bit
 
   bits 35:0	timer
-  bit  36	timer wraparound
-  bits 40:37	channels
-  bit  41	sample lost
-  bits 47-44	laser_en status
+  bit  39:36	strobe/delta channels
+  bits 44:40	unused
+  
+  bit  45	record type
+  bit  46	timer wraparound
+  bit  47	sample lost
+
 
 
 command format:

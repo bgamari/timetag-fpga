@@ -3,6 +3,7 @@ module apdtimer_all(
 	operate,
 	reset_counter,
 	detectors,
+	pulseseq_outputs,
 
 	data_rdy,
 	data
@@ -12,9 +13,10 @@ input	clk;
 input	operate;
 input	reset_counter;
 input	[3:0] detectors;
+input   [3:0] pulseseq_outputs;
 
 output	data_rdy;
-output	[40:0] data;
+output	[46:0] data;
 
 wire	[3:0] ch;
 
@@ -23,7 +25,8 @@ allclickreg	timer(
 	.clk(clk),
 	.clear(reset_counter),
 	.operate(operate),
-	.channel(ch),
+	.strobe_channels(ch),
+	.delta_channels(pulseseq_outputs),
 	.ready(data_rdy),
 	.data(data)
 );

@@ -64,11 +64,12 @@ always @(posedge clk)
 apdtimer_all apdtimer(
 	.clk(clk),
 	.detectors(detectors),
+	.pulseseq_outputs(laser_en),
 	.operate(timer_operate),
 	.reset_counter(timer_cmd[2]),
 
 	.data_rdy(sample_rdy),
-	.data(sample[40:0])
+	.data(sample[46:0])
 );
 
 
