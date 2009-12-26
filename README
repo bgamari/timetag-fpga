@@ -31,7 +31,7 @@ data format:
 Record Bit  48       40        32       24       16        8        0
 Byte Bit       76543210 7654 3210 76543210 76543210 76543210 76543210
               ┌────────┬────┬────┬────────┬────────┬────────┬────────┐
-              │        │    ┆    │        │        │        │        │
+              │        │         │        │        │        │        │
               └────────┴────┴────┴────────┴────────┴────────┴────────┘
                  ╷╷╷╷╷╷ ╷╷╷╷    ╷      ╷        ╷        ╷        ╷
                  ││││││ ││││    │      │        │        │        │
@@ -68,21 +68,21 @@ command format:
 
 
 timetag unit masks:
-  0x00: apd_timer
+  0x01: apd_timer
     Byte 0:
       bit 0	Start detector
       bit 1  	Stop detector
       bit 2  	Reset counter
   
-  0x01: pulse sequencer enable
+  0x02: pulse sequencer enable
     Byte 0:
       bit 0	Start
       bit 1  	Stop
   
-  0x02	pulse sequencer 0 configure
-  0x04	pulse sequencer 1 configure
-  0x08	pulse sequencer 2 configure
-  0x10	pulse_sequencer 3 configure
+  0x04	pulse sequencer 0 configure
+  0x08	pulse sequencer 1 configure
+  0x10	pulse sequencer 2 configure
+  0x20	pulse_sequencer 3 configure
     Byte 0	Configuration option
       0x0	Initial state
       0x1	Initial count
