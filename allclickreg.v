@@ -3,13 +3,13 @@
 // allclickreg
 // Pulse Registration and Time Stamping
 // (c) Sergey V. Polyakov 2006-forever
-module allclickreg (strobe_channels, delta_channels, clk, clear, operate, data, ready);
+module allclickreg (strobe_channels, delta_channels, clk, reset_counter, operate, data, ready);
 
 input [3:0] strobe_channels;
 input [3:0] delta_channels;
 
 input clk;
-input clear;
+input reset_counter;
 input operate;
 
 output ready; 
@@ -51,7 +51,7 @@ begin
 		ready <= 1'b0;
 		data <= 40'bZ;
 	end	
-	timer <= clear ? 36'b0 : timer + 1'b1;
+	timer <= reset_counter ? 36'b0 : timer + 1'b1;
 end
 
 endmodule

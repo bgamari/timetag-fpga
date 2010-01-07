@@ -23,7 +23,7 @@ wire	[3:0] ch;
 
 allclickreg	timer(
 	.clk(clk),
-	.clear(reset_counter),
+	.reset_counter(reset_counter),
 	.operate(operate),
 	.strobe_channels(ch),
 	.delta_channels(pulseseq_outputs),
