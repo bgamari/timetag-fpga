@@ -129,8 +129,7 @@ assign fifo_wr = can_xmit_sample || (state==4'b1110);
 
 assign fifo_dataout_oe = can_xmit_sample || (state==4'b1110);
 						
-assign fifo_pktend = (state==4'b1111)
-		 || ((state==4'b1010) && (length < 16'b0000001000000000));
+assign fifo_pktend = (state==4'b1111);
 
 endmodule
 
