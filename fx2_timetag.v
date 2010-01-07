@@ -34,17 +34,18 @@ output	[3:0] laser_en;
 output	[1:0] led;
 
 wire    clk;
-wire	[7:0] data;
-wire	data_available;
-wire	[15:0] length;
-wire	request_length;
+wire	[7:0] sample;
+wire	sample_rdy;
 wire	cmd_avail;
 wire	[7:0] cmd;
-wire	data_accepted;
+wire	sample_ack;
+wire	[7:0] reply;
+wire	reply_rdy;
+wire	reply_ack;
+wire	reply_end;
 
 
-/*
-altpll0 b2v_inst2(
+/*altpll0 b2v_inst2(
 	//.inclk0(ext_clk),
 	.inclk0(fx2_clk),
 	.c0(clk)
@@ -61,12 +62,9 @@ timetag b2v_inst(
 	//.detectors({3'b0, detectors[0]}),
 	.laser_en(laser_en),
 
-	.data_avail(data_available),
-	.data(data),
-	.data_accepted(data_accepted),
-	
-	.request_length(request_length),
-	.length(length)
+	.data_avail(sample_rdy),
+	.data(sample),
+	.data_accepted(sample_ack)
 );
 
 
@@ -79,17 +77,18 @@ fx2_bidir fx2_if(
 	.fx2_sloe(fx2_sloe),
 	.fx2_wu2(fx2_wu2),
 	.fx2_pktend(fx2_pktend),
+	.fx2_fifoadr(fx2_fifoadr),
 	
-	.fpga_word(data),
-	.fpga_word_avail(data_available),
-	.fpga_word_accepted(data_accepted),
+	.sample(sample),
+	.sample_rdy(sample_rdy),
+	.sample_ack(sample_ack),
 	
 	.cmd(cmd),
 	.cmd_wr(cmd_avail),
-	.request_length(request_length),
-	.length(length),
-	.fx2_fifoadr(fx2_fifoadr),
-	.state(debug)
+	
+	.reply(reply),
+	.reply_rdy(reply_rdy),
+	.reply_end(reply_end)
 );
 
 wire all_detectors = detectors[0] | detectors[1] | detectors[2] | detectors[3];
