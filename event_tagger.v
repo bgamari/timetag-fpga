@@ -1,9 +1,17 @@
 // Fast Multisource Pulse Registration System
 // Module:
-// allclickreg
+// event_tagger
 // Pulse Registration and Time Stamping
 // (c) Sergey V. Polyakov 2006-forever
-module allclickreg (strobe_channels, delta_channels, clk, reset_counter, operate, data, ready);
+module event_tagger(
+	strobe_channels,
+	delta_channels,
+	clk,
+	reset_counter,
+	operate,
+	data,
+	ready
+);
 
 input [3:0] strobe_channels;
 input [3:0] delta_channels;

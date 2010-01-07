@@ -1,7 +1,7 @@
 INCLUDES=-I/opt/altera9.0/modelsim_ase/altera/verilog/src
 
 LIB_FILES= \
-	  allclickreg.v apdtimer_all.v clicklatch.v cmd_fifo.v\
+	  event_tagger.v apdtimer_all.v clicklatch.v cmd_fifo.v\
 	  cmd_parser.v cntrl_pulse_sequencer.v \
 	  pulseseq.v \
 	  sample_fifo.v sample_multiplexer.v strobe_bits_controller.v \

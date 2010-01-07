@@ -21,7 +21,7 @@ output	[46:0] data;
 wire	[3:0] ch;
 
 
-allclickreg	timer(
+event_tagger	timer(
 	.clk(clk),
 	.reset_counter(reset_counter),
 	.operate(operate),
