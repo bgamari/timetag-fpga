@@ -69,9 +69,11 @@ case (state)
 	4'b1100:								// Commit setting
 		state <= 4'b0000;
 
+	default:
+		state <= 4'b0000;
 endcase
 
 assign setting[3:0] = (state == 4'b1100) ? cmd[3:0] : 4'b0;
-assign data_ack = state[3];
+assign cmd_ack = state[3];
 
 endmodule
