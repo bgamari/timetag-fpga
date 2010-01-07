@@ -44,7 +44,7 @@ Byte Bit       76543210 7654 3210 76543210 76543210 76543210 76543210
                │││      │╰─── bit 38: strobe/delta channel 2
                │││      ╰──── bit 39: strobe/delta channel 3
                │││     
-               ││╰─────────── bit 45: record type (0=channel, 1=output)
+               ││╰─────────── bit 45: record type
                │╰──────────── bit 46: timer wraparound
                │        
                ╰───────────── bit 47: sample lost
@@ -53,7 +53,7 @@ Byte Bit       76543210 7654 3210 76543210 76543210 76543210 76543210
   bit  39:36	strobe/delta channels
   bits 44:40	unused
   
-  bit  45	record type
+  bit  45	record type (0=strobe, 1=delta)
   bit  46	timer wraparound
   bit  47	sample lost
 
