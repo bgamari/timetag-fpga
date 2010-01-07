@@ -13,8 +13,8 @@ reg request_length;
 
 
 wire [7:0] data;
-wire data_avail;
-reg data_accepted;
+wire data_rdy;
+reg data_ack;
 
 reg [3:0] detectors;
 wire [3:0] laser_en;
@@ -32,9 +32,9 @@ timetag uut(
 	.detectors(detectors),
 	.laser_en(laser_en),
 
-	.data_avail(data_avail),
+	.data_rdy(data_rdy),
 	.data(data),
-	.data_accepted(data_accepted),
+	.data_ack(data_ack),
 
 	.request_length(request_length),
 	.length(length)
@@ -43,10 +43,10 @@ timetag uut(
 // This just prints the results in the ModelSim text window
 // You can leave this out if you want
 initial
-	$monitor($time, "  cmd(%b %x) data(%b %x) cmd_avail=%b cmd_ack=%b cmd_data=%x state=",
+	$monitor($time, "  cmd(%b %x) data(%b %x) cmd_rdy=%b cmd_ack=%b cmd_data=%x state=",
 		cmd_wr, cmd_in,
-		data_avail, data,
-		uut.cmd_avail, uut.cmd_ack, uut.cmd_data, uut.cmd_parser.state
+		data_rdy, data,
+		uut.cmd_rdy, uut.cmd_ack, uut.cmd_data, uut.cmd_parser.state
 	);
 
 // Clocks
@@ -122,8 +122,7 @@ initial begin
 	#12  cmd_in=8'h01;
 	#12  cmd_wr=0;
 
-
-	data_accepted = 1;
+	data_ack = 1;
 end
 
 endmodule

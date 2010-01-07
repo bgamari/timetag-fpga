@@ -1,7 +1,7 @@
 module timetag(
 	fx2_clk,
 	request_length, length,
-	data_avail, data, data_accepted,
+	data_rdy, data, data_ack,
 	cmd_wr, cmd_in,
 
 	clk,
@@ -10,9 +10,9 @@ module timetag(
 );
 
 input	fx2_clk;
-output	data_avail;
+output	data_rdy;
 output	[7:0] data;
-input	data_accepted;
+input	data_ack;
 
 // For Host->FPGA command submission
 input	cmd_wr;
@@ -178,9 +178,9 @@ sample_multiplexer multiplexer(
 	.sample(samp_buf_out),
 	.sample_ack(samp_buf_rdnext),
 
-	.data_rdy(data_avail),
+	.data_rdy(data_rdy),
 	.data(data),
-	.data_ack(data_accepted)
+	.data_ack(data_ack)
 );
 
 summator sample_counter(

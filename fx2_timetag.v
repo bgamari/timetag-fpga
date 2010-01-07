@@ -34,11 +34,13 @@ output	[3:0] laser_en;
 output	[1:0] led;
 
 wire    clk;
-wire	[7:0] sample;
-wire	sample_rdy;
-wire	cmd_avail;
+wire	cmd_rdy;
 wire	[7:0] cmd;
+
+wire	sample_rdy;
+wire	[7:0] sample;
 wire	sample_ack;
+
 wire	[7:0] reply;
 wire	reply_rdy;
 wire	reply_ack;
@@ -62,9 +64,9 @@ timetag b2v_inst(
 	//.detectors({3'b0, detectors[0]}),
 	.laser_en(laser_en),
 
-	.data_avail(sample_rdy),
+	.data_rdy(sample_rdy),
 	.data(sample),
-	.data_accepted(sample_ack)
+	.data_ack(sample_ack)
 );
 
 
@@ -84,7 +86,7 @@ fx2_bidir fx2_if(
 	.sample_ack(sample_ack),
 	
 	.cmd(cmd),
-	.cmd_wr(cmd_avail),
+	.cmd_wr(cmd_rdy),
 	
 	.reply(reply),
 	.reply_rdy(reply_rdy),
