@@ -88,8 +88,9 @@ fx2_bidir fx2_if(
 	.cmd(cmd),
 	.cmd_wr(cmd_rdy),
 	
-	.reply(reply),
 	.reply_rdy(reply_rdy),
+	.reply(reply),
+	.reply_ack(reply_ack),
 	.reply_end(reply_end)
 );
 

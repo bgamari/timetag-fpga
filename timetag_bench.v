@@ -34,10 +34,7 @@ timetag uut(
 
 	.data_rdy(data_rdy),
 	.data(data),
-	.data_ack(data_ack),
-
-	.request_length(request_length),
-	.length(length)
+	.data_ack(data_ack)
 );
 
 // This just prints the results in the ModelSim text window
@@ -46,7 +43,7 @@ initial
 	$monitor($time, "  cmd(%b %x) data(%b %x) cmd_rdy=%b cmd_ack=%b cmd_data=%x state=",
 		cmd_wr, cmd_in,
 		data_rdy, data,
-		uut.cmd_rdy, uut.cmd_ack, uut.cmd_data, uut.cmd_parser.state
+		uut.cmd_rdy, uut.cmd_ack, uut.cmd, uut.cmd_parser.state
 	);
 
 // Clocks

@@ -97,12 +97,12 @@ case(state)
 		else if (fifo6_full) state <=4'b1001;			//   fifo is full, go to idle
 		     
 	// Receive path:
-	4'b0001: state <= 4'b0011;					// Wait for turnaround to read from PC, send REQUEST_LENGTH to summator
+	4'b0001: state <= 4'b0011;					// Wait for turnaround to read from PC
 	4'b0011: if (fifo2_empty) state <= 4'b1001;			// Receive data
 
 	// Reply path:
-	4'b1110: if (reply_end) state <= 4'b1111;			//   Transmit data
-	4'b1111: state <= 4'b1000; 					//   Transmit end-of-packet
+	4'b1110: if (reply_end) state <= 4'b1111;			// Transmit data
+	4'b1111: state <= 4'b1000; 					// Transmit end-of-packet
 	4'b1000:							// Wait for turnaround to transmit an end-of-packet
 	begin
 		#2 state <= 4'b1010;

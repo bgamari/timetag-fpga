@@ -5,15 +5,16 @@
 
 module cntrl_pulse_sequencer(
 	clk, operate,
-	mask_bit, cmd_data, data_ack,
+	mask_bit, cmd, cmd_ack,
 	out
 );
 
 input clk;
 input operate;
-input [7:0] cmd_data;
 input mask_bit;
-output data_ack;
+
+input [7:0] cmd;
+output cmd_ack;
 
 output out;
 
@@ -43,25 +44,25 @@ case (state)
 		
 	4'b1000:								// Read data bytes
 	begin
-		value[31:24] <= cmd_data[7:0];
+		value[31:24] <= cmd[7:0];
 		state <= 4'b1001;
 	end
 	
 	4'b1001:
 	begin
-		value[23:16] <= cmd_data[7:0];
+		value[23:16] <= cmd[7:0];
 		state <= 4'b1010;
 	end
 	
 	4'b1010:
 	begin
-		value[15:8]  <= cmd_data[7:0];
+		value[15:8]  <= cmd[7:0];
 		state <= 4'b1011;
 	end
 	
 	4'b1011:
 	begin
-		value[7:0]   <= cmd_data[7:0];
+		value[7:0]   <= cmd[7:0];
 		state <= 4'b1100;
 	end
 	
@@ -70,7 +71,7 @@ case (state)
 
 endcase
 
-assign setting[3:0] = (state == 4'b1100) ? cmd_data[3:0] : 4'b0;
+assign setting[3:0] = (state == 4'b1100) ? cmd[3:0] : 4'b0;
 assign data_ack = state[3];
 
 endmodule
