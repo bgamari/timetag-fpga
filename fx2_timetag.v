@@ -56,7 +56,7 @@ assign clk = fx2_clk;
 
 timetag b2v_inst(
 	.fx2_clk(fx2_clk),
-	.cmd_wr(cmd_avail),
+	.cmd_wr(cmd_rdy),
 	.cmd_in(cmd),
 
 	.clk(clk),
@@ -102,10 +102,10 @@ leddriver b2v_inst4(
 
 leddriver b2v_inst6(
 	.clk(fx2_clk),
-	.in(cmd_avail),
+	.in(cmd_rdy),
 	.out(led[0]));
 
-//assign debug[3:0] = { data_available, data_accepted, cmd_avail, request_length };
+//assign debug[3:0] = { data_available, data_accepted, cmd_rdy, request_length };
 
 /*
 leddriver	b2v_inst7(
