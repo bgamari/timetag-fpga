@@ -197,6 +197,7 @@ summator sample_counter(
 	.sum_out(length)
 );
 */
+assign reply_rdy = 0;
 
 endmodule
 
