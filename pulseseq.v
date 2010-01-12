@@ -33,7 +33,7 @@ initial out = 0;
 always @(posedge clk)
 begin
 	if (set_initial_state)
-		out <= (value == 32'b0);
+		out <= value[0];
 	if (set_initial_count)
 		count <= value;
 	if (set_hi_count)
