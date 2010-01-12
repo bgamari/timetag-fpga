@@ -58,8 +58,24 @@ strobe_bits_controller apdtimer_controller(
 	.out(timer_cmd)
 );
 
-`define TEST_OUTPUT 1
+//`define TEST_OUTPUT
 `ifdef TEST_OUTPUT
+
+reg [31:0] count;
+initial count = 0;
+always @(posedge clk)
+begin
+	if (count == 0)
+		count <= 32'd480000;
+	else
+		count <= count - 1;
+end
+
+assign sample_rdy = (count == 0);
+assign sample[46:0] = 47'hfeeddeadbeef;
+//assign cmd_ack = 1'b1;
+
+`else
 
 reg timer_operate = 0;
 always @(posedge clk)
@@ -125,22 +141,6 @@ cntrl_pulse_sequencer pulseseq3(
 	.out(laser_en[3])
 );
 
-`else
-
-reg [31:0] count;
-initial count = 0;
-always @(posedge clk)
-begin
-	if (count == 0)
-		count <= 32'd480000;
-	else
-		count <= count - 1;
-end
-
-assign sample_rdy = (count == 0);
-assign sample = 48'hfeeddeadbeed;
-//assign cmd_ack = 1'b1;
-
 `endif
 
 //////////////////////////////
@@ -189,14 +189,14 @@ sample_multiplexer multiplexer(
 	.data_ack(data_ack)
 );
 
-/*
+wire [7:0] length;
 summator sample_counter(
 	.clk(clk),
 	.increment(sample_rdy & ~samp_buf_full),
-	.readout_clr(request_length),
+	.readout_clr(0),
 	.sum_out(length)
 );
-*/
+
 assign reply_rdy = 0;
 
 endmodule
