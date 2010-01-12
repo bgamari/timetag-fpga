@@ -82,10 +82,10 @@ timetag unit masks:
   0x10	pulse sequencer 2 configure
   0x20	pulse_sequencer 3 configure
     Byte 0	Configuration option
-      0x0	Initial state
-      0x1	Initial count
-      0x2	High count
-      0x4	Low count
+      0x1	Initial state
+      0x2	Initial count
+      0x4	High count
+      0x8	Low count
   
     Bytes 1:4   Value
 
