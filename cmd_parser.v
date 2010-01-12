@@ -23,7 +23,7 @@ input	data_ack;
 
 reg	[7:0] mask;
 reg	[7:0] length;
-reg	[2:0] state;
+reg	[1:0] state;
 reg	[7:0] to_send;
 
 
@@ -47,58 +47,51 @@ cmd_fifo fifo(
 	.q(in_data),
 	.aclr(clr)
 );
+assign clr = 0;
 
 
 initial state = 0;
 always @(posedge clk)
 case (state)
 	0:					// Wait for command
-		if (~in_empty)
+		if (~in_empty && in_data == 8'hAA) // Check magic number
 			state <= 1;
 	
-	1:					// Check magic number
-		if (in_data == 8'hAA)
+	1:					// Get command length
+		if (~in_empty)
+		begin
+			length <= in_data;
 			state <= 2;
-		else
-			state <= 5;
-
-	2:					// Get command length
-	begin
-		length <= in_data;
-		state <= 3;
-	end
+		end
 		
-	3:					// Wait until we have entire command in FIFO
+	2:					// Wait until we have entire command in FIFO
 		if (in_avail >= length)
 		begin
 			mask <= in_data;	//   Grab mask
-			state <= 4;
+			state <= 3;
 			to_send <= length;
 		end
 		
-	4:					// Send command data
+	3:					// Send command data
 	begin
-		if (to_send == 0)		//   Done receiving command, move along
-			state <= 5;
-			
 		if (in_req)
-			to_send <= to_send - 8'b1;
+			to_send <= to_send - 1;
+		if (to_send == 0)		//   Done receiving command, move along
+			state <= 0;
 	end
-	
-	5:					// Clear buffer (only for debugging)
+
+	default:
 		state <= 0;
 endcase
 
 
-assign cmd_mask = ((state == 4) && (to_send > 0)) ? mask : 8'b0;
-assign data = (state == 4) ? in_data : 8'hXX;
+assign cmd_mask = ((state == 3) && (to_send > 0)) ? mask : 8'b0;
+assign data = ((state == 3) && (to_send > 0)) ? in_data : 8'hXX;
 
-assign in_req =  ((state == 1) && (~in_empty))
-		|| (state == 2)
-		|| ((state == 3) && (in_avail == length))
-		|| ((state == 4) && data_ack);
-
-assign clr = (state == 5); // Clear buffer
+assign in_req =  ((state == 0) && ~in_empty)
+		|| ((state == 1) && ~in_empty)
+		|| ((state == 2) && (in_avail >= length))
+		|| ((state == 3) && data_ack);
 
 endmodule
 
