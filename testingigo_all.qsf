@@ -72,7 +72,7 @@ set_global_assignment -name GENERATE_RBF_FILE ON
 
 # Simulator Assignments
 # =====================
-set_global_assignment -name SIMULATION_MODE FUNCTIONAL
+set_global_assignment -name SIMULATION_MODE TIMING
 
 # ----------------------
 # start ENTITY(blinkout)
@@ -131,46 +131,12 @@ set_location_assignment PIN_71 -to led[1]
 set_location_assignment PIN_17 -to fx2_clk
 set_location_assignment PIN_93 -to debug[2] -disable
 set_location_assignment PIN_97 -to debug[3] -disable
-set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE testingigo_all.vwf
-set_global_assignment -name VERILOG_FILE fx2_timetag.v
-set_global_assignment -name SDC_FILE testingigo_all.sdc
-set_global_assignment -name VERILOG_FILE timetag.v
-set_global_assignment -name VERILOG_FILE timetag_bench.v
-set_global_assignment -name VERILOG_FILE apdtimer_all.v
-set_global_assignment -name VERILOG_FILE altpll0.v
-set_global_assignment -name VERILOG_FILE strobe_bits_controller.v
-set_global_assignment -name VERILOG_FILE sample_multiplexer.v
-set_global_assignment -name VERILOG_FILE FX2_bidir.v
-set_global_assignment -name VERILOG_FILE allclickreg.v
-set_global_assignment -name VERILOG_FILE clicklatch.v
-set_global_assignment -name VERILOG_FILE runonce.v
-set_global_assignment -name VERILOG_FILE summator.v
-set_global_assignment -name VERILOG_FILE pulseseq.v
-set_global_assignment -name VECTOR_WAVEFORM_FILE testingigo_all.vwf
-set_global_assignment -name VECTOR_WAVEFORM_FILE apdtimer.vwf
-set_global_assignment -name VECTOR_WAVEFORM_FILE allclickreg.vwf
-set_global_assignment -name VECTOR_WAVEFORM_FILE multiplex_sample_test.vwf
-set_global_assignment -name VERILOG_FILE leddriver.v
-set_global_assignment -name VERILOG_FILE fx2_bidir_test.v
-set_global_assignment -name VERILOG_FILE fx2_test.v
-set_global_assignment -name VERILOG_FILE cmd_parser.v
-set_global_assignment -name VERILOG_FILE cntrl_pulse_sequencer.v
-set_global_assignment -name VECTOR_WAVEFORM_FILE cntrl_pulse_sequencer.vwf
-set_global_assignment -name VECTOR_WAVEFORM_FILE cmd_parser.vwf
-set_global_assignment -name VECTOR_WAVEFORM_FILE strobe_bits_controller.vwf
-set_global_assignment -name QIP_FILE cmd_fifo.qip
-set_global_assignment -name QIP_FILE sample_fifo.qip
-set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
-set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name CLOCK_SETTINGS "FX2 Clock" -to fx2_clk
 set_instance_assignment -name CLOCK_SETTINGS "External clock" -to ext_clk
 set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to fx2_clk
 set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to ext_clk
 set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS OFF
 set_global_assignment -name USE_TIMEQUEST_TIMING_ANALYZER ON
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_location_assignment PIN_40 -to fx2_fd[7]
 set_location_assignment PIN_41 -to fx2_fd[6]
 set_location_assignment PIN_42 -to fx2_fd[5]
@@ -186,3 +152,37 @@ set_location_assignment PIN_31 -to fx2_wu2
 set_location_assignment PIN_27 -to fx2_pktend
 set_location_assignment PIN_30 -to fx2_fifoadr[0]
 set_location_assignment PIN_28 -to fx2_fifoadr[1]
+set_global_assignment -name VERILOG_FILE event_tagger.v
+set_global_assignment -name VERILOG_FILE fx2_fixture.v
+set_global_assignment -name VERILOG_FILE fx2_model.v
+set_global_assignment -name VERILOG_FILE fx2_timetag_bench.v
+set_global_assignment -name VERILOG_FILE fx2_timetag.v
+set_global_assignment -name SDC_FILE testingigo_all.sdc
+set_global_assignment -name VERILOG_FILE timetag.v
+set_global_assignment -name VERILOG_FILE timetag_bench.v
+set_global_assignment -name VERILOG_FILE pulseseq.v
+set_global_assignment -name VERILOG_FILE summator.v
+set_global_assignment -name VERILOG_FILE runonce.v
+set_global_assignment -name VERILOG_FILE clicklatch.v
+set_global_assignment -name VERILOG_FILE allclickreg.v
+set_global_assignment -name VERILOG_FILE FX2_bidir.v
+set_global_assignment -name VERILOG_FILE sample_multiplexer.v
+set_global_assignment -name VERILOG_FILE strobe_bits_controller.v
+set_global_assignment -name VERILOG_FILE altpll0.v
+set_global_assignment -name VERILOG_FILE apdtimer_all.v
+set_global_assignment -name VERILOG_FILE leddriver.v
+set_global_assignment -name VERILOG_FILE fx2_bidir_test.v
+set_global_assignment -name VERILOG_FILE fx2_test.v
+set_global_assignment -name VERILOG_FILE cmd_parser.v
+set_global_assignment -name VERILOG_FILE cntrl_pulse_sequencer.v
+set_global_assignment -name QIP_FILE cmd_fifo.qip
+set_global_assignment -name QIP_FILE sample_fifo.qip
+set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL OFF
+set_global_assignment -name VECTOR_WAVEFORM_FILE testingigo_all.vwf
+set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE testingigo_all.vwf
+set_global_assignment -name END_TIME "100 ns"
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
