@@ -56,30 +56,36 @@ case (state)
 		if (~in_empty)
 			state <= 1;
 	
-	1:					// Get command length
+	1:					// Check magic number
+		if (in_data == 8'hAA)
+			state <= 2;
+		else
+			state <= 5;
+
+	2:					// Get command length
 	begin
 		length <= in_data;
-		state <= 2;
+		state <= 3;
 	end
 		
-	2:					// Wait until we have entire command in FIFO
+	3:					// Wait until we have entire command in FIFO
 		if (in_avail == length)
 		begin
 			mask <= in_data;
-			state <= 3;
+			state <= 4;
 			sent <= 0;
 		end
 		
-	3:					// Send command data
+	4:					// Send command data
 	begin
 		if (sent == length)		//   Done receiving command, move along
-			state <= 4;
+			state <= 5;
 			
 		if (in_req)
 			sent <= sent + 8'b1;
 	end
 	
-	4:					// Clear buffer (only for debugging)
+	5:					// Clear buffer (only for debugging)
 		state <= 0;
 endcase
 

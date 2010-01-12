@@ -60,9 +60,10 @@ Byte Bit       76543210 7654 3210 76543210 76543210 76543210 76543210
 
 
 command format:
-  byte 0	Data Length = N
-  byte 1	Unit mask
-  bytes 2:N	Data
+  byte 0	Magic number (0xAA)
+  byte 1	Data Length = N
+  byte 2	Unit mask
+  bytes 3:N	Data
 
 
 timetag unit masks:
