@@ -92,6 +92,10 @@ initial begin
 	#12  cmd=8'h00;
 	#12  cmd=8'h40;
 	#12  cmd=8'h02;
+	// Test ability to reject trash
+	#12  cmd=8'hFF;
+	#12  cmd=8'hFF;
+	#12  cmd=8'hFF;
 	#12  cmd_wr=0; cmd_commit=1;
 	#12  cmd_commit=0;
 	@(cmd_sent);
