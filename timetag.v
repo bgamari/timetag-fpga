@@ -6,7 +6,9 @@ module timetag(
 
 	clk,
 	detectors,
-	laser_en
+	laser_en,
+
+	pulse_seq_operate, capture_operate
 );
 
 // Clocks
@@ -31,6 +33,10 @@ input	data_ack;
 // Acquisition inputs
 input	[3:0] detectors;
 output	[3:0] laser_en;
+
+// Status outputs
+output	pulse_seq_operate;
+output	capture_operate;
 
 // Internal command tracking signals
 wire	[7:0] cmd_rdy;
@@ -77,9 +83,9 @@ assign sample[46:0] = 47'hfeeddeadbeef;
 
 `else
 
-reg timer_operate = 0;
+reg capture_operate = 0;
 always @(posedge clk)
-	timer_operate = (timer_operate | timer_cmd[0]) & ~timer_cmd[1];
+	capture_operate = (capture_operate | timer_cmd[0]) & ~timer_cmd[1];
 
 wire	[47:0] sample;
 wire    sample_rdy;
@@ -87,7 +93,7 @@ apdtimer_all apdtimer(
 	.clk(clk),
 	.detectors(detectors),
 	.pulseseq_outputs(laser_en),
-	.operate(timer_operate),
+	.operate(capture_operate),
 	.reset_counter(timer_cmd[2]),
 
 	.data_rdy(sample_rdy),
