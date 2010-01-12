@@ -97,7 +97,7 @@ assign in_req =  ((state == 0) && (~in_empty))
 		|| ((state == 2) && (in_avail == length))
 		|| ((state == 3) && data_ack);
 
-//assign clr = (state == 4); // Clear buffer
+assign clr = (state == 5); // Clear buffer
 
 endmodule
 
