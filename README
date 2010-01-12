@@ -68,14 +68,14 @@ command format:
 timetag unit masks:
   0x01: apd_timer
     Byte 0:
-      bit 0	Start detector
-      bit 1  	Stop detector
-      bit 2  	Reset counter
+      0x1	Start detector
+      0x2  	Stop detector
+      0x4  	Reset counter
   
   0x02: pulse sequencer enable
     Byte 0:
-      bit 0	Start
-      bit 1  	Stop
+      0x1	Start
+      0x2  	Stop
   
   0x04	pulse sequencer 0 configure
   0x08	pulse sequencer 1 configure
