@@ -42,17 +42,17 @@ begin
 		data[39:36] <= delta_channels;
 		data[45] <= 1;					// record type
 		data[46] <= (timer==1'b0) ? 1'b1 : 1'b0;	// wraparound
-		ready <= 1'b1;
+		ready <= operate;
 		old_delta <= delta_channels;
 	end
-	else if (strobe_channels != 4'b0 || (timer == 1'b0 && operate))
+	else if (strobe_channels != 4'b0 || (timer == 1'b0))
 	begin
 		data[35:0] <= timer[35:0];
 		//data[35:0] <= 36'hA_DEAD_BEEF;  // for debugging
 		data[39:36] <= strobe_channels;
 		data[45] <= 0;					// record type
 		data[46] <= (timer==1'b0) ? 1'b1 : 1'b0;	// wraparound
-		ready <= 1'b1;
+		ready <= operate;
 	end
 	else
 	begin
