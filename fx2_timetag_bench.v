@@ -82,7 +82,15 @@ initial $monitor($time, "  cmd(%b %x)", cmd_wr, cmd);
 initial begin
 	$display($time, "     Starting...");
 
-	#200 ;
+	#100 ;
+	$display($time, "  Starting with garbage");
+	#12  cmd=8'hFF; cmd_wr=1;
+	#12  cmd=8'hFF;
+	#12  cmd=8'hFF;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+
 	$display($time, "  Setting initial count");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h05;
