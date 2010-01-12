@@ -54,19 +54,22 @@ always #6 fx2_clk = ~fx2_clk;
 
 // Simulate photons
 initial detectors = 4'b0000;
-always begin
-	#100 detectors[0] = 1'b1;
-	#5  detectors[0] = 1'b0;
-end
-
-/*
+//`define RANDOM_PHOTONS
+`ifdef RANDOM_PHOTONS
 initial begin
 	if ((4'b1111 & $random) == 4'b0)
 	begin
 		detectors[0] = 1'b1;
 		#10 detectors[0] = 1'b0;
 	end
-end*/
+end
+`else
+always begin
+	#100 detectors[0] = 1'b1;
+	#5  detectors[0] = 1'b0;
+end
+`endif
+
 
 // These statements conduct the actual circuit test
 initial begin
@@ -74,7 +77,8 @@ initial begin
 
 	$display($time, "  Setting initial count");
 	#100 ;
-	#12  cmd_in=8'h05; cmd_wr=1;
+	#12  cmd_in=8'hAA; cmd_wr=1;
+	#12  cmd_in=8'h05;
 	#12  cmd_in=8'h04;
 	#12  cmd_in=8'h00;
 	#12  cmd_in=8'h00;
@@ -85,7 +89,8 @@ initial begin
 
 	$display($time, "  Setting low count");
 	#100 ;
-	#12  cmd_in=8'h05; cmd_wr=1;
+	#12  cmd_in=8'hAA; cmd_wr=1;
+	#12  cmd_in=8'h05;
 	#12  cmd_in=8'h04;
 	#12  cmd_in=8'h00;
 	#12  cmd_in=8'h00;
@@ -96,7 +101,8 @@ initial begin
 
 	$display($time, "  Setting high count");
 	#100 ;
-	#12  cmd_in=8'h05; cmd_wr=1;
+	#12  cmd_in=8'hAA; cmd_wr=1;
+	#12  cmd_in=8'h05;
 	#12  cmd_in=8'h04;
 	#12  cmd_in=8'h00;
 	#12  cmd_in=8'h00;
@@ -107,14 +113,16 @@ initial begin
 
 	$display($time, "  Starting detectors");
 	#100 ;
-	#12  cmd_in=8'h01; cmd_wr=1;
+	#12  cmd_in=8'hAA; cmd_wr=1;
+	#12  cmd_in=8'h01;
 	#12  cmd_in=8'h01;
 	#12  cmd_in=8'h01;
 	#12  cmd_wr=0;
 
 	$display($time, "  Starting pulse sequencers");
 	#100 ;
-	#12  cmd_in=8'h01; cmd_wr=1;
+	#12  cmd_in=8'hAA; cmd_wr=1;
+	#12  cmd_in=8'h01;
 	#12  cmd_in=8'h02;
 	#12  cmd_in=8'h01;
 	#12  cmd_wr=0;

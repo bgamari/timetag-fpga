@@ -84,7 +84,8 @@ initial begin
 
 	#200 ;
 	$display($time, "  Setting initial count");
-	#12  cmd=8'h05; cmd_wr=1;
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h05;
 	#12  cmd=8'h04;
 	#12  cmd=8'h00;
 	#12  cmd=8'h00;
@@ -97,7 +98,8 @@ initial begin
 
 	#200 ;
 	$display($time, "  Setting low count");
-	#12  cmd=8'h05; cmd_wr=1;
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h05;
 	#12  cmd=8'h04;
 	#12  cmd=8'h00;
 	#12  cmd=8'h00;
@@ -110,7 +112,8 @@ initial begin
 
 	#200 ;
 	$display($time, "  Setting high count");
-	#12  cmd=8'h05; cmd_wr=1;
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h05;
 	#12  cmd=8'h04;
 	#12  cmd=8'h00;
 	#12  cmd=8'h00;
@@ -123,7 +126,8 @@ initial begin
 
 	#200 ;
 	$display($time, "  Starting detectors");
-	#12  cmd=8'h01; cmd_wr=1;
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h01;
 	#12  cmd=8'h01;
 	#12  cmd=8'h01;
 	#12  cmd_wr=0; cmd_commit=1;
@@ -132,7 +136,8 @@ initial begin
 
 	#200 ;
 	$display($time, "  Starting pulse sequencers");
-	#12  cmd=8'h01; cmd_wr=1;
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h01;
 	#12  cmd=8'h02;
 	#12  cmd=8'h01;
 	#12  cmd_wr=0; cmd_commit=1;
@@ -143,7 +148,8 @@ initial begin
 
 	#10000 ;
 	$display($time, "  Stopping pulse sequencers");
-	#12  cmd=8'h01; cmd_wr=1;
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h01;
 	#12  cmd=8'h02;
 	#12  cmd=8'h02;
 	#12  cmd_wr=0; cmd_commit=1;
@@ -152,7 +158,8 @@ initial begin
 
 	#1000 ;
 	$display($time, "  Stopping detectors");
-	#12  cmd=8'h01; cmd_wr=1;
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h01;
 	#12  cmd=8'h01;
 	#12  cmd=8'h02;
 	#12  cmd_wr=0; cmd_commit=1;
