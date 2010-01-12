@@ -91,6 +91,37 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
+	$display($time, "  Setting initial state high");
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h05;
+	#12  cmd=8'h04;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h01;
+	#12  cmd=8'h01;
+	// Test ability to reject trash
+	#12  cmd=8'hFF;
+	#12  cmd=8'hFF;
+	#12  cmd=8'hFF;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+
+	$display($time, "  Setting initial state low");
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h05;
+	#12  cmd=8'h04;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h00;
+	#12  cmd=8'h01;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+
+
 	$display($time, "  Setting initial count");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h05;
@@ -100,10 +131,6 @@ initial begin
 	#12  cmd=8'h00;
 	#12  cmd=8'h40;
 	#12  cmd=8'h02;
-	// Test ability to reject trash
-	#12  cmd=8'hFF;
-	#12  cmd=8'hFF;
-	#12  cmd=8'hFF;
 	#12  cmd_wr=0; cmd_commit=1;
 	#12  cmd_commit=0;
 	@(cmd_sent);
