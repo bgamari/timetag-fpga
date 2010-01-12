@@ -66,7 +66,10 @@ timetag b2v_inst(
 
 	.data_rdy(sample_rdy),
 	.data(sample),
-	.data_ack(sample_ack)
+	.data_ack(sample_ack),
+
+	.capture_operate(led[0]),
+	.pulse_seq_operate(led[1])
 );
 
 
@@ -94,7 +97,7 @@ fx2_bidir fx2_if(
 	.reply_end(reply_end)
 );
 
-`define DETECTORS_LED
+//`define DETECTORS_LED
 `ifdef DETECTORS_LED
 wire all_detectors = detectors[0] | detectors[1] | detectors[2] | detectors[3];
 leddriver b2v_inst4(
@@ -104,7 +107,7 @@ leddriver b2v_inst4(
 );
 `endif
 
-`define CMD_RDY_LED
+//`define CMD_RDY_LED
 `ifdef CMD_RDY_LED
 leddriver b2v_inst6(
 	.clk(fx2_clk),
