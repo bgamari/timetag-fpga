@@ -23,16 +23,11 @@ input operate;
 output ready; 
 output [46:0] data;
 
-reg [35:0] timer;
-reg [3:0] old_delta;
+reg [35:0] timer = 36'b0;
+reg [3:0] old_delta = 3'b0;
 
-reg ready;
-reg [46:0] data;
-
-initial data = 47'b0;
-initial ready = 1'b0;
-initial timer = 36'd0;
-initial old_delta = 4'b0;
+reg ready = 0;
+reg [46:0] data = 47'b0;
 
 always @(posedge clk)
 begin
@@ -45,21 +40,21 @@ begin
 		ready <= operate;
 		old_delta <= delta_channels;
 	end
-	else if (strobe_channels != 4'b0 || (timer == 1'b0))
+	else if (strobe_channels != 4'b0 || (timer == 36'b0))
 	begin
 		data[35:0] <= timer[35:0];
 		//data[35:0] <= 36'hA_DEAD_BEEF;  // for debugging
 		data[39:36] <= strobe_channels;
 		data[45] <= 0;					// record type
-		data[46] <= (timer==1'b0) ? 1'b1 : 1'b0;	// wraparound
+		data[46] <= (timer==36'b0) ? 1'b1 : 1'b0;	// wraparound
 		ready <= operate;
 	end
 	else
 	begin
-		ready <= 1'b0;
-		data <= 40'bZ;
+		ready <= 0;
+		data <= 47'bZ;
 	end	
-	timer <= reset_counter ? 36'b0 : timer + 1'b1;
+	timer <= reset_counter ? 36'b0 : timer + 1;
 end
 
 endmodule
