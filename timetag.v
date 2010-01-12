@@ -94,6 +94,7 @@ apdtimer_all apdtimer(
 	.data(sample[46:0])
 );
 
+`endif
 
 wire	[7:0] seqop_cmd;
 strobe_bits_controller pulse_seq_operate_controller(
@@ -141,7 +142,6 @@ cntrl_pulse_sequencer pulseseq3(
 	.out(laser_en[3])
 );
 
-`endif
 
 //////////////////////////////
 // Sample FIFO
