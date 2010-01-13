@@ -75,8 +75,14 @@ timetag unit masks:
   
   0x02: pulse sequencer enable
     Byte 0:
-      0x1	Start
-      0x2  	Stop
+      0x01	Start pulse sequencer 0
+      0x02  	Stop pulse sequencer 0
+      0x04	Start pulse sequencer 1
+      0x08  	Stop pulse sequencer 1
+      0x10	Start pulse sequencer 2
+      0x20  	Stop pulse sequencer 2
+      0x40	Start pulse sequencer 3
+      0x80  	Stop pulse sequencer 3
   
   0x04	pulse sequencer 0 configure
   0x08	pulse sequencer 1 configure
