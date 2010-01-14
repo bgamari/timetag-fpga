@@ -7,6 +7,7 @@ wire fx2_clk;
 wire [7:0] fd;
 wire [2:0] flags;
 wire [1:0] fifoadr;
+wire sloe, slrd, slwr, pktend;
 
 reg [3:0] detectors;
 wire [3:0] laser_en;
