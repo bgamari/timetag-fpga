@@ -52,7 +52,7 @@ begin
 	else
 	begin
 		ready <= 0;
-		data <= 47'bZ;
+		data <= 47'bX;
 	end	
 	timer <= reset_counter ? 36'b0 : timer + 1;
 end
