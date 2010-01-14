@@ -13,10 +13,7 @@ module fx2_timetag(
 	laser_en,
 	detectors,
 	led,
-
-	debug
 );
-output [3:0] debug;
 
 input	fx2_clk;
 input	[2:0] fx2_flags;
