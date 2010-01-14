@@ -3,6 +3,9 @@
 // Flexible, 3-fifo multidirectional FX2 USB-2 interface
 // (c) Sergey V. Polyakov 2006-forever
 
+// Disable during debugging
+`define CMD_TIMEOUT
+
 module cmd_parser(
 	fx2_clk, clk,
 	cmd_in, cmd_wr,
@@ -25,7 +28,9 @@ reg	[7:0] mask;
 reg	[7:0] length;
 reg	[1:0] state;
 reg	[7:0] to_send;
-
+`ifdef CMD_TIMEOUT
+reg	[7:0] recv_timeout;
+`endif
 
 wire [7:0] in_data;
 wire [7:0] in_avail;
@@ -60,17 +65,28 @@ case (state)
 	1:					// Get command length
 		if (~in_empty)
 		begin
+			`ifdef CMD_TIMEOUT
+			recv_timeout <= 255;
+			`endif
 			length <= in_data;
 			state <= 2;
 		end
 		
 	2:					// Wait until we have entire command in FIFO
+	begin
+		`ifdef CMD_TIMEOUT
+		recv_timeout <= recv_timeout - 1;
+		if (recv_timeout == 0)		//   We had to wait too long, give up on command
+			state <= 0;
+		`endif
+
 		if (in_avail >= length)
 		begin
 			mask <= in_data;	//   Grab mask
 			state <= 3;
 			to_send <= length;
 		end
+	end
 		
 	3:					// Send command data
 	begin
