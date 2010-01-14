@@ -57,7 +57,7 @@ assign clk = fx2_clk;
 
 wire [3:0] pulse_seq_operate;
 assign led[1] = (pulse_seq_operate != 0);
-timetag b2v_inst(
+timetag tagger(
 	.fx2_clk(fx2_clk),
 	.cmd_wr(cmd_rdy),
 	.cmd_in(cmd),
