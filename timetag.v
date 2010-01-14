@@ -209,6 +209,8 @@ summator sample_counter(
 );
 
 assign reply_rdy = 0;
+assign reply[7:0] = 7'bZ;
+assign reply_end = 0;
 
 endmodule
 
