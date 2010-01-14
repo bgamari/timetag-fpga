@@ -47,12 +47,16 @@ wire	reply_ack;
 wire	reply_end;
 
 
-/*altpll0 b2v_inst2(
+//`define USE_PLL
+`ifdef USE_PLL
+altpll0 b2v_inst2(
 	//.inclk0(ext_clk),
 	.inclk0(fx2_clk),
 	.c0(clk)
-);*/
+);
+`else
 assign clk = fx2_clk;
+`endif
 
 wire [3:0] pulse_seq_operate;
 assign led[1] = (pulse_seq_operate != 0);
