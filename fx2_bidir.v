@@ -89,18 +89,18 @@ case(state)
 	4'b1001: 							// Idle state
 		if (fifo2_data_available) state <= 4'b0001; 		//   There is data to be recieved
 		else if (fifo6_ready_to_accept_data) state <= 4'b1011;	//   If fifo6 gets emptied, send more
-		else if (reply_rdy) state <= 4'b1110;
+		else if (reply_rdy && fifo8_ready_to_accept_data) state <= 4'b1110;
 	
-	// Transmit sample path
+	// Data transmit path
 	4'b1011:							// Listen/Transmit state
 		if (fifo2_data_available) state <= 4'b0001;		//   If PC is sending something, handle it first
 		else if (fifo6_full) state <=4'b1001;			//   fifo is full, go to idle
 		     
-	// Receive path:
+	// Command receive path:
 	4'b0001: state <= 4'b0011;					// Wait for turnaround to read from PC
 	4'b0011: if (fifo2_empty) state <= 4'b1001;			// Receive data
 
-	// Reply path:
+	// Command reply path:
 	4'b1110: if (reply_end) state <= 4'b1111;			// Transmit data
 	4'b1111: state <= 4'b1000; 					// Transmit end-of-packet
 	4'b1000:							// Wait for turnaround to transmit an end-of-packet
@@ -130,6 +130,8 @@ assign fifo_wr = can_xmit_sample || (state==4'b1110);
 assign fifo_dataout_oe = can_xmit_sample || (state==4'b1110);
 						
 assign fifo_pktend = (state==4'b1111);
+
+assign reply_ack = (state==4'b1110);
 
 endmodule
 
