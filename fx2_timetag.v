@@ -12,7 +12,7 @@ module fx2_timetag(
 	ext_clk,
 	laser_en,
 	detectors,
-	led,
+	led
 );
 
 input	fx2_clk;
