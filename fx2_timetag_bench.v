@@ -178,7 +178,7 @@ initial begin
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
 	#12  cmd=8'h02;
-	#12  cmd=8'h01;
+	#12  cmd=8'h11;
 	#12  cmd_wr=0; cmd_commit=1;
 	#12  cmd_commit=0;
 	@(cmd_sent);
@@ -190,7 +190,7 @@ initial begin
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
 	#12  cmd=8'h02;
-	#12  cmd=8'h02;
+	#12  cmd=8'hAA;
 	#12  cmd_wr=0; cmd_commit=1;
 	#12  cmd_commit=0;
 	@(cmd_sent);
