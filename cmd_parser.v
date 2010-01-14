@@ -75,7 +75,7 @@ case (state)
 	2:					// Wait until we have entire command in FIFO
 	begin
 		`ifdef CMD_TIMEOUT
-		recv_timeout <= recv_timeout - 1;
+		recv_timeout <= recv_timeout - 8'b1;
 		if (recv_timeout == 0)		//   We had to wait too long, give up on command
 			state <= 0;
 		`endif
@@ -91,7 +91,7 @@ case (state)
 	3:					// Send command data
 	begin
 		if (in_req)
-			to_send <= to_send - 1;
+			to_send <= to_send - 8'b1;
 		if (to_send == 0)		//   Done receiving command, move along
 			state <= 0;
 	end
