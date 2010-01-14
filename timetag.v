@@ -204,7 +204,7 @@ wire [15:0] length;
 summator sample_counter(
 	.clk(clk),
 	.increment(sample_rdy & ~samp_buf_full),
-	.readout_clr(0),
+	.readout_clr(1'b0),
 	.sum_out(length)
 );
 
