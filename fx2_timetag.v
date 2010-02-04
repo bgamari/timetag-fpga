@@ -10,8 +10,12 @@ module fx2_timetag(
 	fx2_fifoadr,
 
 	ext_clk,
-	laser_en,
-	detectors,
+`ifdef PULSE_SEQ
+	pulse_seq_out,
+`else
+	delta_in,
+`endif
+	strobe_in,
 	led
 );
 
@@ -26,8 +30,12 @@ inout	[7:0] fx2_fd;
 output	[1:0] fx2_fifoadr;
 
 input	ext_clk;
-input	[3:0] detectors;
-output	[3:0] laser_en;
+input	[3:0] strobe_in;
+`ifdef PULSE_SEQ
+output	[3:0] pulse_seq_out;
+`else
+input	[3:0] delta_in;
+`endif
 output	[1:0] led;
 
 wire    clk;
@@ -63,9 +71,11 @@ timetag tagger(
 	.cmd_in(cmd),
 
 	.clk(clk),
-	.detectors(detectors),
-	//.detectors({3'b0, detectors[0]}),
-	.laser_en(laser_en),
+	.strobe_in(strobe_in),
+	//.strobe_in({3'b0, strobe_in[0]}),
+`ifdef PULSE_SEQ
+	.pulse_seq_out(pulse_seq_out),
+`endif
 
 	.data_rdy(sample_rdy),
 	.data(sample),
@@ -102,7 +112,7 @@ fx2_bidir fx2_if(
 
 //`define DETECTORS_LED
 `ifdef DETECTORS_LED
-wire all_detectors = detectors[0] | detectors[1] | detectors[2] | detectors[3];
+wire all_detectors = strobe_in[0] | strobe_in[1] | strobe_in[2] | strobe_in[3];
 leddriver b2v_inst4(
 	.clk(fx2_clk),
 	.in(all_detectors),

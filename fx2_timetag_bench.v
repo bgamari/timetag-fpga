@@ -9,8 +9,12 @@ wire [2:0] flags;
 wire [1:0] fifoadr;
 wire sloe, slrd, slwr, pktend;
 
-reg [3:0] detectors;
-wire [3:0] laser_en;
+reg [3:0] detectors_in;
+`ifdef PULSE_SEQ
+wire [3:0] laser_out;
+`else
+wire [3:0] laser_in;
+`endif
 
 
 // External Clock
@@ -23,19 +27,19 @@ always #2 clk = ~clk;
 	initial begin
 		if ((4'b1111 & $random) == 4'b0)
 		begin
-			detectors[0] = 1'b1;
-			#10 detectors[0] = 1'b0;
+			detectors_in[0] = 1'b1;
+			#10 detectors_in[0] = 1'b0;
 		end
 	end
 `else
-	initial detectors = 4'b0000;
+	initial detectors_in = 4'b0000;
 	always begin
-		#100 detectors[0] = 1'b1;
-		#5  detectors[0] = 1'b0;
+		#100 detectors_in[0] = 1'b1;
+		#5  detectors_in[0] = 1'b0;
 	end
 	always begin
-		#80  detectors[1] = 1'b1;
-		#5  detectors[1] = 1'b0;
+		#80  detectors_in[1] = 1'b1;
+		#5  detectors_in[1] = 1'b0;
 	end
 `endif
 
@@ -71,8 +75,12 @@ fx2_timetag uut(
 	.fx2_fifoadr(fifoadr),
 
 	.ext_clk(clk),
-	.detectors(detectors),
-	.laser_en(laser_en)
+`ifdef PULSE_SEQ
+	.pulse_seq_out(laser_out),
+`else
+	.delta_in(laser_in),
+`endif
+	.strobe_in(detectors_in)
 );
 
 // This just prints the results in the ModelSim text window
@@ -92,6 +100,7 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
+`ifdef PULSE_SEQ
 	$display($time, "  Setting initial state high");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h05;
@@ -163,6 +172,9 @@ initial begin
 	#12  cmd_wr=0; cmd_commit=1;
 	#12  cmd_commit=0;
 	@(cmd_sent);
+`else
+	$display($time, "  PULSE_SEQ not defined. Skipping pulse sequencer tests.");
+`endif
 
 	#200 ;
 	$display($time, "  Starting detectors");
@@ -174,6 +186,7 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
+`ifdef PULSE_SEQ
 	#200 ;
 	$display($time, "  Starting pulse sequencers");
 	#12  cmd=8'hAA; cmd_wr=1;
@@ -183,10 +196,13 @@ initial begin
 	#12  cmd_wr=0; cmd_commit=1;
 	#12  cmd_commit=0;
 	@(cmd_sent);
+`endif
 
 	$display($time, "  Waiting for some data");
 
 	#10000 ;
+
+`ifdef PULSE_SEQ
 	$display($time, "  Stopping pulse sequencers");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
@@ -195,6 +211,7 @@ initial begin
 	#12  cmd_wr=0; cmd_commit=1;
 	#12  cmd_commit=0;
 	@(cmd_sent);
+`endif
 
 	#1000 ;
 	$display($time, "  Stopping detectors");

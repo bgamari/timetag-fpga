@@ -29,9 +29,12 @@ timetag uut(
 	.cmd_in(cmd_in),
 
 	.clk(clk),
-	.detectors(detectors),
-	.laser_en(laser_en),
-
+	.strobe_in(detectors),
+`ifdef PULSE_SEQ
+	.pulse_seq_out(laser_en),
+`else
+	// TODO): Implement delta channel test
+`endif
 	.data_rdy(data_rdy),
 	.data(data),
 	.data_ack(data_ack)
@@ -75,6 +78,7 @@ end
 initial begin
 	$display($time, "     Starting...");
 
+`ifdef PULSE_SEQ
 	$display($time, "  Setting initial count");
 	#100 ;
 	#12  cmd_in=8'hAA; cmd_wr=1;
@@ -110,6 +114,9 @@ initial begin
 	#12  cmd_in=8'h10;
 	#12  cmd_in=8'h08;
 	#12  cmd_wr=0;
+`else
+	$display($time, "  PULSE_SEQ not defined. Skipping pulse sequencer tests.");
+`endif
 
 	$display($time, "  Starting detectors");
 	#100 ;
@@ -119,6 +126,7 @@ initial begin
 	#12  cmd_in=8'h01;
 	#12  cmd_wr=0;
 
+`ifdef PULSE_SEQ
 	$display($time, "  Starting pulse sequencers");
 	#100 ;
 	#12  cmd_in=8'hAA; cmd_wr=1;
@@ -126,6 +134,7 @@ initial begin
 	#12  cmd_in=8'h02;
 	#12  cmd_in=8'h01;
 	#12  cmd_wr=0;
+`endif
 
 	data_ack = 1;
 end

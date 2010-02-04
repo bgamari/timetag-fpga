@@ -5,8 +5,12 @@ module timetag(
 	reply_rdy, reply, reply_ack, reply_end,
 
 	clk,
-	detectors,
-	laser_en,
+	strobe_in,
+`ifdef PULSE_SEQ
+	pulse_seq_out,
+`else
+	delta_in,
+`endif
 
 	pulse_seq_operate, capture_operate
 );
@@ -31,8 +35,13 @@ output	[7:0] data;
 input	data_ack;
 
 // Acquisition inputs
-input	[3:0] detectors;
-output	[3:0] laser_en;
+input	[3:0] strobe_in;
+`ifdef PULSE_SEQ
+output	[3:0] pulse_seq_out;
+`else
+input	[3:0] delta_in;
+`endif
+wire	[3:0] delta_in;
 
 // Status outputs
 output	[3:0] pulse_seq_operate;
@@ -91,8 +100,8 @@ wire	[47:0] sample;
 wire    sample_rdy;
 apdtimer_all apdtimer(
 	.clk(clk),
-	.detectors(detectors),
-	.pulseseq_outputs(laser_en),
+	.strobe_in(strobe_in),
+	.delta_in(delta_in),
 	.operate(capture_operate),
 	.reset_counter(timer_cmd[2]),
 
@@ -102,6 +111,7 @@ apdtimer_all apdtimer(
 
 `endif
 
+`ifdef PULSE_SEQ
 wire	[7:0] seqop_cmd;
 strobe_bits_controller pulse_seq_operate_controller(
 	.clk(clk),
@@ -110,6 +120,8 @@ strobe_bits_controller pulse_seq_operate_controller(
 	.data_ack(cmd_ack[1]),
 	.out(seqop_cmd)
 );
+
+assign delta_in[3:0] = pulse_seq_out[3:0];
 
 reg [3:0] pulse_seq_operate = 0;
 always @(posedge clk)
@@ -126,7 +138,7 @@ cntrl_pulse_sequencer pulseseq0(
 	.mask_bit(cmd_rdy[2]),
 	.cmd(cmd),
 	.cmd_ack(cmd_ack[2]),
-	.out(laser_en[0])
+	.out(pulse_seq_out[0])
 );
 cntrl_pulse_sequencer pulseseq1(
 	.clk(clk),
@@ -134,7 +146,7 @@ cntrl_pulse_sequencer pulseseq1(
 	.mask_bit(cmd_rdy[3]),
 	.cmd(cmd),
 	.cmd_ack(cmd_ack[3]),
-	.out(laser_en[1])
+	.out(pulse_seq_out[1])
 );
 cntrl_pulse_sequencer pulseseq2(
 	.clk(clk),
@@ -142,7 +154,7 @@ cntrl_pulse_sequencer pulseseq2(
 	.mask_bit(cmd_rdy[4]),
 	.cmd(cmd),
 	.cmd_ack(cmd_ack[4]),
-	.out(laser_en[2])
+	.out(pulse_seq_out[2])
 );
 cntrl_pulse_sequencer pulseseq3(
 	.clk(clk),
@@ -150,8 +162,9 @@ cntrl_pulse_sequencer pulseseq3(
 	.mask_bit(cmd_rdy[5]),
 	.cmd(cmd),
 	.cmd_ack(cmd_ack[5]),
-	.out(laser_en[3])
+	.out(pulse_seq_out[3])
 );
+`endif
 
 
 //////////////////////////////
