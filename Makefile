@@ -1,3 +1,5 @@
+V_FLAGS=-DPULSE_SEQ
+
 INCLUDES=-I/opt/altera9.0/modelsim_ase/altera/verilog/src
 
 LIB_FILES= \
@@ -17,11 +19,11 @@ all : timetag_bench fx2_timetag_bench test
 
 
 timetag_bench : ${TIMETAG_BENCH_FILES} ${LIB_FILES}
-	iverilog -o $@ ${INCLUDES} $+
+	iverilog ${V_FLAGS} -o $@ ${INCLUDES} $+
 
 fx2_timetag_bench : ${FX2_TIMETAG_BENCH_FILES} ${LIB_FILES}
-	iverilog -o $@ ${INCLUDES} $+
+	iverilog ${V_FLAGS} -o $@ ${INCLUDES} $+
 
 test : test.v cmd_fifo_bb.v
-	iverilog -o $@ ${INCLUDES} $+
+	iverilog ${V_FLAGS} -o $@ ${INCLUDES} $+
 
