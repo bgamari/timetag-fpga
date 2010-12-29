@@ -1,0 +1,38 @@
+timetag: An FPGA-based time-tagger implementation
+
+Hardware: KNJN Xylo EM
+
+This is an adaptation of the FPGA time-tagging platform written at NIST by
+Polyakov, Migdall, and Nam[1]. The code was cleaned up, modularized, and a
+command parser was added. See docs/protocol for protocol documentation.
+
+Data flow:
+      ┌─────────────────┐
+      │  apd_timer_all  │
+      └───────┬─────────┘
+              │
+              │
+              ↓
+      ┌─────────────────┐
+      │   sample_fifo   │     (~2000 samples)
+      └───────┬─────────┘
+              │
+              │
+              ↓
+    ┌──────────────────────┐
+    │  sample_multiplexer  │
+    └─────────┬────────────┘
+              │
+              │
+              ↓
+      ┌──────────────────┐
+      │    fx2_bidir     │
+      └───────┬──────────┘
+              │
+              │
+              ↓
+             FX2
+              │
+              │
+              ↓
+             HOST
