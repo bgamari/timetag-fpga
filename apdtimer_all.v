@@ -3,7 +3,6 @@ module apdtimer_all(
 	operate,
 	reset_counter,
 	strobe_in, delta_in,
-	pulseseq_outputs,
 
 	data_rdy,
 	data
@@ -14,7 +13,6 @@ input	operate;
 input	reset_counter;
 input	[3:0] strobe_in;
 input	[3:0] delta_in;
-input   [3:0] pulseseq_outputs;
 
 output	data_rdy;
 output	[46:0] data;

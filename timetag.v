@@ -6,13 +6,9 @@ module timetag(
 
 	clk,
 	strobe_in,
-`ifdef PULSE_SEQ
-	pulse_seq_out,
-`else
 	delta_in,
-`endif
 
-	pulse_seq_operate, capture_operate
+	capture_operate
 );
 
 // Clocks
@@ -36,15 +32,9 @@ input	data_ack;
 
 // Acquisition inputs
 input	[3:0] strobe_in;
-`ifdef PULSE_SEQ
-output	[3:0] pulse_seq_out;
-`else
 input	[3:0] delta_in;
-`endif
-wire	[3:0] delta_in;
 
 // Status outputs
-output	[3:0] pulse_seq_operate;
 output	capture_operate;
 
 // Internal command tracking signals
@@ -111,66 +101,9 @@ apdtimer_all apdtimer(
 
 `endif
 
-`ifdef PULSE_SEQ
-wire	[7:0] seqop_cmd;
-strobe_bits_controller pulse_seq_operate_controller(
-	.clk(clk),
-	.mask_bit(cmd_rdy[1]),
-	.data(cmd),
-	.data_ack(cmd_ack[1]),
-	.out(seqop_cmd)
-);
-
-assign delta_in[3:0] = pulse_seq_out[3:0];
-
-reg [3:0] pulse_seq_operate = 0;
-always @(posedge clk)
-begin
-	pulse_seq_operate[0] = (pulse_seq_operate[0] | seqop_cmd[0]) & ~seqop_cmd[1];
-	pulse_seq_operate[1] = (pulse_seq_operate[1] | seqop_cmd[2]) & ~seqop_cmd[3];
-	pulse_seq_operate[2] = (pulse_seq_operate[2] | seqop_cmd[4]) & ~seqop_cmd[5];
-	pulse_seq_operate[3] = (pulse_seq_operate[3] | seqop_cmd[6]) & ~seqop_cmd[7];
-end
-
-cntrl_pulse_sequencer pulseseq0(
-	.clk(clk),
-	.operate(pulse_seq_operate[0]),
-	.mask_bit(cmd_rdy[2]),
-	.cmd(cmd),
-	.cmd_ack(cmd_ack[2]),
-	.out(pulse_seq_out[0])
-);
-cntrl_pulse_sequencer pulseseq1(
-	.clk(clk),
-	.operate(pulse_seq_operate[1]),
-	.mask_bit(cmd_rdy[3]),
-	.cmd(cmd),
-	.cmd_ack(cmd_ack[3]),
-	.out(pulse_seq_out[1])
-);
-cntrl_pulse_sequencer pulseseq2(
-	.clk(clk),
-	.operate(pulse_seq_operate[2]),
-	.mask_bit(cmd_rdy[4]),
-	.cmd(cmd),
-	.cmd_ack(cmd_ack[4]),
-	.out(pulse_seq_out[2])
-);
-cntrl_pulse_sequencer pulseseq3(
-	.clk(clk),
-	.operate(pulse_seq_operate[3]),
-	.mask_bit(cmd_rdy[5]),
-	.cmd(cmd),
-	.cmd_ack(cmd_ack[5]),
-	.out(pulse_seq_out[3])
-);
-`endif
-
 
 //////////////////////////////
 // Sample FIFO
-
-
 wire samp_buf_full;
 wire samp_buf_rdnext;
 wire samp_buf_empty;

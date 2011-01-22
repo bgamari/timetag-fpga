@@ -10,11 +10,7 @@ wire [1:0] fifoadr;
 wire sloe, slrd, slwr, pktend;
 
 reg [3:0] detectors_in;
-`ifdef PULSE_SEQ
-wire [3:0] laser_out;
-`else
 wire [3:0] laser_in;
-`endif
 
 
 // External Clock
@@ -75,11 +71,7 @@ fx2_timetag uut(
 	.fx2_fifoadr(fifoadr),
 
 	.ext_clk(clk),
-`ifdef PULSE_SEQ
-	.pulse_seq_out(laser_out),
-`else
 	.delta_in(laser_in),
-`endif
 	.strobe_in(detectors_in)
 );
 
@@ -100,82 +92,6 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
-`ifdef PULSE_SEQ
-	$display($time, "  Setting initial state high");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h05;
-	#12  cmd=8'h04;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h01;
-	#12  cmd=8'h01;
-	// Test ability to reject trash
-	#12  cmd=8'hFF;
-	#12  cmd=8'hFF;
-	#12  cmd=8'hFF;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
-
-	$display($time, "  Setting initial state low");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h05;
-	#12  cmd=8'h04;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h01;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
-
-
-	$display($time, "  Setting initial count");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h05;
-	#12  cmd=8'h04;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h40;
-	#12  cmd=8'h02;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
-
-	#200 ;
-	$display($time, "  Setting low count");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h05;
-	#12  cmd=8'h04;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h20;
-	#12  cmd=8'h04;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
-
-	#200 ;
-	$display($time, "  Setting high count");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h05;
-	#12  cmd=8'h04;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h00;
-	#12  cmd=8'h10;
-	#12  cmd=8'h08;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
-`else
-	$display($time, "  PULSE_SEQ not defined. Skipping pulse sequencer tests.");
-`endif
-
 	#200 ;
 	$display($time, "  Starting detectors");
 	#12  cmd=8'hAA; cmd_wr=1;
@@ -186,34 +102,9 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
-`ifdef PULSE_SEQ
-	#200 ;
-	$display($time, "  Starting pulse sequencers");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h01;
-	#12  cmd=8'h02;
-	#12  cmd=8'h11;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
-`endif
-
 	$display($time, "  Waiting for some data");
 
 	#10000 ;
-
-`ifdef PULSE_SEQ
-	$display($time, "  Stopping pulse sequencers");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h01;
-	#12  cmd=8'h02;
-	#12  cmd=8'hAA;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
-`endif
-
-	#1000 ;
 	$display($time, "  Stopping detectors");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;

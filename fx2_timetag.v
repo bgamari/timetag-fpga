@@ -10,11 +10,7 @@ module fx2_timetag(
 	fx2_fifoadr,
 
 	ext_clk,
-`ifdef PULSE_SEQ
-	pulse_seq_out,
-`else
 	delta_in,
-`endif
 	strobe_in,
 	led
 );
@@ -31,11 +27,7 @@ output	[1:0] fx2_fifoadr;
 
 input	ext_clk;
 input	[3:0] strobe_in;
-`ifdef PULSE_SEQ
-output	[3:0] pulse_seq_out;
-`else
 input	[3:0] delta_in;
-`endif
 output	[1:0] led;
 
 wire    clk;
@@ -63,8 +55,6 @@ altpll0 b2v_inst2(
 assign clk = fx2_clk;
 `endif
 
-wire [3:0] pulse_seq_operate;
-assign led[1] = (pulse_seq_operate != 0);
 timetag tagger(
 	.fx2_clk(fx2_clk),
 	.cmd_wr(cmd_rdy),
@@ -73,16 +63,12 @@ timetag tagger(
 	.clk(clk),
 	.strobe_in(strobe_in),
 	//.strobe_in({3'b0, strobe_in[0]}),
-`ifdef PULSE_SEQ
-	.pulse_seq_out(pulse_seq_out),
-`endif
 
 	.data_rdy(sample_rdy),
 	.data(sample),
 	.data_ack(sample_ack),
 
-	.capture_operate(led[0]),
-	.pulse_seq_operate(pulse_seq_operate)
+	.capture_operate(led[0])
 );
 
 
