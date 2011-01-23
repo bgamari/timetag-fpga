@@ -32,40 +32,15 @@ Byte Bit       76543210 7654 3210 76543210 76543210 76543210 76543210
 
 
 
-command format:
-  byte 0	Magic number (0xAA)
-  byte 1	Data Length = N
-  byte 2	Unit mask
-  bytes 3:N	Data
+register write:
+  byte 0	Register address
+  byte 1	Register value
 
-
-timetag unit masks:
-  0x01: apd_timer
-    Byte 0:
-      0x1	Start detector
-      0x2  	Stop detector
-      0x4  	Reset counter
-  
-  0x02: pulse sequencer enable
-    Byte 0:
-      0x01	Start pulse sequencer 0
-      0x02  	Stop pulse sequencer 0
-      0x04	Start pulse sequencer 1
-      0x08  	Stop pulse sequencer 1
-      0x10	Start pulse sequencer 2
-      0x20  	Stop pulse sequencer 2
-      0x40	Start pulse sequencer 3
-      0x80  	Stop pulse sequencer 3
-  
-  0x04	pulse sequencer 0 configure
-  0x08	pulse sequencer 1 configure
-  0x10	pulse sequencer 2 configure
-  0x20	pulse_sequencer 3 configure
-    Bytes 0:3   Value
-    Byte 4	Configuration option
-      0x1	Initial state
-      0x2	Initial count
-      0x4	High count
-      0x8	Low count
-  
+registers:
+0x01:
+  bit		description
+  0		capture_operate: Disable registration of input events
+  1		counter_operate: Start/stop timestamp counter
+  2		reset_counter: Reset counter to 0; counter will remain at 0
+		until this bit is manually cleared
 

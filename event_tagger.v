@@ -8,7 +8,7 @@ module event_tagger(
 	delta_channels,
 	clk,
 	reset_counter,
-	operate,
+	capture_operate, counter_operate,
 	data,
 	ready
 );
@@ -18,7 +18,8 @@ input [3:0] delta_channels;
 
 input clk;
 input reset_counter;
-input operate;
+input capture_operate;
+input counter_operate;
 
 output ready; 
 output [46:0] data;
@@ -37,7 +38,7 @@ begin
 		data[39:36] <= delta_channels;
 		data[45] <= 1;					// record type
 		data[46] <= (timer==1'b0) ? 1'b1 : 1'b0;	// wraparound
-		ready <= operate;
+		ready <= capture_operate;
 		old_delta <= delta_channels;
 	end
 	else if (strobe_channels != 4'b0 || (timer == 36'b0))
@@ -47,14 +48,14 @@ begin
 		data[39:36] <= strobe_channels;
 		data[45] <= 0;					// record type
 		data[46] <= (timer==36'b0) ? 1'b1 : 1'b0;	// wraparound
-		ready <= operate;
+		ready <= capture_operate;
 	end
 	else
 	begin
 		ready <= 0;
 		data <= 47'bX;
 	end	
-	timer <= reset_counter ? 36'b0 : timer + 1;
+	timer <= reset_counter ? 36'b0 : timer + counter_operate;
 end
 
 endmodule

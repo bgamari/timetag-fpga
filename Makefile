@@ -4,21 +4,24 @@ ALTERA_ROOT=/home/bgamari
 INCLUDES=-I${ALTERA_ROOT}/altera/verilog/src
 
 LIB_FILES= \
-	  event_tagger.v apdtimer_all.v clicklatch.v cmd_fifo.v cmd_parser.v \
-	  sample_fifo.v sample_multiplexer.v strobe_bits_controller.v \
-	  summator.v timetag.v fx2_timetag.v fx2_bidir.v leddriver.v \
+	  event_tagger.v apdtimer_all.v clicklatch.v \
+	  reg_manager.v register.v \
+	  sample_fifo.v sample_multiplexer.v \
+	  summator.v timetag.v fx2_timetag.v fx2_bidir.v \
 	  ${ALTERA_ROOT}/altera/verilog/src/altera_mf.v
 
 TIMETAG_BENCH_FILES=timetag_bench.v
 
 FX2_TIMETAG_BENCH_FILES=fx2_fixture.v fx2_model.v fx2_timetag_bench.v
 
-
-all : timetag_bench fx2_timetag_bench
-
+PROGS=timetag_bench fx2_timetag_bench
+all : ${PROGS}
+clean :
+	rm -f ${PROGS}
 
 timetag_bench : ${TIMETAG_BENCH_FILES} ${LIB_FILES}
 	iverilog ${V_FLAGS} -o $@ ${INCLUDES} $+
 
 fx2_timetag_bench : ${FX2_TIMETAG_BENCH_FILES} ${LIB_FILES}
 	iverilog ${V_FLAGS} -o $@ ${INCLUDES} $+
+

@@ -37,30 +37,16 @@ input	[3:0] delta_in;
 // Status outputs
 output	capture_operate;
 
-// Internal command tracking signals
-wire	[7:0] cmd_rdy;
-wire	[7:0] cmd;
-wire	[7:0] cmd_ack;
-assign cmd_ack[7:6] = 0;
-
-cmd_parser cmd_parser(
+// Registers
+wire	[7:0] reg_addr;
+wire	[7:0] reg_data;
+reg_manager reg_mgr(
 	.fx2_clk(fx2_clk),
 	.clk(clk),
 	.cmd_wr(cmd_wr),
 	.cmd_in(cmd_in),
-
-	.cmd_mask(cmd_rdy),
-	.data(cmd),
-	.data_ack(cmd_ack != 0)
-);
-
-wire	[7:0] timer_cmd;
-strobe_bits_controller apdtimer_controller(
-	.clk(clk),
-	.mask_bit(cmd_rdy[0]),
-	.data(cmd),
-	.data_ack(cmd_ack[0]),
-	.out(timer_cmd)
+	.data_out(reg_data),
+	.addr_out(reg_addr)
 );
 
 //`define TEST_OUTPUT
@@ -82,19 +68,12 @@ assign sample[46:0] = 47'hfeeddeadbeef;
 
 `else
 
-reg capture_operate = 0;
-always @(posedge clk)
-	capture_operate = (capture_operate | timer_cmd[0]) & ~timer_cmd[1];
-
 wire	[47:0] sample;
 wire    sample_rdy;
 apdtimer_all apdtimer(
 	.clk(clk),
 	.strobe_in(strobe_in),
 	.delta_in(delta_in),
-	.operate(capture_operate),
-	.reset_counter(timer_cmd[2]),
-
 	.data_rdy(sample_rdy),
 	.data(sample[46:0])
 );
