@@ -42,31 +42,36 @@ output	capture_operate;
 // Register framework
 wire	[7:0] reg_addr;
 wire	[7:0] reg_data;
-wire    reg_wr;
+wire	reg_wr;
 reg_manager reg_mgr(
 	.fx2_clk(fx2_clk),
-	.clk(clk),
 	.cmd_wr(cmd_wr),
 	.cmd_in(cmd_in),
+	.reply_out(reply),
+	.reply_rdy(reply_rdy),
+	.reply_ack(reply_ack),
+	.reply_end(reply_end),
+
+	.clk(clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
-        .reg_wr(reg_wr)
+	.reg_wr(reg_wr)
 );
 
 readonly_register #(.ADDR(8'h01)) version_reg(
-        .clk(clk),
-        .reg_addr(reg_addr),
-        .reg_data(reg_data),
-        .reg_wr(reg_wr),
-        .value(`HWVERSION)
+	.clk(clk),
+	.reg_addr(reg_addr),
+	.reg_data(reg_data),
+	.reg_wr(reg_wr),
+	.value(`HWVERSION)
 );
 
 readonly_register #(.ADDR(8'h02)) clock_reg(
-        .clk(clk),
-        .reg_addr(reg_addr),
-        .reg_data(reg_data),
-        .reg_wr(reg_wr),
-        .value(`CLOCKRATE)
+	.clk(clk),
+	.reg_addr(reg_addr),
+	.reg_data(reg_data),
+	.reg_wr(reg_wr),
+	.value(`CLOCKRATE)
 );
 
 //`define TEST_OUTPUT
@@ -89,16 +94,17 @@ assign sample[46:0] = 47'hfeeddeadbeef;
 `else
 
 wire	[47:0] sample;
-wire    sample_rdy;
+wire	sample_rdy;
 apdtimer_all apdtimer(
 	.clk(clk),
 	.strobe_in(strobe_in),
 	.delta_in(delta_in),
 	.data_rdy(sample_rdy),
 	.data(sample[46:0]),
-        .reg_addr(reg_addr),
-        .reg_data(reg_data),
-        .reg_wr(reg_wr)
+	.reg_addr(reg_addr),
+	.reg_data(reg_data),
+	.reg_wr(reg_wr),
+	.operate()
 );
 
 `endif

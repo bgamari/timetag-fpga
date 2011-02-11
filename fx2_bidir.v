@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 // Fast Multisource Pulse Registration System
 // Module:
 // Flexible, 3-fifo multidirectional FX2 USB-2 interface

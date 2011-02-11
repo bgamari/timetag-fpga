@@ -1,6 +1,5 @@
 V_FLAGS=
-ALTERA_ROOT=/home/bgamari
-#ALTERA_ROOT=/opt/altera9.0/modelsim_ase
+ALTERA_ROOT=/opt/altera/10.1sp1/modelsim_ase
 INCLUDES=-I${ALTERA_ROOT}/altera/verilog/src
 
 LIB_FILES= \

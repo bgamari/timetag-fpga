@@ -30,7 +30,7 @@ input	[3:0] strobe_in;
 input	[3:0] delta_in;
 output	[1:0] led;
 
-wire    clk;
+wire	clk;
 wire	cmd_rdy;
 wire	[7:0] cmd;
 
@@ -57,16 +57,21 @@ assign clk = fx2_clk;
 
 timetag tagger(
 	.fx2_clk(fx2_clk),
-	.cmd_wr(cmd_rdy),
-	.cmd_in(cmd),
-
-	.clk(clk),
-	.strobe_in(strobe_in),
-	//.strobe_in({3'b0, strobe_in[0]}),
-
 	.data_rdy(sample_rdy),
 	.data(sample),
 	.data_ack(sample_ack),
+
+	.cmd_wr(cmd_rdy),
+	.cmd_in(cmd),
+
+	.reply_rdy(reply_rdy),
+	.reply(reply),
+	.reply_ack(reply_ack),
+	.reply_end(reply_end),
+
+	.clk(clk),
+	.strobe_in(strobe_in),
+	.delta_in(delta_in),
 
 	.capture_operate(led[0])
 );

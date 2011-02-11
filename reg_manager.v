@@ -5,7 +5,7 @@
 
 module reg_manager(
 	fx2_clk,
-	cmd_in, cmd_wr,
+	cmd_wr, cmd_in,
         reply_out, reply_rdy, reply_ack, reply_end,
 	
         clk,
@@ -14,9 +14,9 @@ module reg_manager(
 
 // fx2bidir interface
 input   fx2_clk;
-input 	[7:0] cmd_in;
 input	cmd_wr;
-output  reply_out;
+input 	[7:0] cmd_in;
+output  [7:0] reply_out;
 output  reply_rdy;
 input   reply_ack;
 output  reply_end;

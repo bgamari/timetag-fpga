@@ -66,13 +66,15 @@ fx2_timetag uut(
 	.fx2_slwr(slwr),
 	.fx2_slrd(slrd),
 	.fx2_sloe(sloe),
+	.fx2_wu2(),
 	.fx2_pktend(pktend),
 	.fx2_fd(fd),
 	.fx2_fifoadr(fifoadr),
 
 	.ext_clk(clk),
 	.delta_in(laser_in),
-	.strobe_in(detectors_in)
+	.strobe_in(detectors_in),
+	.led()
 );
 
 // This just prints the results in the ModelSim text window
