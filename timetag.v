@@ -39,7 +39,7 @@ input	[3:0] delta_in;
 // Status outputs
 output	capture_operate;
 
-// Registers
+// Register framework
 wire	[7:0] reg_addr;
 wire	[7:0] reg_data;
 wire    reg_wr;
@@ -53,7 +53,7 @@ reg_manager reg_mgr(
         .reg_wr(reg_wr)
 );
 
-readonly_register version_reg(
+readonly_register #(.ADDR(8'h01)) version_reg(
         .clk(clk),
         .reg_addr(reg_addr),
         .reg_data(reg_data),
@@ -61,7 +61,7 @@ readonly_register version_reg(
         .value(`HWVERSION)
 );
 
-readonly_register clock_reg(
+readonly_register #(.ADDR(8'h02)) clock_reg(
         .clk(clk),
         .reg_addr(reg_addr),
         .reg_data(reg_data),

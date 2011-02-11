@@ -20,7 +20,7 @@ output	[46:0] data;
 wire	[3:0] ch;
 
 wire	[7:0] timer_reg;
-register #(.ADDR(1)) apdtimer_reg(
+register #(.ADDR(8'h03)) apdtimer_reg(
 	.clk(clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),

@@ -1,5 +1,5 @@
-
 data format:
+=============
 
 Record Bit  48       40        32       24       16        8        0
 Byte Bit       76543210 7654 3210 76543210 76543210 76543210 76543210
@@ -31,13 +31,28 @@ Byte Bit       76543210 7654 3210 76543210 76543210 76543210 76543210
   bit  47	sample lost
 
 
+registers:
+===========
+
+The device is controlled using a simple 8-bit register interface.
+
+register read:
+  byte 0        0x00
+  byte 1	Register address
 
 register write:
-  byte 0	Register address
-  byte 1	Register value
+  byte 0        0x01
+  byte 1	Register address
+  byte 2	Register value
 
 registers:
-0x01:
+addr  description
+----  -----------
+0x01: Version register (RO)
+      Gives the hardware version number
+0x02: Clockrate register (RO)
+      Gives the clockrate in MHz
+0x03: Capture control (RW)
   bit		description
   0		capture_operate: Disable registration of input events
   1		counter_operate: Start/stop timestamp counter
