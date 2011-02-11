@@ -1,7 +1,7 @@
 module apdtimer_all(
 	clk,
 	strobe_in, delta_in,
-	reg_addr, reg_data,
+	reg_addr, reg_data, reg_wr,
 	operate,
 	data_rdy, data
 );
@@ -10,7 +10,8 @@ input	clk;
 input	[3:0] strobe_in;
 input	[3:0] delta_in;
 input	[7:0] reg_addr;
-input	[7:0] reg_data;
+inout	[7:0] reg_data;
+input   reg_wr;
 
 output	operate;
 output	data_rdy;
@@ -21,8 +22,9 @@ wire	[3:0] ch;
 wire	[7:0] timer_reg;
 register #(.ADDR(1)) apdtimer_reg(
 	.clk(clk),
-	.addr(reg_addr),
-	.data(reg_data),
+	.reg_addr(reg_addr),
+	.reg_data(reg_data),
+	.reg_wr(reg_wr),
 	.value(timer_reg)
 );
 

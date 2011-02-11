@@ -22,8 +22,6 @@ timetag
 Tests:
 =======
 
-
-
 fx2_timetag_bench
         fx2_test_fixture (fx2_fixture.v)
                 out_fifo, in_fifo (fx2_model.v)

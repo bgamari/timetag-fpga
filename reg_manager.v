@@ -4,50 +4,79 @@
 // (c) Ben Gamari (2010)
 
 module reg_manager(
-	fx2_clk, clk,
+	fx2_clk,
 	cmd_in, cmd_wr,
+        reply_out, reply_rdy, reply_ack, reply_end,
 	
-	addr_out, data_out
+        clk,
+	reg_addr, reg_data, reg_wr
 );
 
-input fx2_clk;
-input clk;
+// fx2bidir interface
+input   fx2_clk;
 input 	[7:0] cmd_in;
 input	cmd_wr;
+output  reply_out;
+output  reply_rdy;
+input   reply_ack;
+output  reply_end;
 
-output 	[7:0] addr_out;
-output 	[7:0] data_out;
+// Internal interface
+input   clk;
+output	[7:0] reg_addr;
+inout  	[7:0] reg_data;
+output  reg_wr;
 
-reg	[1:0] state;
-reg	[7:0] data;
 reg	[7:0] addr;
-
+reg	[7:0] data;
+reg	[2:0] state;
+reg     wants_wr;
 initial state = 0;
+
 always @(posedge clk)
 case (state)
-	0:					// Get address
+        0:                                      // Read message type
+                if (cmd_wr)
+                begin
+                        wants_wr <= cmd_in[0];
+                        state <= 1;
+                end
+
+	1:					// Read address
 		if (cmd_wr)
 		begin
 			addr <= cmd_in;
-			state <= 1;
-		end
-		
-	1:					// Get data
-		if (cmd_wr)
-		begin
-			data <= cmd_in;
 			state <= 2;
 		end
 		
-	2:					// Send to rest of device
-		state <= 0;
+	2:					// Read data
+		if (cmd_wr)
+		begin
+			data <= cmd_in;
+			state <= 3;
+		end
+		
+	3:					// Do write (if needed)
+                state <= 4;
 
+        4:                                      // Send reply
+                if (reply_ack)                  // Wait until fx2bidir acks
+                        state <= 5;
+
+        5:                                      // End reply packet
+                state <= 0;
+        
 	default:
 		state <= 0;
 endcase
 
-assign addr_out = (state == 2) ? addr : 8'hXX;
-assign data_out = (state == 2) ? data : 8'hXX;
+assign reg_addr = (state == 3 || state == 4) ? reg_addr : 8'hXX;
+assign reg_data = (state == 3 || state == 4) ? reg_data : 8'hZZ;
+assign reg_wr = (state == 3) && wants_wr;
+
+assign reply_out = (state == 4) ? data : 8'hXX;
+assign reply_rdy = state == 4;
+assign reply_end = state == 5;
 
 endmodule
 

@@ -1,3 +1,5 @@
+`include "config.v"
+
 module timetag(
 	fx2_clk,
 	data_rdy, data, data_ack,
@@ -40,13 +42,31 @@ output	capture_operate;
 // Registers
 wire	[7:0] reg_addr;
 wire	[7:0] reg_data;
+wire    reg_wr;
 reg_manager reg_mgr(
 	.fx2_clk(fx2_clk),
 	.clk(clk),
 	.cmd_wr(cmd_wr),
 	.cmd_in(cmd_in),
-	.data_out(reg_data),
-	.addr_out(reg_addr)
+	.reg_addr(reg_addr),
+	.reg_data(reg_data),
+        .reg_wr(reg_wr)
+);
+
+readonly_register version_reg(
+        .clk(clk),
+        .reg_addr(reg_addr),
+        .reg_data(reg_data),
+        .reg_wr(reg_wr),
+        .value(`HWVERSION)
+);
+
+readonly_register clock_reg(
+        .clk(clk),
+        .reg_addr(reg_addr),
+        .reg_data(reg_data),
+        .reg_wr(reg_wr),
+        .value(`CLOCKRATE)
 );
 
 //`define TEST_OUTPUT
@@ -75,13 +95,15 @@ apdtimer_all apdtimer(
 	.strobe_in(strobe_in),
 	.delta_in(delta_in),
 	.data_rdy(sample_rdy),
-	.data(sample[46:0])
+	.data(sample[46:0]),
+        .reg_addr(reg_addr),
+        .reg_data(reg_data),
+        .reg_wr(reg_wr)
 );
 
 `endif
 
 
-//////////////////////////////
 // Sample FIFO
 wire samp_buf_full;
 wire samp_buf_rdnext;
@@ -124,18 +146,6 @@ sample_multiplexer multiplexer(
 	.data(data),
 	.data_ack(data_ack)
 );
-
-wire [15:0] length;
-summator sample_counter(
-	.clk(clk),
-	.increment(sample_rdy & ~samp_buf_full),
-	.readout_clr(1'b0),
-	.sum_out(length)
-);
-
-assign reply_rdy = 0;
-assign reply[7:0] = 7'bZ;
-assign reply_end = 0;
 
 endmodule
 
