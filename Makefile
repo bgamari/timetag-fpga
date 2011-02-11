@@ -12,7 +12,7 @@ LIB_FILES= \
 
 TIMETAG_BENCH_FILES=timetag_bench.v
 
-FX2_TIMETAG_BENCH_FILES=fx2_fixture.v fx2_model.v fx2_timetag_bench.v
+FX2_TIMETAG_BENCH_FILES=fx2_test_fixture.v fx2_timetag_bench.v
 
 PROGS=timetag_bench fx2_timetag_bench
 all : ${PROGS}

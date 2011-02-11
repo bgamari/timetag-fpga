@@ -1,0 +1,31 @@
+Root instance for actual hardware
+==================================
+fx2_timetag
+        timetag
+        fx2_bidir
+
+
+Core timetagging functionality:
+================================
+
+timetag
+        reg_manager
+        apdtimer_all
+                register
+                event_tagger
+                clicklatch
+        sample_fifo 
+        sample_multiplexer
+        summator
+
+
+Tests:
+=======
+
+
+
+fx2_timetag_bench
+        fx2_test_fixture (fx2_fixture.v)
+                out_fifo, in_fifo (fx2_model.v)
+        fx2_timetag
+
