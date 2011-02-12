@@ -8,9 +8,7 @@ module timetag(
 
 	clk,
 	strobe_in,
-	delta_in,
-
-	capture_operate
+	delta_in
 );
 
 // Clocks
@@ -36,15 +34,12 @@ input	data_ack;
 input	[3:0] strobe_in;
 input	[3:0] delta_in;
 
-// Status outputs
-output	capture_operate;
-
 // Register framework
 wire	[7:0] reg_addr;
 wire	[7:0] reg_data;
 wire	reg_wr;
 reg_manager reg_mgr(
-	.fx2_clk(fx2_clk),
+	.clk(fx2_clk),
 	.cmd_wr(cmd_wr),
 	.cmd_in(cmd_in),
 	.reply_out(reply),
@@ -52,14 +47,13 @@ reg_manager reg_mgr(
 	.reply_ack(reply_ack),
 	.reply_end(reply_end),
 
-	.clk(clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr)
 );
 
 readonly_register #(.ADDR(8'h01)) version_reg(
-	.clk(clk),
+	.clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
@@ -67,7 +61,7 @@ readonly_register #(.ADDR(8'h01)) version_reg(
 );
 
 readonly_register #(.ADDR(8'h02)) clock_reg(
-	.clk(clk),
+	.clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
@@ -101,6 +95,7 @@ apdtimer_all apdtimer(
 	.delta_in(delta_in),
 	.record_rdy(record_rdy),
 	.record(record[46:0]),
+	.reg_clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr)
@@ -144,7 +139,7 @@ sample_multiplexer mux(
 	.clk(fx2_clk),
 	.sample_rdy(~rec_buf_empty),
 	.sample(rec_buf_out),
-	.sample_ack(rec_buf_rdnext),
+	.sample_req(rec_buf_rdnext),
 
 	.data_rdy(data_rdy),
 	.data(data),

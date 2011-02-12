@@ -96,7 +96,7 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
-	#20 ;
+	#50 ;
 	$display($time, "  Testing version register");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h00;
@@ -106,7 +106,7 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
-	#20 ;
+	#50 ;
 	$display($time, "  Testing clockrate register");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h00;
@@ -116,7 +116,7 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
-	#20 ;
+	#50 ;
 	$display($time, "  Resetting counter");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
@@ -126,7 +126,7 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
-	#20 ;
+	#50 ;
 	$display($time, "  Enabling strobe channels");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
@@ -136,7 +136,7 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
-	#20 ;
+	#50 ;
 	$display($time, "  Starting capture");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
@@ -148,12 +148,12 @@ initial begin
 
 	$display($time, "  Waiting for some data");
 
-	#10000 ;
+	#4000 ;
 	$display($time, "  Stopping capture");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
-	#12  cmd=8'h01;
-	#12  cmd=8'h02;
+	#12  cmd=8'h03;
+	#12  cmd=8'h02; // Leave counter on
 	#12  cmd_wr=0; cmd_commit=1;
 	#12  cmd_commit=0;
 	@(cmd_sent);

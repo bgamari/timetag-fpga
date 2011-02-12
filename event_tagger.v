@@ -36,6 +36,7 @@ begin
 	begin
 		data[35:0] <= timer[35:0];
 		data[39:36] <= delta_channels;
+		data[44:40] <= 0;				// reserved
 		data[45] <= 1;					// record type
 		data[46] <= (timer==1'b0) ? 1'b1 : 1'b0;	// wraparound
 		ready <= capture_operate;
@@ -45,6 +46,7 @@ begin
 	begin
 		data[35:0] <= timer[35:0];
 		data[39:36] <= strobe_channels;
+		data[44:40] <= 0;				// reserved
 		data[45] <= 0;					// record type
 		data[46] <= (timer==36'b0) ? 1'b1 : 1'b0;	// wraparound
 		ready <= capture_operate;

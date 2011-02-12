@@ -1,13 +1,13 @@
 module sample_multiplexer(
 	clk,
-	sample, sample_rdy, sample_ack,
+	sample, sample_rdy, sample_req,
 	data, data_rdy, data_ack
 );
 
 input clk;
 input [47:0] sample;
 input sample_rdy;
-output sample_ack;
+output sample_req;
 
 input data_ack;
 output [7:0] data;
@@ -18,28 +18,28 @@ wire [7:0] data;
 reg [1:0] state;
 reg [2:0] byte_idx;
 
-initial state = 2'b00;
+initial state = 0;
 
 always @(posedge clk)
 case (state)
-	2'b00:				// Wait for sample to become available
+	0:				// Wait for sample to become available
 		if (sample_rdy)
 		begin
-			state <= 2'b01;
-			byte_idx <= 3'b000;
+			state <= 1;
+			byte_idx <= 0;
 		end
 
-	2'b01:				// Send bytes
+	1:				// Request a record from the fifo
+		state <= 2;
+		
+	2:				// Send bytes
 		if (data_ack)
 		begin
 			if (byte_idx == 3'd5)
-				state <= 2'b10;
+				state <= 0;
 			else
-				byte_idx <= byte_idx + 3'b1;
+				byte_idx <= byte_idx + 3'd1;
 		end
-
-	2'b10:				// Acknowledge sample
-		state <= 2'b00;
 endcase
 
 assign data[7:0] = 
@@ -51,8 +51,8 @@ assign data[7:0] =
 	(byte_idx == 3'd5) ? sample[7:0] :
 	8'b0;
 
-assign sample_ack = (state == 2'b10);
-assign data_rdy = (state == 2'b01);
+assign data_rdy = (state == 2);
+assign sample_req = (state == 1);
 
 endmodule
 

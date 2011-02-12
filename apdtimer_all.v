@@ -1,16 +1,18 @@
 module apdtimer_all(
 	clk,
 	strobe_in, delta_in,
-	reg_addr, reg_data, reg_wr,
+	reg_clk, reg_addr, reg_data, reg_wr,
 	record_rdy, record
 );
 
 input	clk;
 input	[3:0] strobe_in;
 input	[3:0] delta_in;
+
+input	reg_clk;
 input	[7:0] reg_addr;
 inout	[7:0] reg_data;
-input   reg_wr;
+input	reg_wr;
 
 output	record_rdy;
 output	[46:0] record;
@@ -19,7 +21,7 @@ wire	[3:0] strobe_chans;
 
 wire	[7:0] timer_reg;
 register #(.ADDR(8'h03)) apdtimer_reg(
-	.clk(clk),
+	.clk(reg_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
@@ -31,7 +33,7 @@ wire	reset_counter = timer_reg[2];
 
 wire [7:0] strobe_operate;
 register #(.ADDR(8'h04)) strobe_operate_reg(
-	.clk(clk),
+	.clk(reg_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
@@ -40,7 +42,7 @@ register #(.ADDR(8'h04)) strobe_operate_reg(
 
 wire [7:0] delta_operate;
 register #(.ADDR(8'h05)) delta_operate_reg(
-	.clk(clk),
+	.clk(reg_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),

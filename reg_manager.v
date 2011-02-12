@@ -4,47 +4,45 @@
 // (c) Ben Gamari (2010)
 
 module reg_manager(
-	fx2_clk,
+	clk,
 	cmd_wr, cmd_in,
-        reply_out, reply_rdy, reply_ack, reply_end,
+	reply_out, reply_rdy, reply_ack, reply_end,
 	
-        clk,
 	reg_addr, reg_data, reg_wr
 );
 
 // fx2bidir interface
-input   fx2_clk;
+input	clk;
 input	cmd_wr;
-input 	[7:0] cmd_in;
-output  [7:0] reply_out;
-output  reply_rdy;
-input   reply_ack;
-output  reply_end;
+input	[7:0] cmd_in;
+output	[7:0] reply_out;
+output	reply_rdy;
+input	reply_ack;
+output	reply_end;
 
 // Internal interface
-input   clk;
 output	[7:0] reg_addr;
-inout  	[7:0] reg_data;
-output  reg_wr;
+inout	[7:0] reg_data;
+output	reg_wr;
 
 reg	[7:0] addr;
 reg	[7:0] data;
 reg	[2:0] state;
-reg     wants_wr;
+reg	wants_wr;
 initial state = 0;
 
 always @(posedge clk)
 case (state)
-        0:                                      // Read magic number
-                if (cmd_in == 8'hAA)
-                        state <= 1;
+	0:					// Read magic number
+		if (cmd_in == 8'hAA)
+			state <= 1;
 
-        1:                                      // Read message type
-                if (cmd_wr)
-                begin
-                        wants_wr <= cmd_in[0];
-                        state <= 2;
-                end
+	1:					// Read message type
+		if (cmd_wr)
+		begin
+			wants_wr <= cmd_in[0];
+			state <= 2;
+		end
 
 	2:					// Read address
 		if (cmd_wr)
@@ -61,15 +59,15 @@ case (state)
 		end
 		
 	4:					// Write new value (if needed)
-                state <= 5;
+		state <= 5;
 
-        5:                                      // Reply with register value
-                if (reply_ack)                  // Wait until fx2bidir acks
-                        state <= 6;
+	5:					// Reply with register value
+		if (reply_ack)			// Wait until fx2bidir acks
+			state <= 6;
 
-        6:                                      // End reply packet
-                state <= 0;
-        
+	6:					// End reply packet
+		state <= 0;
+	
 	default:
 		state <= 0;
 endcase

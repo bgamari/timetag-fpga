@@ -29,6 +29,7 @@ input	ext_clk;
 input	[3:0] strobe_in;
 input	[3:0] delta_in;
 output	[1:0] led;
+assign led = 0;
 
 wire	clk;
 wire	cmd_rdy;
@@ -44,11 +45,11 @@ wire	reply_ack;
 wire	reply_end;
 
 
-//`define USE_PLL
+`define USE_PLL
 `ifdef USE_PLL
 altpll0 b2v_inst2(
-	//.inclk0(ext_clk),
-	.inclk0(fx2_clk),
+	.inclk0(ext_clk),
+	//.inclk0(fx2_clk),
 	.c0(clk)
 );
 `else
@@ -71,9 +72,7 @@ timetag tagger(
 
 	.clk(clk),
 	.strobe_in(strobe_in),
-	.delta_in(delta_in),
-
-	.capture_operate(led[0])
+	.delta_in(delta_in)
 );
 
 

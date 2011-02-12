@@ -49,20 +49,24 @@ register write:
   byte 2	Register address
   byte 3	Register value
 
-registers:
+register descriptions:
 addr  description
 ----  -----------
 0x01: Version register (RO)
       Gives the hardware version number
+
 0x02: Clockrate register (RO)
       Gives the clockrate in MHz
+
 0x03: Capture control (RW)
   bit		description
   0		capture_operate: Enable registration of input events
   1		counter_operate: Start/stop timestamp counter
   2		reset_counter: Reset counter to 0; counter will remain at 0
 		until this bit is manually cleared
+
 0x04: Strobe channel control (RW)
       Each bit enables/disables the corresponding strobe channel
+
 0x05: Delta channel control (RW)
       Each bit enables/disables the corresponding delta channel

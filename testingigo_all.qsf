@@ -45,51 +45,17 @@ set_global_assignment -name LAST_QUARTUS_VERSION 10.1
 set_global_assignment -name MISC_FILE "C:/Users/Carla/Desktop/tagger/timetag/firmware/testingigo_all.dpf"
 set_global_assignment -name MISC_FILE "C:/Documents and Settings/Ben/Desktop/timetag/firmware/testingigo_all.dpf"
 set_global_assignment -name MISC_FILE "C:/Documents and Settings/Ben/Desktop/clean-timetag/testingigo_all.dpf"
-set_global_assignment -name VERILOG_FILE fx2_bidir.v
-set_global_assignment -name VERILOG_FILE fx2_test_fixture.v
-set_global_assignment -name VERILOG_FILE reg_manager.v
-set_global_assignment -name VERILOG_FILE register.v
-set_global_assignment -name VERILOG_FILE event_tagger.v
-set_global_assignment -name VERILOG_FILE fx2_timetag_bench.v
-set_global_assignment -name VERILOG_FILE fx2_timetag.v
-set_global_assignment -name SDC_FILE testingigo_all.sdc
-set_global_assignment -name VERILOG_FILE timetag.v
-set_global_assignment -name VERILOG_FILE timetag_bench.v
-set_global_assignment -name VERILOG_FILE runonce.v
-set_global_assignment -name VERILOG_FILE clicklatch.v
-set_global_assignment -name VERILOG_FILE sample_multiplexer.v
-set_global_assignment -name VERILOG_FILE strobe_bits_controller.v
-set_global_assignment -name VERILOG_FILE altpll0.v
-set_global_assignment -name VERILOG_FILE apdtimer_all.v
-set_global_assignment -name VERILOG_FILE leddriver.v
-set_global_assignment -name VERILOG_FILE fx2_bidir_test.v
-set_global_assignment -name VERILOG_FILE fx2_test.v
-set_global_assignment -name QIP_FILE sample_fifo.qip
-set_global_assignment -name VECTOR_WAVEFORM_FILE testingigo_all.vwf
-set_global_assignment -name QIP_FILE altpll0.qip
 
 # Pin & Location Assignments
 # ==========================
-set_location_assignment PIN_79 -to debug[0] -disable
-set_location_assignment PIN_92 -to debug[1] -disable
 set_location_assignment PIN_22 -to fx2_flags[2]
 set_location_assignment PIN_21 -to fx2_flags[1]
 set_location_assignment PIN_18 -to fx2_flags[0]
 set_location_assignment PIN_88 -to ext_clk
-set_location_assignment PIN_89 -to detectors[0]
-set_location_assignment PIN_73 -to detectors[1]
-set_location_assignment PIN_74 -to detectors[2]
-set_location_assignment PIN_75 -to detectors[3]
-set_location_assignment PIN_92 -to laser_en[0]
-set_location_assignment PIN_93 -to laser_en[1]
-set_location_assignment PIN_97 -to laser_en[2]
-set_location_assignment PIN_79 -to laser_en[3]
 set_location_assignment PIN_63 -to push_button -disable
 set_location_assignment PIN_72 -to led[0]
 set_location_assignment PIN_71 -to led[1]
 set_location_assignment PIN_17 -to fx2_clk
-set_location_assignment PIN_93 -to debug[2] -disable
-set_location_assignment PIN_97 -to debug[3] -disable
 set_location_assignment PIN_40 -to fx2_fd[7]
 set_location_assignment PIN_41 -to fx2_fd[6]
 set_location_assignment PIN_42 -to fx2_fd[5]
@@ -117,7 +83,6 @@ set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL OFF
 # Analysis & Synthesis Assignments
 # ================================
 set_global_assignment -name FAMILY "Cyclone II"
-set_global_assignment -name TOP_LEVEL_ENTITY fx2_timetag
 set_global_assignment -name CYCLONE_OPTIMIZATION_TECHNIQUE SPEED
 set_global_assignment -name MUX_RESTRUCTURE OFF
 set_global_assignment -name ADV_NETLIST_OPT_SYNTH_WYSIWYG_REMAP ON
@@ -156,7 +121,7 @@ set_global_assignment -name END_TIME "100 ns"
 
 	# Classic Timing Assignments
 	# ==========================
-	set_global_assignment -name FMAX_REQUIREMENT "48 MHz" -section_id "FX2 Clock"
+set_global_assignment -name FMAX_REQUIREMENT "48 MHz" -section_id "FX2 Clock"
 
 # end CLOCK(FX2 Clock)
 # --------------------
@@ -166,7 +131,7 @@ set_global_assignment -name END_TIME "100 ns"
 
 	# Classic Timing Assignments
 	# ==========================
-	set_global_assignment -name FMAX_REQUIREMENT "1003 MHz" -section_id "External clock"
+set_global_assignment -name FMAX_REQUIREMENT "1003 MHz" -section_id "External clock"
 
 # end CLOCK(External clock)
 # -------------------------
@@ -176,21 +141,21 @@ set_global_assignment -name END_TIME "100 ns"
 
 	# Classic Timing Assignments
 	# ==========================
-	set_instance_assignment -name CLOCK_SETTINGS "FX2 Clock" -to fx2_clk
-	set_instance_assignment -name CLOCK_SETTINGS "External clock" -to ext_clk
+set_instance_assignment -name CLOCK_SETTINGS "FX2 Clock" -to fx2_clk
+set_instance_assignment -name CLOCK_SETTINGS "External clock" -to ext_clk
 
 	# Fitter Assignments
 	# ==================
-	set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to fx2_clk
-	set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to ext_clk
+set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to fx2_clk
+set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to ext_clk
 
 	# start LOGICLOCK_REGION(Root Region)
 	# -----------------------------------
 
 		# LogicLock Region Assignments
 		# ============================
-		set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
-		set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
 
 	# end LOGICLOCK_REGION(Root Region)
 	# ---------------------------------
@@ -200,13 +165,40 @@ set_global_assignment -name END_TIME "100 ns"
 
 		# Incremental Compilation Assignments
 		# ===================================
-		set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-		set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-		set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-		set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 
 	# end DESIGN_PARTITION(Top)
 	# -------------------------
 
 # end ENTITY(fx2_timetag)
 # -----------------------
+set_global_assignment -name VERILOG_FILE strobe_latch.v
+set_global_assignment -name VERILOG_FILE fx2_bidir.v
+set_global_assignment -name VERILOG_FILE fx2_test_fixture.v
+set_global_assignment -name VERILOG_FILE reg_manager.v
+set_global_assignment -name VERILOG_FILE register.v
+set_global_assignment -name VERILOG_FILE event_tagger.v
+set_global_assignment -name VERILOG_FILE fx2_timetag_bench.v
+set_global_assignment -name VERILOG_FILE fx2_timetag.v
+set_global_assignment -name VERILOG_FILE timetag.v
+set_global_assignment -name VERILOG_FILE timetag_bench.v
+set_global_assignment -name VERILOG_FILE runonce.v
+set_global_assignment -name VERILOG_FILE sample_multiplexer.v
+set_global_assignment -name VERILOG_FILE altpll0.v
+set_global_assignment -name VERILOG_FILE apdtimer_all.v
+set_global_assignment -name VERILOG_FILE leddriver.v
+set_global_assignment -name VERILOG_FILE fx2_test.v
+set_global_assignment -name QIP_FILE sample_fifo.qip
+set_global_assignment -name MISC_FILE "/home/bgamari/trees/timetag-fpga/testingigo_all.dpf"
+set_location_assignment PIN_73 -to strobe_in[3]
+set_location_assignment PIN_70 -to strobe_in[2]
+set_location_assignment PIN_69 -to strobe_in[1]
+set_location_assignment PIN_74 -to strobe_in[0]
+set_location_assignment PIN_75 -to delta_in[0]
+set_location_assignment PIN_79 -to delta_in[1]
+set_location_assignment PIN_97 -to delta_in[2]
+set_location_assignment PIN_92 -to delta_in[3]
+set_global_assignment -name SDC_FILE timetag.sdc
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
