@@ -42,7 +42,7 @@ input fx2_clk;
 output fx2_wu2; // WU2 (USB wakeup, always high)
 inout [7:0] fx2_fd;
 output [1:0] fx2_fifoadr; // FIFO address
-input [2:0] fx2_flags; // 0: FIFO2 data available,  1: FIFO6 not full,  2: FIFO8 not full
+input [2:0] fx2_flags; // 0: FIFO2 data available,  1: FIFO6 not full,	2: FIFO8 not full
 output fx2_slrd, fx2_slwr;
 output fx2_sloe; // FIFO data bus output enable
 output fx2_pktend; // Packet end
@@ -97,15 +97,22 @@ reg [3:0] state;
 always @(posedge fifo_clk)
 case(state)
 	// Idle
-	4'b1001: 							// Idle state
-		if (fifo2_data_available) state <= 4'b0001; 		//   There is data to be recieved
-		else if (reply_rdy && fifo8_ready_to_accept_data) state <= 4'b1110; // Send command reply if one is waiting
-		else if (sample_rdy && fifo6_ready_to_accept_data) state <= 4'b1011;	//   If fifo6 gets emptied, send more
+	4'b1001:							// Idle state
+		if (fifo2_data_available)				//   There is data to be recieved
+			state <= 4'b0001;
+		else if (reply_rdy && fifo8_ready_to_accept_data)	//   Send command reply if one is waiting
+			state <= 4'b1110;
+		else if (sample_rdy && fifo6_ready_to_accept_data)	//   If fifo6 gets emptied, send more
+			state <= 4'b1011;
 	
 	// Data transmit path
 	4'b1011:							// Listen/Transmit state
-		if (fifo2_data_available) state <= 4'b0001;		//   If PC is sending something, handle it first
-		else if (fifo6_full) state <=4'b1001;			//   fifo is full, go to idle
+		if (reply_rdy && fifo8_ready_to_accept_data)		//   If we are trying to send something, handle it next
+			state <= 4'b1110;			
+		else if (fifo2_data_available)				//   If host is sending something, handle it first
+			state <= 4'b0001;
+		else if (fifo6_full)					//   fifo is full, go to idle
+			state <=4'b1001;
 		     
 	// Command receive path:
 	4'b0001: state <= 4'b0011;					// Wait for turnaround to read from PC
@@ -113,7 +120,7 @@ case(state)
 
 	// Command reply path:
 	4'b1110: if (reply_end) state <= 4'b1111;			// Transmit data
-	4'b1111: state <= 4'b1000; 					// Transmit end-of-packet
+	4'b1111: state <= 4'b1000;					// Transmit end-of-packet
 	4'b1000:							// Wait for turnaround to transmit an end-of-packet
 	begin
 		#2 state <= 4'b1010;

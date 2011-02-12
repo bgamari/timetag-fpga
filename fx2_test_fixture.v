@@ -21,11 +21,11 @@ always @(posedge ifclk)
 begin
 	if ((fifoadr == FIFOADR) && wr)
 	begin
-		$display($time, "%2b: IN %x", FIFOADR, data);
+		$display($time, "  %2b: IN %x", FIFOADR, data);
 		$fwrite(outf, "%02x\n", data);
 	end
 	if ((fifoadr == FIFOADR) && pktend)
-		$display($time, "%2b: PKTEND", FIFOADR);
+		$display($time, "  %2b: PKTEND", FIFOADR);
 end
 
 assign full = 0;
@@ -72,7 +72,7 @@ begin
 	if ((fifoadr == FIFOADR) && rd && data_waiting)
 	begin
 		tail <= tail + 1;
-		$display($time, "%2b: OUT %x", fifoadr, data);
+		$display($time, "  %2b: OUT %x", fifoadr, data);
 	end
 
 	if (send_done)

@@ -9,35 +9,35 @@ wire [2:0] flags;
 wire [1:0] fifoadr;
 wire sloe, slrd, slwr, pktend;
 
-reg [3:0] detectors_in;
-wire [3:0] lasers_in;
+reg [3:0] delta_in;
+reg [3:0] strobe_in;
 
 
 // External Clock
 initial clk = 0;
 always #2 clk = ~clk;
 
-// Simulate photons
-//`define RANDOM_PHOTONS 1
-`ifdef RANDOM_PHOTONS
-	initial begin
-		if ((4'b1111 & $random) == 4'b0)
-		begin
-			detectors_in[0] = 1'b1;
-			#10 detectors_in[0] = 1'b0;
-		end
-	end
-`else
-	initial detectors_in = 4'b0000;
-	always begin
-		#100 detectors_in[0] = 1'b1;
-		#5  detectors_in[0] = 1'b0;
-	end
-	always begin
-		#80  detectors_in[1] = 1'b1;
-		#5  detectors_in[1] = 1'b0;
-	end
-`endif
+// Simulate strobe inputs
+initial strobe_in = 0;
+always begin
+        #100 strobe_in[0] = 1;
+        #5   strobe_in[0] = 0;
+end
+always begin
+        #80  strobe_in[1] = 1;
+        #5   strobe_in[1] = 0;
+end
+
+// Simulate delta inputs
+initial delta_in = 0;
+always begin
+        #100 delta_in[0] = 1;
+        #100 delta_in[0] = 0;
+end
+always begin
+        #200 delta_in[1] = 1;
+        #300 delta_in[1] = 0;
+end
 
 assign lasers_in = 0;
 
@@ -74,8 +74,8 @@ fx2_timetag uut(
 	.fx2_fifoadr(fifoadr),
 
 	.ext_clk(clk),
-	.delta_in(lasers_in),
-	.strobe_in(detectors_in),
+	.delta_in(delta_in),
+	.strobe_in(strobe_in),
 	.led()
 );
 
@@ -149,6 +149,41 @@ initial begin
 	$display($time, "  Waiting for some data");
 
 	#4000 ;
+
+	#50 ;
+	$display($time, "  Disabling strobe channels");
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h01;
+	#12  cmd=8'h04;
+	#12  cmd=8'h00;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+
+        #1000;
+
+	#50 ;
+	$display($time, "  Enabling delta channels");
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h01;
+	#12  cmd=8'h05;
+	#12  cmd=8'h0f;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+
+        #4000 ;
+
+	#50 ;
+	$display($time, "  Disabling delta channels");
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h01;
+	#12  cmd=8'h05;
+	#12  cmd=8'h00;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+        
 	$display($time, "  Stopping capture");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
