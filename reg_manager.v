@@ -35,47 +35,51 @@ initial state = 0;
 
 always @(posedge clk)
 case (state)
-        0:                                      // Read message type
+        0:                                      // Read magic number
+                if (cmd_in == 8'hAA)
+                        state <= 1;
+
+        1:                                      // Read message type
                 if (cmd_wr)
                 begin
                         wants_wr <= cmd_in[0];
-                        state <= 1;
+                        state <= 2;
                 end
 
-	1:					// Read address
+	2:					// Read address
 		if (cmd_wr)
 		begin
 			addr <= cmd_in;
-			state <= 2;
-		end
-		
-	2:					// Read data
-		if (cmd_wr)
-		begin
-			data <= cmd_in;
 			state <= 3;
 		end
 		
-	3:					// Do write (if needed)
-                state <= 4;
+	3:					// Read data
+		if (cmd_wr)
+		begin
+			data <= cmd_in;
+			state <= 4;
+		end
+		
+	4:					// Write new value (if needed)
+                state <= 5;
 
-        4:                                      // Send reply
+        5:                                      // Reply with register value
                 if (reply_ack)                  // Wait until fx2bidir acks
-                        state <= 5;
+                        state <= 6;
 
-        5:                                      // End reply packet
+        6:                                      // End reply packet
                 state <= 0;
         
 	default:
 		state <= 0;
 endcase
 
-assign reg_addr = (state == 3 || state == 4) ? reg_addr : 8'hXX;
-assign reg_data = (state == 3 || state == 4) ? reg_data : 8'hZZ;
-assign reg_wr = (state == 3) && wants_wr;
+assign reg_addr = (state == 4 || state == 5) ? addr : 8'hXX;
+assign reg_data = (state == 4) ? data : 8'hZZ;
+assign reg_wr = (state == 4) && wants_wr;
 
-assign reply_out = (state == 4) ? data : 8'hXX;
-assign reply_rdy = state == 4;
+assign reply_out = (state == 5) ? reg_data : 8'hXX;
+assign reply_rdy = state == 5;
 assign reply_end = state == 5;
 
 endmodule

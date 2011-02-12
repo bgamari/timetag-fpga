@@ -12,6 +12,16 @@ module fx2_bidir(
 	reply, reply_rdy, reply_ack, reply_end
 );
 
+/*
+ * This is the state machine to handle interactions between the FX2 USB
+ * controller and the timetagger. We must handle three streams of data,
+ *
+ *   fifo8: commands from the host to the device
+ *   fifo2: command replies from the device to the host
+ *   fifo6: data from the device.
+ *
+ */
+
 //************************************************************************
 //FPGA interface
 //************************************************************************
@@ -89,8 +99,8 @@ case(state)
 	// Idle
 	4'b1001: 							// Idle state
 		if (fifo2_data_available) state <= 4'b0001; 		//   There is data to be recieved
-		else if (fifo6_ready_to_accept_data) state <= 4'b1011;	//   If fifo6 gets emptied, send more
-		else if (reply_rdy && fifo8_ready_to_accept_data) state <= 4'b1110;
+		else if (reply_rdy && fifo8_ready_to_accept_data) state <= 4'b1110; // Send command reply if one is waiting
+		else if (sample_rdy && fifo6_ready_to_accept_data) state <= 4'b1011;	//   If fifo6 gets emptied, send more
 	
 	// Data transmit path
 	4'b1011:							// Listen/Transmit state

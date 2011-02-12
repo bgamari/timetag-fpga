@@ -10,7 +10,7 @@ wire [1:0] fifoadr;
 wire sloe, slrd, slwr, pktend;
 
 reg [3:0] detectors_in;
-wire [3:0] laser_in;
+wire [3:0] lasers_in;
 
 
 // External Clock
@@ -38,6 +38,8 @@ always #2 clk = ~clk;
 		#5  detectors_in[1] = 1'b0;
 	end
 `endif
+
+assign lasers_in = 0;
 
 reg [7:0] cmd;
 reg cmd_wr, cmd_commit;
@@ -72,7 +74,7 @@ fx2_timetag uut(
 	.fx2_fifoadr(fifoadr),
 
 	.ext_clk(clk),
-	.delta_in(laser_in),
+	.delta_in(lasers_in),
 	.strobe_in(detectors_in),
 	.led()
 );
@@ -94,12 +96,52 @@ initial begin
 	#12  cmd_commit=0;
 	@(cmd_sent);
 
-	#200 ;
-	$display($time, "  Starting detectors");
+	#20 ;
+	$display($time, "  Testing version register");
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h00;
+	#12  cmd=8'h01;
+	#12  cmd=8'h00;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+
+	#20 ;
+	$display($time, "  Testing clockrate register");
+	#12  cmd=8'hAA; cmd_wr=1;
+	#12  cmd=8'h00;
+	#12  cmd=8'h02;
+	#12  cmd=8'h00;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+
+	#20 ;
+	$display($time, "  Resetting counter");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
+	#12  cmd=8'h03;
+	#12  cmd=8'h04;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+
+	#20 ;
+	$display($time, "  Enabling strobe channels");
+	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
+	#12  cmd=8'h04;
+	#12  cmd=8'h0f;
+	#12  cmd_wr=0; cmd_commit=1;
+	#12  cmd_commit=0;
+	@(cmd_sent);
+
+	#20 ;
+	$display($time, "  Starting capture");
+	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
+	#12  cmd=8'h03;
+	#12  cmd=8'h03;
 	#12  cmd_wr=0; cmd_commit=1;
 	#12  cmd_commit=0;
 	@(cmd_sent);
@@ -107,7 +149,7 @@ initial begin
 	$display($time, "  Waiting for some data");
 
 	#10000 ;
-	$display($time, "  Stopping detectors");
+	$display($time, "  Stopping capture");
 	#12  cmd=8'hAA; cmd_wr=1;
 	#12  cmd=8'h01;
 	#12  cmd=8'h01;

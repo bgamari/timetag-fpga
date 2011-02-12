@@ -103,8 +103,7 @@ apdtimer_all apdtimer(
 	.data(sample[46:0]),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
-	.reg_wr(reg_wr),
-	.operate()
+	.reg_wr(reg_wr)
 );
 
 `endif

@@ -3,7 +3,7 @@ ALTERA_ROOT=/opt/altera/10.1sp1/modelsim_ase
 INCLUDES=-I${ALTERA_ROOT}/altera/verilog/src
 
 LIB_FILES= \
-	  event_tagger.v apdtimer_all.v clicklatch.v \
+	  event_tagger.v apdtimer_all.v strobe_latch.v \
 	  reg_manager.v register.v \
 	  sample_fifo.v sample_multiplexer.v \
 	  timetag.v fx2_timetag.v fx2_bidir.v \

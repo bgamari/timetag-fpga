@@ -161,5 +161,15 @@ in_fifo ep6(
 );
 defparam ep6.FIFOADR = 2'b10;
 
+in_fifo ep8(
+	.ifclk(ifclk),
+	.fifoadr(fifoadr),
+	.data(in_data),
+	.wr(~slwr),
+	.full(nflags[2]),
+	.pktend(~pktend)
+);
+defparam ep8.FIFOADR = 2'b11;
+
 assign flags = ~nflags;
 endmodule
