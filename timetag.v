@@ -87,20 +87,20 @@ begin
 		count <= count - 1;
 end
 
-assign sample_rdy = (count == 0);
-assign sample[46:0] = 47'hfeeddeadbeef;
+assign record_rdy = (count == 0);
+assign record[46:0] = 47'hfeeddeadbeef;
 //assign cmd_ack = 1'b1;
 
 `else
 
-wire	[47:0] sample;
-wire	sample_rdy;
+wire	[47:0] record;
+wire	record_rdy;
 apdtimer_all apdtimer(
 	.clk(clk),
 	.strobe_in(strobe_in),
 	.delta_in(delta_in),
-	.data_rdy(sample_rdy),
-	.data(sample[46:0]),
+	.record_rdy(record_rdy),
+	.record(record[46:0]),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr)
@@ -109,43 +109,42 @@ apdtimer_all apdtimer(
 `endif
 
 
-// Sample FIFO
-wire samp_buf_full;
-wire samp_buf_rdnext;
-wire samp_buf_empty;
-wire [47:0] samp_buf_out;
+// Record FIFO
+wire rec_buf_full;
+wire rec_buf_rdnext;
+wire rec_buf_empty;
+wire [47:0] rec_buf_out;
 
-reg samp_lost;
-initial samp_lost = 0;
-assign sample[47] = samp_lost;
+reg rec_lost;
+initial rec_lost = 0;
+assign record[47] = rec_lost;
 
-// Track dropped samples
+// Track dropped records
 always @(posedge clk)
 begin
-	if (sample_rdy && samp_buf_full)
-		samp_lost <= 1;
-	else if (sample_rdy && ~samp_buf_full)
-		samp_lost <= 0;
+	if (record_rdy && rec_buf_full)
+		rec_lost <= 1;
+	else if (record_rdy && ~rec_buf_full)
+		rec_lost <= 0;
 end
 
-sample_fifo samp_buf(
+sample_fifo rec_buf(
 	.wrclk(clk),
-	.wrreq(sample_rdy & ~samp_buf_full),
-	.wrfull(samp_buf_full),
-	.data(sample),
+	.wrreq(record_rdy & ~rec_buf_full),
+	.wrfull(rec_buf_full),
+	.data(record),
 
 	.rdclk(fx2_clk),
-	.rdreq(samp_buf_rdnext),
-	.rdempty(samp_buf_empty),
-	.q(samp_buf_out)
+	.rdreq(rec_buf_rdnext),
+	.rdempty(rec_buf_empty),
+	.q(rec_buf_out)
 );
 
-
-sample_multiplexer multiplexer(
+sample_multiplexer mux(
 	.clk(fx2_clk),
-	.sample_rdy(~samp_buf_empty),
-	.sample(samp_buf_out),
-	.sample_ack(samp_buf_rdnext),
+	.sample_rdy(~rec_buf_empty),
+	.sample(rec_buf_out),
+	.sample_ack(rec_buf_rdnext),
 
 	.data_rdy(data_rdy),
 	.data(data),

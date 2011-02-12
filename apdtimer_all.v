@@ -2,7 +2,7 @@ module apdtimer_all(
 	clk,
 	strobe_in, delta_in,
 	reg_addr, reg_data, reg_wr,
-	data_rdy, data
+	record_rdy, record
 );
 
 input	clk;
@@ -12,8 +12,8 @@ input	[7:0] reg_addr;
 inout	[7:0] reg_data;
 input   reg_wr;
 
-output	data_rdy;
-output	[46:0] data;
+output	record_rdy;
+output	[46:0] record;
 
 wire	[3:0] strobe_chans;
 
@@ -54,8 +54,8 @@ event_tagger	tagger(
 	.counter_operate(counter_operate),
 	.strobe_channels(strobe_chans & strobe_operate[3:0]),
 	.delta_channels(delta_in & delta_operate[3:0]),
-	.ready(data_rdy),
-	.data(data)
+	.ready(record_rdy),
+	.data(record)
 );
 
 
