@@ -1,10 +1,12 @@
 // Fast Multisource Pulse Registration System
 // Module:
-// leddriver
+// led_blinker
 // Holds a LED high for a certain number of cycles when an input goes high
 // (c) Sergey V. Polyakov 2006-forever
 
-module leddriver (clk, in, out);
+module led_blinker (clk, in, out);
+
+parameter HIGH_TIME = 1_500_000;
 
 input clk;
 input in;
@@ -27,7 +29,7 @@ begin
 	if (in == 1)
 	begin
 		out = 1;
-		count = 2500000;
+		count = HIGH_TIME;
 	end
 	
 	if (count == 0)

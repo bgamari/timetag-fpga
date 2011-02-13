@@ -7,6 +7,7 @@ LIB_FILES= \
 	  reg_manager.v register.v \
 	  sample_fifo.v sample_multiplexer.v \
 	  timetag.v fx2_timetag.v fx2_bidir.v \
+	  led_blinker.v \
 	  ${ALTERA_ROOT}/altera/verilog/src/altera_mf.v
 
 TIMETAG_BENCH_FILES=timetag_bench.v

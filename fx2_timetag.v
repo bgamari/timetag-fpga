@@ -29,7 +29,6 @@ input	ext_clk;
 input	[3:0] strobe_in;
 input	[3:0] delta_in;
 output	[1:0] led;
-assign led = 0;
 
 wire	clk;
 wire	cmd_rdy;
@@ -39,8 +38,8 @@ wire	sample_rdy;
 wire	[7:0] sample;
 wire	sample_ack;
 
-wire	[7:0] reply;
 wire	reply_rdy;
+wire	[7:0] reply;
 wire	reply_ack;
 wire	reply_end;
 
@@ -99,23 +98,17 @@ fx2_bidir fx2_if(
 	.reply_end(reply_end)
 );
 
-//`define DETECTORS_LED
-`ifdef DETECTORS_LED
-wire all_detectors = strobe_in[0] | strobe_in[1] | strobe_in[2] | strobe_in[3];
-leddriver b2v_inst4(
-	.clk(fx2_clk),
-	.in(all_detectors),
-	.out(led[1])
-);
-`endif
-
-//`define CMD_RDY_LED
-`ifdef CMD_RDY_LED
-leddriver b2v_inst6(
-	.clk(fx2_clk),
-	.in(cmd_rdy),
+led_blinker cmd_rdy_led(
+        .clk(fx2_clk),
+	.in(cmd_wr),
 	.out(led[0])
 );
-`endif
+
+led_blinker sample_rdy_led(
+	.clk(fx2_clk),
+	.in(sample_rdy),
+	.out(led[1])
+);
 
 endmodule
+
