@@ -45,11 +45,10 @@ wire	reply_ack;
 wire	reply_end;
 
 
-//`define USE_PLL
-`ifdef USE_PLL
+//`define USE_EXT_CLK
+`ifdef USE_EXT_CLK
 altpll0 b2v_inst2(
 	.inclk0(ext_clk),
-	//.inclk0(fx2_clk),
 	.c0(clk)
 );
 `else
