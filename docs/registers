@@ -1,4 +1,4 @@
-register interface:
+Register interface:
 ====================
 
 The device is controlled using a simple register interface. Register addresses
@@ -7,27 +7,28 @@ read and write commands written on the control endpoint (endpoint 8). In both
 cases the register value is written back on the reply endpoint (endpoint 2).
 
 register read:
-  byte 0	0xAA
+  byte 0        0xAA
   byte 1        0x00
-  byte 2	Register address, bits 7:0
-  byte 3	Register address, bits 15:8
-  byte 4	0x00
-  byte 5	0x00
-  byte 6	0x00
-  byte 7	0x00
+  byte 2        Register address, bits 7:0
+  byte 3        Register address, bits 15:8
+  byte 4        0x00
+  byte 5        0x00
+  byte 6        0x00
+  byte 7        0x00
 
 register write:
-  byte 0	0xAA
+  byte 0        0xAA
   byte 1        0x01
-  byte 2	Register address, bits 7:0
-  byte 3	Register address, bits 15:8
-  byte 4	Register value, bits 7:0
-  byte 5	Register value, bits 15:8
-  byte 6	Register value, bits 23:16
-  byte 7	Register value, bits 31:24
+  byte 2        Register address, bits 7:0
+  byte 3        Register address, bits 15:8
+  byte 4        Register value, bits 7:0
+  byte 5        Register value, bits 15:8
+  byte 6        Register value, bits 23:16
+  byte 7        Register value, bits 31:24
 
 
 Register descriptions:
+=======================
 Access types:
   RO=Read-Only
   RW=Read/Write
@@ -35,31 +36,32 @@ Access types:
 
 addr  description
 ----  -----------
-0x01: Version register (RO)
-      Gives the hardware version number
+0x0001: Version register (RO)
+        Gives the hardware version number
 
-0x02: Clockrate register (RO)
-      Gives the clockrate in MHz
+0x0002: Clockrate register (RO)
+        Gives the clockrate in MHz
 
-0x03: Capture control (RW)
-  bit		description
-  0		capture_operate: Enable registration of input events
-  1		counter_operate: Start/stop timestamp counter
-  2		reset_counter: Reset counter to 0; counter will remain at 0
-		until this bit is manually cleared
+0x0003: Capture control (RW)
+  bit   name                    description
+  0     capture_operate         Enable registration of input events
+  1     counter_operate         Start/stop timestamp counter
+  2     reset_counter           Reset counter to zero; counter will
+                                remain at zero until this bit is manually
+                                cleared
 
-0x04: Strobe channel control (RW)
-      Each bit enables/disables the corresponding strobe channel
+0x0004: Strobe channel control (RW)
+        Each bit enables/disables the corresponding strobe channel
 
-0x05: Delta channel control (RW)
-      Each bit enables/disables the corresponding delta channel
+0x0005: Delta channel control (RW)
+        Each bit enables/disables the corresponding delta channel
 
-0x06: Record counter (RR)
-      Gives the number of records passed to the host since the last reset
+0x0006: Record counter (RR)
+        Gives the number of records passed to the host since the last reset
 
-0x07: Lost record counter (RR)
-      Gives the number of records dropped (e.g. due to buffer overflow) since
-      the last reset
+0x0007: Lost record counter (RR)
+        Gives the number of records dropped (e.g. due to buffer overflow) since
+        the last reset
 
 
 Reset procedure:
@@ -67,17 +69,22 @@ Reset procedure:
 Upon powering up the device the register state must be safely initialized to
 sane values. Below is the recommended reset procedure,
 
-   Reg    Value
-1) 0x04 = 0x00          Disable all strobe channels
-2) 0x05 = 0x00          Disable all delta channels
-3) 0x03 = 0x04          Reset counter and event generation
-4) 0x03 = 0x00          Unassert reset_counter
+     Reg        Value
+  1) 0x0004 =   0x0000              Disable all strobe channels
+  2) 0x0005 =   0x0000              Disable all delta channels
+  3) 0x0003 =   0x0004              Reset counter and event generation
+  4) 0x0003 =   0x0000              Unassert reset_counter
 
 To then begin taking data, one might do the following,
 
-   Reg    Value
-5) 0x04 = 0x07          Enable all strobe channels
-6) 0x05 = 0x07          Enable all delta channels
-7) 0x03 = 0x02          Start counter
-8) 0x03 = 0x03          Start event generation
+     Reg        Value
+  5) 0x0004 =   0x0007              Enable all strobe channels
+  6) 0x0005 =   0x0007              Enable all delta channels
+  7) 0x0003 =   0x0002              Start counter
+  8) 0x0003 =   0x0003              Start event generation
+
+To then stop data acquisition, one might,
+
+     Reg        Value
+  9) 0x0003 =   0x0002              Disable event generation
 
