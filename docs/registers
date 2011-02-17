@@ -26,7 +26,13 @@ register write:
   byte 6	Register value, bits 23:16
   byte 7	Register value, bits 31:24
 
-register descriptions:
+
+Register descriptions:
+Access types:
+  RO=Read-Only
+  RW=Read/Write
+  RR=Read/Reset (any write will reset the value to 0)
+
 addr  description
 ----  -----------
 0x01: Version register (RO)
@@ -48,13 +54,12 @@ addr  description
 0x05: Delta channel control (RW)
       Each bit enables/disables the corresponding delta channel
 
+0x06: Record counter (RR)
+      Gives the number of records passed to the host since the last reset
+
 0x07: Lost record counter (RR)
       Gives the number of records dropped (e.g. due to buffer overflow) since
       the last reset
-
-RO=Read-Only
-RW=Read/Write
-RR=Read/Reset (any write will reset the value to 0)
 
 
 Reset procedure:
