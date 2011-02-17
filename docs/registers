@@ -1,20 +1,30 @@
 register interface:
 ====================
 
-The device is controlled using a simple 8-bit register interface. Registers are
-manipulated with the read and write commands,
+The device is controlled using a simple register interface. Register addresses
+are 16-bits long whereas values are 32-bits. Registers are manipulated with the
+read and write commands written on the control endpoint (endpoint 8). In both
+cases the register value is written back on the reply endpoint (endpoint 2).
 
 register read:
   byte 0	0xAA
   byte 1        0x00
-  byte 2	Register address
-  byte 3	0x00
+  byte 2	Register address, bits 7:0
+  byte 3	Register address, bits 15:8
+  byte 4	0x00
+  byte 5	0x00
+  byte 6	0x00
+  byte 7	0x00
 
 register write:
   byte 0	0xAA
   byte 1        0x01
-  byte 2	Register address
-  byte 3	Register value
+  byte 2	Register address, bits 7:0
+  byte 3	Register address, bits 15:8
+  byte 4	Register value, bits 7:0
+  byte 5	Register value, bits 15:8
+  byte 6	Register value, bits 23:16
+  byte 7	Register value, bits 31:24
 
 register descriptions:
 addr  description

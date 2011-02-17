@@ -10,8 +10,8 @@ input	[3:0] strobe_in;
 input	[3:0] delta_in;
 
 input	reg_clk;
-input	[7:0] reg_addr;
-inout	[7:0] reg_data;
+input	[15:0] reg_addr;
+inout	[31:0] reg_data;
 input	reg_wr;
 
 output	record_rdy;
@@ -19,7 +19,7 @@ output	[46:0] record;
 
 wire	[3:0] strobe_chans;
 
-wire	[7:0] timer_reg;
+wire	[31:0] timer_reg;
 register #(.ADDR(8'h03)) apdtimer_reg(
 	.clk(reg_clk),
 	.reg_addr(reg_addr),
@@ -31,7 +31,7 @@ wire	capture_operate = timer_reg[0];
 wire	counter_operate = timer_reg[1];
 wire	reset_counter = timer_reg[2];
 
-wire [7:0] strobe_operate;
+wire [31:0] strobe_operate;
 register #(.ADDR(8'h04)) strobe_operate_reg(
 	.clk(reg_clk),
 	.reg_addr(reg_addr),
@@ -40,7 +40,7 @@ register #(.ADDR(8'h04)) strobe_operate_reg(
 	.value(strobe_operate)
 );
 
-wire [7:0] delta_operate;
+wire [31:0] delta_operate;
 register #(.ADDR(8'h05)) delta_operate_reg(
 	.clk(reg_clk),
 	.reg_addr(reg_addr),

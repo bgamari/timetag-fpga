@@ -10,18 +10,17 @@ module register(
 parameter ADDR = 1;
 
 input   clk;
-input   [7:0] reg_addr;
-inout   [7:0] reg_data;
+input   [15:0] reg_addr;
+inout   [31:0] reg_data;
 input   reg_wr;
-output  [7:0] value;
-
-reg     [7:0] value;
+output  [31:0] value;
+reg     [31:0] value;
 
 always @(posedge clk)
 if (reg_addr == ADDR && reg_wr)
         value <= reg_data;
 
-assign reg_data = (reg_addr == ADDR && !reg_wr) ? value : 8'hZZ;
+assign reg_data = (reg_addr == ADDR && !reg_wr) ? value : 32'hZZ;
 endmodule
 
 
@@ -34,11 +33,11 @@ module readonly_register(
 parameter ADDR = 1;
 
 input   clk;
-input   [7:0] reg_addr;
-inout   [7:0] reg_data;
+input   [15:0] reg_addr;
+inout   [31:0] reg_data;
 input   reg_wr;
-input   [7:0] value;
+input   [31:0] value;
 
-assign reg_data = (reg_addr == ADDR && !reg_wr) ? value : 8'hZZ;
+assign reg_data = (reg_addr == ADDR && !reg_wr) ? value : 32'hZZ;
 endmodule
 

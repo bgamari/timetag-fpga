@@ -21,64 +21,86 @@ input	reply_ack;
 output	reply_end;
 
 // Internal interface
-output	[7:0] reg_addr;
-inout	[7:0] reg_data;
+output	[15:0] reg_addr;
+inout	[31:0] reg_data;
 output	reg_wr;
 
-reg	[7:0] addr;
-reg	[7:0] data;
-reg	[2:0] state;
+reg	[15:0] addr;
+reg	[31:0] data;
+reg	[4:0] state;
 reg	wants_wr;
 initial state = 0;
 
 always @(posedge clk)
 case (state)
-	0:					// Read magic number
-		if (cmd_in == 8'hAA)
+	0:	if (cmd_in == 8'hAA)		// Read magic number
 			state <= 1;
 
-	1:					// Read message type
-		if (cmd_wr)
+	1:	if (cmd_wr)			// Read message type
 		begin
 			wants_wr <= cmd_in[0];
 			state <= 2;
 		end
 
-	2:					// Read address
-		if (cmd_wr)
+	2:	if (cmd_wr)			// Read address, 1st byte
 		begin
-			addr <= cmd_in;
+			addr[7:0] <= cmd_in;
 			state <= 3;
 		end
-		
-	3:					// Read data
-		if (cmd_wr)
+	3:	if (cmd_wr)			// Read address, 2nd byte
 		begin
-			data <= cmd_in;
+			addr[15:8] <= cmd_in;
 			state <= 4;
 		end
-		
-	4:					// Write new value (if needed)
-		state <= 5;
 
-	5:					// Reply with register value
-		if (reply_ack)			// Wait until fx2bidir acks
+	5:	if (cmd_wr)			// Read data, 1st byte
+		begin
+			data[7:0] <= cmd_in;
 			state <= 6;
+		end
+	6:	if (cmd_wr)			// Read data, 2st byte
+		begin
+			data[15:8] <= cmd_in;
+			state <= 7;
+		end
+	7:	if (cmd_wr)			// Read data, 3rd byte
+		begin
+			data[23:16] <= cmd_in;
+			state <= 8;
+		end
+	8:	if (cmd_wr)			// Read data, 4th byte
+		begin
+			data[31:24] <= cmd_in;
+			state <= 9;
+		end
+		
+	7:	state <= 8;			// Write new value to register (if needed)
 
-	6:					// End reply packet
-		state <= 0;
+	8:	if (reply_ack)			// Reply with register value, 1st byte
+			state <= 9;
+	9:	if (reply_ack)			// Reply with register value, 1st byte
+			state <= 10;
+	10:	if (reply_ack)			// Reply with register value, 1st byte
+			state <= 11;
+	11:	if (reply_ack)			// Reply with register value, 1st byte
+			state <= 12;
+
+	12:	state <= 0;			// End reply packet
 	
 	default:
 		state <= 0;
 endcase
 
-assign reg_addr = (state == 4 || state == 5) ? addr : 8'hXX;
-assign reg_data = (state == 4) ? data : 8'hZZ;
-assign reg_wr = (state == 4) && wants_wr;
+assign reg_addr = (state==7 || state==8 || state==9 || state==10) ? addr : 8'hXX;
+assign reg_data = (state==7) ? data : 8'hZZ;
+assign reg_wr = (state==7) && wants_wr;
 
-assign reply_out = (state == 5) ? reg_data : 8'hXX;
-assign reply_rdy = state == 5;
-assign reply_end = state == 5;
+assign reply_out = (state==8)  ? reg_data[7:0] : 
+		   (state==9)  ? reg_data[15:8] :
+		   (state==10) ? reg_data[23:16] :
+		   (state==11) ? reg_data[31:24] : 32'hZZZZZZZZ;
+assign reply_rdy = state==8 || state==9 || state==10 || state==11;
+assign reply_end = state==12;
 
 endmodule
 

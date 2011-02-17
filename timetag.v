@@ -35,8 +35,8 @@ input	[3:0] strobe_in;
 input	[3:0] delta_in;
 
 // Register framework
-wire	[7:0] reg_addr;
-wire	[7:0] reg_data;
+wire	[15:0] reg_addr;
+wire	[31:0] reg_data;
 wire	reg_wr;
 reg_manager reg_mgr(
 	.clk(fx2_clk),
@@ -52,7 +52,7 @@ reg_manager reg_mgr(
 	.reg_wr(reg_wr)
 );
 
-readonly_register #(.ADDR(8'h01)) version_reg(
+readonly_register #(.ADDR(16'h01)) version_reg(
 	.clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
@@ -60,7 +60,7 @@ readonly_register #(.ADDR(8'h01)) version_reg(
 	.value(`HWVERSION)
 );
 
-readonly_register #(.ADDR(8'h02)) clock_reg(
+readonly_register #(.ADDR(16'h02)) clock_reg(
 	.clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
