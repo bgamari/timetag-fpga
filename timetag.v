@@ -60,7 +60,7 @@ readonly_register #(.ADDR(16'h01)) version_reg(
 	.value(`HWVERSION)
 );
 
-readonly_register #(.ADDR(16'h02)) clock_reg(
+readonly_register #(.ADDR(16'h02)) clockrate_reg(
 	.clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
@@ -113,6 +113,13 @@ wire [47:0] rec_buf_out;
 reg rec_lost;
 initial rec_lost = 0;
 assign record[47] = rec_lost;
+counter_register #(.ADDR(16'h07)) rec_lost_counter(
+	.clk(fx2_clk),
+	.reg_addr(reg_addr),
+	.reg_data(reg_data),
+	.reg_wr(reg_wr),
+	.increment(reg_lost)
+);
 
 // Track dropped records
 always @(posedge clk)

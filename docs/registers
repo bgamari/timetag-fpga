@@ -48,6 +48,14 @@ addr  description
 0x05: Delta channel control (RW)
       Each bit enables/disables the corresponding delta channel
 
+0x07: Lost record counter (RR)
+      Gives the number of records dropped (e.g. due to buffer overflow) since
+      the last reset
+
+RO=Read-Only
+RW=Read/Write
+RR=Read/Reset (any write will reset the value to 0)
+
 
 Reset procedure:
 =================
