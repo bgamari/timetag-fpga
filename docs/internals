@@ -1,0 +1,32 @@
+Data flow:
+===========
+
+      ┌─────────────────┐
+      │  apd_timer_all  │               Produces records
+      └───────┬─────────┘
+              │
+              │
+              ↓
+      ┌─────────────────┐
+      │   sample_fifo   │               ~2000 sample buffer
+      └───────┬─────────┘
+              │
+              │
+              ↓
+    ┌──────────────────────┐            Split up 48-bit records into bytes
+    │  sample_multiplexer  │            to be passed along data bus to FX2
+    └─────────┬────────────┘
+              │
+              │
+              ↓
+      ┌──────────────────┐              State machine for multiplexing
+      │    fx2_bidir     │              FX2 data bus
+      └───────┬──────────┘
+              │
+              │
+              ↓
+             FX2                        USB interface
+              │
+              │
+              ↓
+             HOST

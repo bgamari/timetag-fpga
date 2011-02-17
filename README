@@ -1,38 +1,23 @@
 timetag: An FPGA-based time-tagger implementation
+==================================================
 
 Hardware: KNJN Xylo EM
 
 This is an adaptation of the FPGA time-tagging platform written at NIST by
 Polyakov, Migdall, and Nam[1]. The code was cleaned up, modularized, and a
-command parser was added. See docs/protocol for protocol documentation.
+register interface was added for configuration. The device is intended to 
+record timestamps of certain events on a set of input signals.
 
-Data flow:
-      ┌─────────────────┐
-      │  apd_timer_all  │
-      └───────┬─────────┘
-              │
-              │
-              ↓
-      ┌─────────────────┐
-      │   sample_fifo   │     (~2000 samples)
-      └───────┬─────────┘
-              │
-              │
-              ↓
-    ┌──────────────────────┐
-    │  sample_multiplexer  │
-    └─────────┬────────────┘
-              │
-              │
-              ↓
-      ┌──────────────────┐
-      │    fx2_bidir     │
-      └───────┬──────────┘
-              │
-              │
-              ↓
-             FX2
-              │
-              │
-              ↓
-             HOST
+The tagging engine has two types of inputs, strobe channels and delta channels.
+A strobe channel can be equated to a standard edge trigger, registering an
+event on the rising edge of the input signal. This can be used, for instance to
+register photon counts from a PMT. Delta channels register any change
+(low-to-high or high-to-low) of the input, recording the new state of the input
+in the record. The design by default supports up to four channels in strobe
+mode and four channels in delta mode, although this can be changed.
+
+See docs/registers for details on using the configuration register interface
+and docs/data-format for the structure of produced event records.
+
+[1] http://www.nist.gov/pml/div685/grp03/multicoincidence.cfm
+
