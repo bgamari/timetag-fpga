@@ -20,23 +20,23 @@ always #2 clk = ~clk;
 // Simulate strobe inputs
 initial strobe_in = 0;
 always begin
-        #100 strobe_in[0] = 1;
-        #5   strobe_in[0] = 0;
+	#100 strobe_in[0] = 1;
+	#5   strobe_in[0] = 0;
 end
 always begin
-        #80  strobe_in[1] = 1;
-        #5   strobe_in[1] = 0;
+	#80  strobe_in[1] = 1;
+	#5   strobe_in[1] = 0;
 end
 
 // Simulate delta inputs
 initial delta_in = 0;
 always begin
-        #100 delta_in[0] = 1;
-        #100 delta_in[0] = 0;
+	#100 delta_in[0] = 1;
+	#100 delta_in[0] = 0;
 end
 always begin
-        #200 delta_in[1] = 1;
-        #300 delta_in[1] = 0;
+	#200 delta_in[1] = 1;
+	#300 delta_in[1] = 0;
 end
 
 assign lasers_in = 0;
@@ -44,6 +44,11 @@ assign lasers_in = 0;
 reg [7:0] cmd;
 reg cmd_wr, cmd_commit;
 wire cmd_sent;
+
+wire [7:0] reply_data;
+wire reply_rdy;
+wire [7:0] sample_data;
+wire sample_rdy;
 
 fx2_test_fixture fx2(
 	.ifclk(fx2_clk),
@@ -58,7 +63,13 @@ fx2_test_fixture fx2(
 	.cmd_data(cmd),
 	.cmd_wr(cmd_wr),
 	.cmd_commit(cmd_commit),
-	.cmd_sent(cmd_sent)
+	.cmd_sent(cmd_sent),
+
+	.reply_data(reply_data),
+	.reply_rdy(reply_rdy),
+	
+	.data(sample_data),
+	.data_rdy(sample_rdy)
 );
 
 // Instantiate the UUT
@@ -79,9 +90,45 @@ fx2_timetag uut(
 	.led()
 );
 
+reg [31:0] reply_buf;
+
+task reg_cmd;
+input write;
+input [15:0] addr;
+input [31:0] value;
+begin
+	$display($time, "  Register transaction on %04x with value %08x (wr=%d)", addr, value, write);
+	#12 cmd=8'hAA; cmd_wr=1;
+	#12 cmd=write;
+	#12 cmd=addr[7:0];
+	#12 cmd=addr[15:8];
+	#12 cmd=value[7:0];
+	#12 cmd=value[15:8];
+	#12 cmd=value[23:16];
+	#12 cmd=value[31:24];
+	#12 cmd_wr=0; cmd_commit=1;
+	#12 cmd_commit=0;
+	@(cmd_sent);
+
+	@(posedge fx2_clk && reply_rdy); // HACK perhaps
+	@(posedge fx2_clk && reply_rdy);
+	reply_buf[7:0] = reply_data;
+	@(posedge fx2_clk && reply_rdy);
+	reply_buf[15:8] = reply_data;
+	@(posedge fx2_clk && reply_rdy);
+	reply_buf[23:16] = reply_data;
+	@(posedge fx2_clk && reply_rdy);
+	reply_buf[31:24] = reply_data;
+	$display($time, "  Register %04x = %08x", addr, reply_buf);
+end
+endtask
+
+always @(posedge fx2_clk && sample_rdy)
+	$display($time, "  sample: %02x", sample_data);
+	
 // This just prints the results in the ModelSim text window
 // You can leave this out if you want
-initial $monitor($time, "  cmd(%b %x)", cmd_wr, cmd);
+//initial $monitor($time, "  cmd(%b %x)", cmd_wr, cmd);
 
 // These statements conduct the actual circuit test
 initial begin
@@ -98,53 +145,23 @@ initial begin
 
 	#50 ;
 	$display($time, "  Testing version register");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h00;
-	#12  cmd=8'h01;
-	#12  cmd=8'h00;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
+	reg_cmd(0, 4'h1, 0);
 
 	#50 ;
 	$display($time, "  Testing clockrate register");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h00;
-	#12  cmd=8'h02;
-	#12  cmd=8'h00;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
+	reg_cmd(0, 4'h2, 0);
 
 	#50 ;
 	$display($time, "  Resetting counter");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h01;
-	#12  cmd=8'h03;
-	#12  cmd=8'h04;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
+	reg_cmd(1, 4'h3, 32'h04);
 
 	#50 ;
 	$display($time, "  Enabling strobe channels");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h01;
-	#12  cmd=8'h04;
-	#12  cmd=8'h0f;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
+	reg_cmd(1, 4'h4, 32'h0f);
 
 	#50 ;
 	$display($time, "  Starting capture");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h01;
-	#12  cmd=8'h03;
-	#12  cmd=8'h03;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
+	reg_cmd(1, 4'h3, 32'h03);
 
 	$display($time, "  Waiting for some data");
 
@@ -152,46 +169,23 @@ initial begin
 
 	#50 ;
 	$display($time, "  Disabling strobe channels");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h01;
-	#12  cmd=8'h04;
-	#12  cmd=8'h00;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
+	reg_cmd(1, 4'h4, 0);
 
-        #1000;
+	#1000;
 
 	#50 ;
 	$display($time, "  Enabling delta channels");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h01;
-	#12  cmd=8'h05;
-	#12  cmd=8'h0f;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
+	reg_cmd(1, 4'h5, 32'h0f);
 
-        #4000 ;
+	#4000 ;
 
 	#50 ;
 	$display($time, "  Disabling delta channels");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h01;
-	#12  cmd=8'h05;
-	#12  cmd=8'h00;
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
-        
+	reg_cmd(1, 4'h5, 0);
+	
+	#50 ;
 	$display($time, "  Stopping capture");
-	#12  cmd=8'hAA; cmd_wr=1;
-	#12  cmd=8'h01;
-	#12  cmd=8'h03;
-	#12  cmd=8'h02; // Leave counter on
-	#12  cmd_wr=0; cmd_commit=1;
-	#12  cmd_commit=0;
-	@(cmd_sent);
+	reg_cmd(1, 4'h3, 32'h02);
 
 end
 
