@@ -40,7 +40,7 @@ addr  description
         Gives the hardware version number
 
 0x0002: Clockrate register (RO)
-        Gives the clockrate in MHz
+        Gives the clockrate in Hertz
 
 0x0003: Capture control (RW)
   bit   name                    description
