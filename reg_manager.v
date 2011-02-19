@@ -93,8 +93,8 @@ case (state)
 		state <= 0;
 endcase
 
-assign reg_addr = (state==8 || state==9 || state==10 || state==11 || state==12) ? addr : 8'hXX;
-assign reg_data = (state==8) ? data : 8'hZZ;
+assign reg_addr = (state==8 || state==9 || state==10 || state==11 || state==12) ? addr : 16'hXX;
+assign reg_data = (state==8) ? data : 32'hZZ;
 assign reg_wr = (state==8) && wants_wr;
 
 assign reply_out = (state==9)  ? reg_data[7:0] : 
