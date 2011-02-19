@@ -87,10 +87,7 @@ case (state)
 	11:	if (reply_ack)			// 3rd byte
 			state <= 12;
 	12:	if (reply_ack)			// 4th byte
-			state <= 13;
-
-	// End reply packet
-	13:	state <= 0;
+			state <= 0;
 	
 	default:
 		state <= 0;
@@ -105,7 +102,7 @@ assign reply_out = (state==9)  ? reg_data[7:0] :
 		   (state==11) ? reg_data[23:16] :
 		   (state==12) ? reg_data[31:24] : 32'hZZZZZZZZ;
 assign reply_rdy = state==9 || state==10 || state==11 || state==12;
-assign reply_end = state==13;
+assign reply_end = state==12;
 
 endmodule
 
