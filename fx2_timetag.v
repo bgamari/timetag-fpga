@@ -44,7 +44,7 @@ wire	reply_ack;
 wire	reply_end;
 
 
-//`define USE_EXT_CLK
+`define USE_EXT_CLK
 `ifdef USE_EXT_CLK
 altpll0 b2v_inst2(
 	.inclk0(ext_clk),

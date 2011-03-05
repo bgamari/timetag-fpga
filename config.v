@@ -3,5 +3,5 @@
 // Increment for any major change
 `define HWVERSION 32'd2
 // Acquisition clockrate: Make sure you account for PLL parameters as well
-`define CLOCKRATE 32'd30_000_000 // Hertz
+`define CLOCKRATE 32'd128_000_000 // Hertz
 

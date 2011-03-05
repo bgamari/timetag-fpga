@@ -51,7 +51,7 @@ set_global_assignment -name MISC_FILE "C:/Documents and Settings/Ben/Desktop/cle
 set_location_assignment PIN_22 -to fx2_flags[2]
 set_location_assignment PIN_21 -to fx2_flags[1]
 set_location_assignment PIN_18 -to fx2_flags[0]
-set_location_assignment PIN_88 -to ext_clk
+set_location_assignment PIN_91 -to ext_clk
 set_location_assignment PIN_63 -to push_button -disable
 set_location_assignment PIN_72 -to led[0]
 set_location_assignment PIN_71 -to led[1]

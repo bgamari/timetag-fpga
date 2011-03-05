@@ -33,7 +33,7 @@ initial state = 0;
 
 always @(posedge clk)
 case (state)
-	0:	if (cmd_in == 8'hAA)		// Read magic number
+	0:	if (cmd_wr && cmd_in == 8'hAA)	// Read magic number
 			state <= 1;
 
 	1:	if (cmd_wr)			// Read message type (read/write)
