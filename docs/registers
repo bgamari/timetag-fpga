@@ -26,6 +26,12 @@ register write:
   byte 6        Register value, bits 23:16
   byte 7        Register value, bits 31:24
 
+response:
+  byte 0        Register value, bits 7:0
+  byte 1        Register value, bits 15:8
+  byte 2        Register value, bits 23:16
+  byte 3        Register value, bits 31:24
+
 
 Register descriptions:
 =======================
