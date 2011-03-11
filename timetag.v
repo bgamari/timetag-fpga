@@ -136,7 +136,7 @@ counter_register #(.ADDR(16'h06)) rec_counter(
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
-	.increment(record_rdy & ~rec_buf_full)
+	.increment(rec_buf_rdnext)
 );
 
 sample_fifo rec_buf(

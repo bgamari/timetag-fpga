@@ -55,8 +55,13 @@ begin
 	begin
 		ready <= 0;
 		data <= 47'bX;
-	end	
-	timer <= reset_counter ? 36'b0 : timer + counter_operate;
+	end
+	
+	/*if (reset_counter)
+		timer <= 0;
+	else if (counter_operate)
+		timer <= timer + 1;*/
+	timer <= reset_counter ? 0 : timer + counter_operate;
 end
 
 endmodule
