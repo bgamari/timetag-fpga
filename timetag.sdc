@@ -1,9 +1,9 @@
 set_time_format -unit ns -decimal_places 3
 
 create_clock -name {fx2_clk} -period 33.333 -waveform { 0.000 16.666 } [get_ports {fx2_clk}]
-create_clock -name {ext_clk} -period 31.250 -waveform { 0.000 15.625 } [get_ports {ext_clk}]
+create_clock -name {ext_clk} -period 32.000 -waveform { 0.000 16.000 } [get_ports {ext_clk}]
 
-create_generated_clock -name {sample_clk} -source [get_pins {b2v_inst2|altpll_component|pll|inclk[0]}] -duty_cycle 50.000 -multiply_by 4 -master_clock {ext_clk} [get_pins {b2v_inst2|altpll_component|pll|clk[0]}] 
+create_generated_clock -name {sample_clk} -source [get_pins {b2v_inst2|altpll_component|pll|inclk[0]}] -duty_cycle 50.000 -multiply_by 5 -master_clock {ext_clk} [get_pins {b2v_inst2|altpll_component|pll|clk[0]}] 
 
 # Constrain FX2 interface ports
 set_input_delay -clock fx2_clk -max 10ns [get_ports {fx2_fd*}]
