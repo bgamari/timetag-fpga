@@ -107,7 +107,7 @@ always @(posedge clk)
 begin
 	if (record_rdy && rec_buf_full)
 		rec_lost <= 1;
-	else if (record_rdy && ~rec_buf_full)
+	else if (record_rdy && !rec_buf_full)
 		rec_lost <= 0;
 end
 
@@ -117,12 +117,12 @@ counter_register #(.ADDR(16'h06)) rec_counter(
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
-	.increment(record_rdy & ~rec_buf_full)
+	.increment(record_rdy && !rec_buf_full)
 );
 
 sample_fifo rec_buf(
 	.wrclk(clk),
-	.wrreq(record_rdy & ~rec_buf_full),
+	.wrreq(record_rdy && !rec_buf_full),
 	.wrfull(rec_buf_full),
 	.data(record),
 
@@ -134,7 +134,7 @@ sample_fifo rec_buf(
 
 sample_multiplexer mux(
 	.clk(fx2_clk),
-	.sample_rdy(~rec_buf_empty),
+	.sample_rdy(!rec_buf_empty),
 	.sample(rec_buf_out),
 	.sample_req(rec_buf_rdnext),
 
