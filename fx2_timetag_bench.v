@@ -1,5 +1,8 @@
 `timescale 1ns/1ns
 
+//`define LOG_EVENTS
+//`define LOG_SAMPLES
+
 module fx2_timetag_bench();
 
 reg clk;
@@ -19,28 +22,35 @@ initial clk = 0;
 always #2 clk = ~clk;
 
 // Simulate strobe inputs
+reg [31:0] strobe_count;
+initial strobe_count = 0;
 initial strobe_in = 0;
 always begin
-	#100 strobe_in[0] = 1; $display($time, "  Strobe channel 0 (counter=%d)", counter);
+	#100 strobe_in[0] = 1;
+	`ifdef LOG_EVENTS
+	$display($time, "  Strobe channel 0 (event %d, counter=%d)", strobe_count, counter);
+	`endif
 	#5   strobe_in[0] = 0;
+	if (uut.tagger.apdtimer.capture_operate)
+		strobe_count = strobe_count + 1;
 end
 always begin
-	#80  strobe_in[1] = 1; $display($time, "  Strobe channel 1 (counter=%d)", counter);
+	#80  strobe_in[1] = 1;
+	`ifdef LOG_EVENTS
+	$display($time, "  Strobe channel 1 (event %d, counter=%d)", strobe_count, counter);
+	`endif
 	#5   strobe_in[1] = 0;
+	if (uut.tagger.apdtimer.capture_operate)
+		strobe_count = strobe_count + 1;
 end
 
-// Simulate delta inputs
-initial delta_in = 0;
-always begin
-	#100 delta_in[0] = 1; $display($time, "  Delta channel 0 (counter=%d)", counter);
-	#100 delta_in[0] = 0;
-end
-always begin
-	#200 delta_in[1] = 1; $display($time, "  Delta channel 1 (counter=%d)", counter);
-	#300 delta_in[1] = 0;
-end
-
-assign lasers_in = 0;
+reg [31:0] delta_count;
+initial delta_count = 0;
+wire [3:0] delta_chs;
+`ifdef LOG_EVENTS
+always @(posedge delta_chs[0])
+	$display($time, "  Delta channel event %d", delta_count);
+`endif
 
 reg [7:0] cmd;
 reg cmd_wr, cmd_commit;
@@ -86,7 +96,7 @@ fx2_timetag uut(
 	.fx2_fifoadr(fifoadr),
 
 	.ext_clk(clk),
-	.delta_in(delta_in),
+	.delta_chs(delta_chs),
 	.strobe_in(strobe_in),
 	.led()
 );
@@ -120,20 +130,25 @@ begin
 end
 endtask
 
+`ifdef LOG_SAMPLES
 reg [47:0] sample_buf;
+reg [31:0] sample_count;
+initial sample_count = 0;
 initial begin
-#100 ; // Wait until things stabilize
-forever begin
-	@(posedge fx2_clk && sample_rdy);
-	@(posedge fx2_clk && sample_rdy) sample_buf[47:40] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[39:32] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[31:24] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[23:16] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[15:8] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[7:0] = sample_data;
-	$display($time, "  Sample %012x", sample_buf);
+	#100 ; // Wait until things stabilize
+	forever begin
+		@(posedge fx2_clk && sample_rdy);
+		@(posedge fx2_clk && sample_rdy) sample_buf[47:40] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[39:32] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[31:24] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[23:16] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[15:8] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[7:0] = sample_data;
+		sample_count = sample_count + 1;
+		$display($time, "  Sample #%d:    %012x", sample_count, sample_buf);
+	end
 end
-end
+`endif
 
 //always @(posedge fx2_clk && sample_rdy) $display($time, "  sample: %02x", sample_data);
 	
@@ -156,23 +171,23 @@ initial begin
 
 	#50 ;
 	$display($time, "  Testing version register");
-	reg_cmd(0, 4'h1, 0);
+	reg_cmd(0, 16'h1, 0);
 
 	#50 ;
 	$display($time, "  Testing clockrate register");
-	reg_cmd(0, 4'h2, 0);
+	reg_cmd(0, 16'h2, 0);
 
 	#50 ;
 	$display($time, "  Resetting counter");
-	reg_cmd(1, 4'h3, 32'h04);
+	reg_cmd(1, 16'h3, 32'h04);
 
 	#50 ;
 	$display($time, "  Enabling strobe channels");
-	reg_cmd(1, 4'h4, 32'h0f);
+	reg_cmd(1, 16'h4, 32'h0f);
 
 	#50 ;
 	$display($time, "  Starting capture");
-	reg_cmd(1, 4'h3, 32'h03);
+	reg_cmd(1, 16'h3, 32'h03);
 
 	$display($time, "  Waiting for some data");
 
@@ -180,23 +195,30 @@ initial begin
 
 	#50 ;
 	$display($time, "  Disabling strobe channels");
-	reg_cmd(1, 4'h4, 0);
+	reg_cmd(1, 16'h4, 0);
 
 	#1000;
 
+	$display($time, "  Setting up sequencer");
+	reg_cmd(1, 16'h22, 31'h03); // Enable channel 0, initial_state=1
+	reg_cmd(1, 16'h23, 31'd10); // Channel 0 low count
+	reg_cmd(1, 16'h24, 31'd20); // Channel 0 high count
+	reg_cmd(1, 16'h20, 31'h02); // Reset
+	reg_cmd(1, 16'h20, 31'h01); // Operate
+
 	#50 ;
 	$display($time, "  Enabling delta channels");
-	reg_cmd(1, 4'h5, 32'h0f);
+	reg_cmd(1, 16'h5, 32'h0f);
 
 	#4000 ;
 
 	#50 ;
 	$display($time, "  Disabling delta channels");
-	reg_cmd(1, 4'h5, 0);
+	reg_cmd(1, 16'h5, 0);
 	
 	#50 ;
 	$display($time, "  Stopping capture");
-	reg_cmd(1, 4'h3, 32'h02);
+	reg_cmd(1, 16'h3, 32'h02);
 
 end
 

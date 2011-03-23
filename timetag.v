@@ -8,7 +8,7 @@ module timetag(
 
 	clk,
 	strobe_in,
-	delta_in
+	delta_chs
 );
 
 // Clocks
@@ -32,7 +32,7 @@ input	data_ack;
 
 // Acquisition inputs
 input	[3:0] strobe_in;
-input	[3:0] delta_in;
+output	[3:0] delta_chs;
 
 // Register framework
 wire	[15:0] reg_addr;
@@ -68,31 +68,23 @@ readonly_register #(.ADDR(16'h02)) clockrate_reg(
 	.value(`CLOCKRATE)
 );
 
-//`define TEST_OUTPUT
-`ifdef TEST_OUTPUT
+// Sequencer
+sequencer seq(
+        .clk(fx2_clk),
+        .outputs(delta_chs),
+        .reg_clk(fx2_clk),
+        .reg_addr(reg_addr),
+        .reg_data(reg_data),
+        .reg_wr(reg_wr)
+);
 
-reg [31:0] count;
-initial count = 0;
-always @(posedge clk)
-begin
-	if (count == 0)
-		count <= 32'd480000;
-	else
-		count <= count - 1;
-end
-
-assign record_rdy = (count == 0);
-assign record[46:0] = 47'hfeeddeadbeef;
-//assign cmd_ack = 1'b1;
-
-`else
 
 wire	[47:0] record;
 wire	record_rdy;
 apdtimer_all apdtimer(
 	.clk(clk),
 	.strobe_in(strobe_in),
-	.delta_in(delta_in),
+	.delta_in(delta_chs),
 	.record_rdy(record_rdy),
 	.record(record[46:0]),
 	.reg_clk(fx2_clk),
@@ -100,8 +92,6 @@ apdtimer_all apdtimer(
 	.reg_data(reg_data),
 	.reg_wr(reg_wr)
 );
-
-`endif
 
 
 // Record FIFO
@@ -126,7 +116,7 @@ always @(posedge clk)
 begin
 	if (record_rdy && rec_buf_full)
 		rec_lost <= 1;
-	else if (record_rdy && ~rec_buf_full)
+	else if (record_rdy && !rec_buf_full)
 		rec_lost <= 0;
 end
 
@@ -136,12 +126,12 @@ counter_register #(.ADDR(16'h06)) rec_counter(
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
-	.increment(rec_buf_rdnext)
+	.increment(record_rdy && !rec_buf_full)
 );
 
 sample_fifo rec_buf(
 	.wrclk(clk),
-	.wrreq(record_rdy & ~rec_buf_full),
+	.wrreq(record_rdy && !rec_buf_full),
 	.wrfull(rec_buf_full),
 	.data(record),
 
@@ -153,7 +143,7 @@ sample_fifo rec_buf(
 
 sample_multiplexer mux(
 	.clk(fx2_clk),
-	.sample_rdy(~rec_buf_empty),
+	.sample_rdy(!rec_buf_empty),
 	.sample(rec_buf_out),
 	.sample_req(rec_buf_rdnext),
 
