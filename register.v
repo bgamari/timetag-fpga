@@ -16,6 +16,8 @@ input   reg_wr;
 output  [31:0] value;
 reg     [31:0] value;
 
+initial value = 32'h0;
+
 always @(posedge clk)
 if (reg_addr == ADDR && reg_wr)
         value <= reg_data;
@@ -56,6 +58,8 @@ inout   [31:0] reg_data;
 input   reg_wr;
 input   increment;
 reg     [31:0] value;
+
+initial value = 32'h0;
 
 always @(posedge clk)
 begin
