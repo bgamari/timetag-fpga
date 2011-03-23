@@ -176,23 +176,23 @@ initial begin
 
 	#50 ;
 	$display($time, "  Testing version register");
-	reg_cmd(0, 4'h1, 0);
+	reg_cmd(0, 16'h1, 0);
 
 	#50 ;
 	$display($time, "  Testing clockrate register");
-	reg_cmd(0, 4'h2, 0);
+	reg_cmd(0, 16'h2, 0);
 
 	#50 ;
 	$display($time, "  Resetting counter");
-	reg_cmd(1, 4'h3, 32'h04);
+	reg_cmd(1, 16'h3, 32'h04);
 
 	#50 ;
 	$display($time, "  Enabling strobe channels");
-	reg_cmd(1, 4'h4, 32'h0f);
+	reg_cmd(1, 16'h4, 32'h0f);
 
 	#50 ;
 	$display($time, "  Starting capture");
-	reg_cmd(1, 4'h3, 32'h03);
+	reg_cmd(1, 16'h3, 32'h03);
 
 	$display($time, "  Waiting for some data");
 
@@ -200,23 +200,23 @@ initial begin
 
 	#50 ;
 	$display($time, "  Disabling strobe channels");
-	reg_cmd(1, 4'h4, 0);
+	reg_cmd(1, 16'h4, 0);
 
 	#1000;
 
 	#50 ;
 	$display($time, "  Enabling delta channels");
-	reg_cmd(1, 4'h5, 32'h0f);
+	reg_cmd(1, 16'h5, 32'h0f);
 
 	#4000 ;
 
 	#50 ;
 	$display($time, "  Disabling delta channels");
-	reg_cmd(1, 4'h5, 0);
+	reg_cmd(1, 16'h5, 0);
 	
 	#50 ;
 	$display($time, "  Stopping capture");
-	reg_cmd(1, 4'h3, 32'h02);
+	reg_cmd(1, 16'h3, 32'h02);
 
 end
 
