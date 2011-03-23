@@ -69,6 +69,37 @@ addr  description
         Gives the number of records dropped (e.g. due to buffer overflow) since
         the last reset
 
+0x0020: Sequencer configuration (RW)
+  bit   name                    description
+  0     operate                 Enable operation of sequencer
+  1     reset                   Reset counter and initial states
+
+0x0021: Sequencer clockrate (RO)
+        Gives the clockrate of the sequencer module in Hertz
+
+0x0022: Sequencer channel 0 configuration (RW)
+  bit   name                    description
+  0     enabled                 Enable operation
+  1     initial_state           The state to start in
+
+0x0023: Sequencer channel 0 low count (RW)
+        Gives the number of cycles for which to remain low
+
+0x0024: Sequencer channel 0 high count (RW)
+        Gives the number of cycles for which to remain high
+
+0x0025: Sequencer channel 1 configuration (RW)
+0x0026: Sequencer channel 1 low count (RW)
+0x0027: Sequencer channel 1 high count (RW)
+
+0x0028: Sequencer channel 2 configuration (RW)
+0x0029: Sequencer channel 2 low count (RW)
+0x002a: Sequencer channel 2 high count (RW)
+
+0x002b: Sequencer channel 3 configuration (RW)
+0x002c: Sequencer channel 3 low count (RW)
+0x002d: Sequencer channel 3 high count (RW)
+
 
 Reset procedure:
 =================

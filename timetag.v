@@ -8,7 +8,7 @@ module timetag(
 
 	clk,
 	strobe_in,
-	delta_in
+	delta_chs
 );
 
 // Clocks
@@ -32,7 +32,7 @@ input	data_ack;
 
 // Acquisition inputs
 input	[3:0] strobe_in;
-input	[3:0] delta_in;
+output	[3:0] delta_chs;
 
 // Register framework
 wire	[15:0] reg_addr;
@@ -68,6 +68,15 @@ readonly_register #(.ADDR(16'h02)) clockrate_reg(
 	.value(`CLOCKRATE)
 );
 
+// Sequencer
+sequencer seq(
+        .clk(fx2_clk),
+        .outputs(delta_chs),
+        .reg_clk(fx2_clk),
+        .reg_addr(reg_addr),
+        .reg_data(reg_data),
+        .reg_wr(reg_wr)
+);
 
 
 wire	[47:0] record;
@@ -75,7 +84,7 @@ wire	record_rdy;
 apdtimer_all apdtimer(
 	.clk(clk),
 	.strobe_in(strobe_in),
-	.delta_in(delta_in),
+	.delta_in(delta_chs),
 	.record_rdy(record_rdy),
 	.record(record[46:0]),
 	.reg_clk(fx2_clk),

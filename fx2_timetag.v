@@ -12,7 +12,7 @@ module fx2_timetag(
 	fx2_fifoadr,
 
 	ext_clk,
-	delta_in,
+	delta_chs,
 	strobe_in,
 	led
 );
@@ -29,7 +29,7 @@ output	[1:0] fx2_fifoadr;
 
 input	ext_clk;
 input	[3:0] strobe_in;
-input	[3:0] delta_in;
+output	[3:0] delta_chs;
 output	[1:0] led;
 
 wire	clk;
@@ -72,7 +72,7 @@ timetag tagger(
 
 	.clk(clk),
 	.strobe_in(strobe_in),
-	.delta_in(delta_in)
+	.delta_chs(delta_chs)
 );
 
 

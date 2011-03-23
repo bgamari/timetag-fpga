@@ -1,7 +1,7 @@
 `timescale 1ns/1ns
 
-`define LOG_EVENTS
-`define LOG_SAMPLES
+//`define LOG_EVENTS
+//`define LOG_SAMPLES
 
 module fx2_timetag_bench();
 
@@ -44,18 +44,13 @@ always begin
 		strobe_count = strobe_count + 1;
 end
 
-// Simulate delta inputs
-initial delta_in = 0;
-always begin
-	#100 delta_in[0] = 1; $display($time, "  Delta channel 0 (counter=%d)", counter);
-	#100 delta_in[0] = 0;
-end
-always begin
-	#200 delta_in[1] = 1; $display($time, "  Delta channel 1 (counter=%d)", counter);
-	#300 delta_in[1] = 0;
-end
-
-assign lasers_in = 0;
+reg [31:0] delta_count;
+initial delta_count = 0;
+wire [3:0] delta_chs;
+`ifdef LOG_EVENTS
+always @(posedge delta_chs[0])
+	$display($time, "  Delta channel event %d", delta_count);
+`endif
 
 reg [7:0] cmd;
 reg cmd_wr, cmd_commit;
@@ -101,7 +96,7 @@ fx2_timetag uut(
 	.fx2_fifoadr(fifoadr),
 
 	.ext_clk(clk),
-	.delta_in(delta_in),
+	.delta_chs(delta_chs),
 	.strobe_in(strobe_in),
 	.led()
 );
@@ -203,6 +198,13 @@ initial begin
 	reg_cmd(1, 16'h4, 0);
 
 	#1000;
+
+	$display($time, "  Setting up sequencer");
+	reg_cmd(1, 16'h22, 31'h03); // Enable channel 0, initial_state=1
+	reg_cmd(1, 16'h23, 31'd10); // Channel 0 low count
+	reg_cmd(1, 16'h24, 31'd20); // Channel 0 high count
+	reg_cmd(1, 16'h20, 31'h02); // Reset
+	reg_cmd(1, 16'h20, 31'h01); // Operate
 
 	#50 ;
 	$display($time, "  Enabling delta channels");
