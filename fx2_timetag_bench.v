@@ -19,14 +19,18 @@ initial clk = 0;
 always #2 clk = ~clk;
 
 // Simulate strobe inputs
+reg [31:0] strobe_count;
+initial strobe_count = 0;
 initial strobe_in = 0;
 always begin
-	#100 strobe_in[0] = 1; $display($time, "  Strobe channel 0 (counter=%d)", counter);
+	#100 strobe_in[0] = 1; $display($time, "  Strobe channel 0 (event %d, counter=%d)", strobe_count, counter);
 	#5   strobe_in[0] = 0;
+	strobe_count = strobe_count + 1;
 end
 always begin
-	#80  strobe_in[1] = 1; $display($time, "  Strobe channel 1 (counter=%d)", counter);
+	#80  strobe_in[1] = 1; $display($time, "  Strobe channel 1 (event %d, counter=%d)", strobe_count, counter);
 	#5   strobe_in[1] = 0;
+	strobe_count = strobe_count + 1;
 end
 
 // Simulate delta inputs
@@ -121,6 +125,8 @@ end
 endtask
 
 reg [47:0] sample_buf;
+reg [31:0] sample_count;
+initial sample_count = 0;
 initial begin
 #100 ; // Wait until things stabilize
 forever begin
@@ -131,7 +137,8 @@ forever begin
 	@(posedge fx2_clk && sample_rdy) sample_buf[23:16] = sample_data;
 	@(posedge fx2_clk && sample_rdy) sample_buf[15:8] = sample_data;
 	@(posedge fx2_clk && sample_rdy) sample_buf[7:0] = sample_data;
-	$display($time, "  Sample %012x", sample_buf);
+	sample_count = sample_count + 1;
+	$display($time, "  Sample #%d:    %012x", sample_count, sample_buf);
 end
 end
 
