@@ -58,16 +58,19 @@ inout   [31:0] reg_data;
 input   reg_wr;
 input   increment;
 reg     [31:0] value;
-
 initial value = 32'h0;
 
-always @(posedge increment)
-        value <= value + 1;
+reg     reset;
+
+always @(posedge increment || reset)
+        value <= reset ? 0 : value + 1;
 
 always @(posedge clk)
 begin
         if (reg_addr == ADDR && reg_wr)
-                value <= 0;
+                reset <= 1;
+        else if (reset)
+                reset <= 0;
 end
 
 assign reg_data = (reg_addr == ADDR && !reg_wr) ? value : 32'hZZ;
