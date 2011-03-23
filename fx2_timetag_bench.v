@@ -31,7 +31,8 @@ always begin
 	$display($time, "  Strobe channel 0 (event %d, counter=%d)", strobe_count, counter);
 	`endif
 	#5   strobe_in[0] = 0;
-	strobe_count = strobe_count + 1;
+	if (uut.tagger.apdtimer.capture_operate)
+		strobe_count = strobe_count + 1;
 end
 always begin
 	#80  strobe_in[1] = 1;
@@ -39,7 +40,8 @@ always begin
 	$display($time, "  Strobe channel 1 (event %d, counter=%d)", strobe_count, counter);
 	`endif
 	#5   strobe_in[1] = 0;
-	strobe_count = strobe_count + 1;
+	if (uut.tagger.apdtimer.capture_operate)
+		strobe_count = strobe_count + 1;
 end
 
 // Simulate delta inputs
