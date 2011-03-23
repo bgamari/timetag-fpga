@@ -68,24 +68,7 @@ readonly_register #(.ADDR(16'h02)) clockrate_reg(
 	.value(`CLOCKRATE)
 );
 
-//`define TEST_OUTPUT
-`ifdef TEST_OUTPUT
 
-reg [31:0] count;
-initial count = 0;
-always @(posedge clk)
-begin
-	if (count == 0)
-		count <= 32'd480000;
-	else
-		count <= count - 1;
-end
-
-assign record_rdy = (count == 0);
-assign record[46:0] = 47'hfeeddeadbeef;
-//assign cmd_ack = 1'b1;
-
-`else
 
 wire	[47:0] record;
 wire	record_rdy;
@@ -100,8 +83,6 @@ apdtimer_all apdtimer(
 	.reg_data(reg_data),
 	.reg_wr(reg_wr)
 );
-
-`endif
 
 
 // Record FIFO
