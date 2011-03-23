@@ -1,3 +1,5 @@
+`include "config.v"
+
 module fx2_timetag(
 	fx2_clk,
 	fx2_flags,
@@ -44,11 +46,11 @@ wire	reply_ack;
 wire	reply_end;
 
 
-`define USE_EXT_CLK
 `ifdef USE_EXT_CLK
 altpll0 b2v_inst2(
 	.inclk0(ext_clk),
-	.c0(clk)
+	.c0(clk),
+        .locked(pll_locked)
 );
 `else
 assign clk = fx2_clk;
