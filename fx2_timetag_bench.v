@@ -1,5 +1,8 @@
 `timescale 1ns/1ns
 
+`define LOG_EVENTS
+`define LOG_SAMPLES
+
 module fx2_timetag_bench();
 
 reg clk;
@@ -23,12 +26,18 @@ reg [31:0] strobe_count;
 initial strobe_count = 0;
 initial strobe_in = 0;
 always begin
-	#100 strobe_in[0] = 1; $display($time, "  Strobe channel 0 (event %d, counter=%d)", strobe_count, counter);
+	#100 strobe_in[0] = 1;
+	`ifdef LOG_EVENTS
+	$display($time, "  Strobe channel 0 (event %d, counter=%d)", strobe_count, counter);
+	`endif
 	#5   strobe_in[0] = 0;
 	strobe_count = strobe_count + 1;
 end
 always begin
-	#80  strobe_in[1] = 1; $display($time, "  Strobe channel 1 (event %d, counter=%d)", strobe_count, counter);
+	#80  strobe_in[1] = 1;
+	`ifdef LOG_EVENTS
+	$display($time, "  Strobe channel 1 (event %d, counter=%d)", strobe_count, counter);
+	`endif
 	#5   strobe_in[1] = 0;
 	strobe_count = strobe_count + 1;
 end
@@ -124,23 +133,25 @@ begin
 end
 endtask
 
+`ifdef LOG_SAMPLES
 reg [47:0] sample_buf;
 reg [31:0] sample_count;
 initial sample_count = 0;
 initial begin
-#100 ; // Wait until things stabilize
-forever begin
-	@(posedge fx2_clk && sample_rdy);
-	@(posedge fx2_clk && sample_rdy) sample_buf[47:40] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[39:32] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[31:24] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[23:16] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[15:8] = sample_data;
-	@(posedge fx2_clk && sample_rdy) sample_buf[7:0] = sample_data;
-	sample_count = sample_count + 1;
-	$display($time, "  Sample #%d:    %012x", sample_count, sample_buf);
+	#100 ; // Wait until things stabilize
+	forever begin
+		@(posedge fx2_clk && sample_rdy);
+		@(posedge fx2_clk && sample_rdy) sample_buf[47:40] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[39:32] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[31:24] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[23:16] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[15:8] = sample_data;
+		@(posedge fx2_clk && sample_rdy) sample_buf[7:0] = sample_data;
+		sample_count = sample_count + 1;
+		$display($time, "  Sample #%d:    %012x", sample_count, sample_buf);
+	end
 end
-end
+`endif
 
 //always @(posedge fx2_clk && sample_rdy) $display($time, "  sample: %02x", sample_data);
 	
