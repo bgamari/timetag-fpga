@@ -1,7 +1,7 @@
 `timescale 1ns/1ns
 
-//`define LOG_EVENTS
-//`define LOG_SAMPLES
+`define LOG_EVENTS
+`define LOG_SAMPLES
 
 module fx2_timetag_bench();
 
@@ -201,8 +201,8 @@ initial begin
 
 	$display($time, "  Setting up sequencer");
 	reg_cmd(1, 16'h22, 31'h03); // Enable channel 0, initial_state=1
-	reg_cmd(1, 16'h23, 31'd10); // Channel 0 low count
-	reg_cmd(1, 16'h24, 31'd20); // Channel 0 high count
+	reg_cmd(1, 16'h23, 31'd40); // Channel 0 low count
+	reg_cmd(1, 16'h24, 31'd80); // Channel 0 high count
 	reg_cmd(1, 16'h20, 31'h02); // Reset
 	reg_cmd(1, 16'h20, 31'h01); // Operate
 

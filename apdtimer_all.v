@@ -21,10 +21,11 @@ wire	[3:0] strobe_chans;
 
 wire	[31:0] timer_reg;
 register #(.ADDR(8'h03)) apdtimer_reg(
-	.clk(reg_clk),
+	.reg_clk(reg_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
+	.clk(clk),
 	.value(timer_reg)
 );
 wire	capture_operate = timer_reg[0];
@@ -33,19 +34,21 @@ wire	reset_counter = timer_reg[2];
 
 wire [31:0] strobe_operate;
 register #(.ADDR(8'h04)) strobe_operate_reg(
-	.clk(reg_clk),
+	.reg_clk(reg_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
+	.clk(clk),
 	.value(strobe_operate)
 );
 
 wire [31:0] delta_operate;
 register #(.ADDR(8'h05)) delta_operate_reg(
-	.clk(reg_clk),
+	.reg_clk(reg_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
+	.clk(clk),
 	.value(delta_operate)
 );
 

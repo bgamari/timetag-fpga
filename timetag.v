@@ -53,7 +53,7 @@ reg_manager reg_mgr(
 );
 
 readonly_register #(.ADDR(16'h01)) version_reg(
-	.clk(fx2_clk),
+	.reg_clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
@@ -61,21 +61,21 @@ readonly_register #(.ADDR(16'h01)) version_reg(
 );
 
 readonly_register #(.ADDR(16'h02)) clockrate_reg(
-	.clk(fx2_clk),
-	.reg_addr(reg_addr),
-	.reg_data(reg_data),
-	.reg_wr(reg_wr),
-	.value(`CLOCKRATE)
+       .reg_clk(fx2_clk),
+       .reg_addr(reg_addr),
+       .reg_data(reg_data),
+       .reg_wr(reg_wr),
+       .value(`CLOCKRATE)
 );
 
 // Sequencer
 sequencer seq(
-        .clk(fx2_clk),
-        .outputs(delta_chs),
-        .reg_clk(fx2_clk),
-        .reg_addr(reg_addr),
-        .reg_data(reg_data),
-        .reg_wr(reg_wr)
+	.clk(fx2_clk),
+	.outputs(delta_chs),
+	.reg_clk(fx2_clk),
+	.reg_addr(reg_addr),
+	.reg_data(reg_data),
+	.reg_wr(reg_wr)
 );
 
 
@@ -104,11 +104,13 @@ wire [47:0] rec_buf_out;
 reg rec_lost;
 initial rec_lost = 0;
 assign record[47] = rec_lost;
+
 counter_register #(.ADDR(16'h07)) rec_lost_counter(
-	.clk(fx2_clk),
+	.reg_clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
+	.increment_clk(clk),
 	.increment(reg_lost)
 );
 
@@ -122,10 +124,11 @@ end
 
 // Record counter
 counter_register #(.ADDR(16'h06)) rec_counter(
-	.clk(fx2_clk),
+	.reg_clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
+	.increment_clk(clk),
 	.increment(record_rdy && !rec_buf_full)
 );
 

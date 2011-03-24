@@ -184,7 +184,7 @@ set_global_assignment -name PHYSICAL_SYNTHESIS_ASYNCHRONOUS_SIGNAL_PIPELINING ON
 set_global_assignment -name PHYSICAL_SYNTHESIS_EFFORT EXTRA
 set_global_assignment -name CYCLONEII_OPTIMIZATION_TECHNIQUE SPEED
 set_global_assignment -name SYNTH_TIMING_DRIVEN_SYNTHESIS ON
-set_global_assignment -name OPTIMIZE_HOLD_TIMING "ALL PATHS"
+set_global_assignment -name OPTIMIZE_HOLD_TIMING OFF
 set_global_assignment -name AUTO_PACKED_REGISTERS_STRATIXII NORMAL
 set_global_assignment -name STATE_MACHINE_PROCESSING AUTO
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
@@ -208,7 +208,6 @@ set_global_assignment -name VERILOG_FILE runonce.v
 set_global_assignment -name VERILOG_FILE sample_multiplexer.v
 set_global_assignment -name VERILOG_FILE altpll0.v
 set_global_assignment -name VERILOG_FILE apdtimer_all.v
-set_global_assignment -name VERILOG_FILE leddriver.v
 set_global_assignment -name VERILOG_FILE fx2_test.v
 set_global_assignment -name QIP_FILE sample_fifo.qip
 set_global_assignment -name SDC_FILE timetag.sdc
