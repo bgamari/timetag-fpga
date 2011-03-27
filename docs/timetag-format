@@ -1,5 +1,5 @@
-data format:
-=============
+timetag event format:
+=======================
 
 High bytes are sent first (e.g. bits 47:40, then 39:32, etc.).
 
