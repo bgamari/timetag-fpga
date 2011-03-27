@@ -16,11 +16,8 @@ begin
 		state <= 1;
 		out <= 1;
 	end
-	else
-	begin
-		if (out == 1)
-			out <= 0;
-	end
+	else if (out == 1)
+		out <= 0;
 	
 	if (in == 0)
 		state <= 0;
