@@ -77,28 +77,34 @@ addr  description
 0x0021: Sequencer clockrate (RO)
         Gives the clockrate of the sequencer module in Hertz
 
-0x0022: Sequencer channel 0 configuration (RW)
+0x0028: Sequencer channel 0 configuration (RW)
   bit   name                    description
   0     enabled                 Enable operation
   1     initial_state           The state to start in
 
-0x0023: Sequencer channel 0 low count (RW)
+0x0029: Sequencer channel 0 initial count (RW)
+	Gives the number of cycles for which to remain in initial_state
+
+0x002a: Sequencer channel 0 low count (RW)
         Gives the number of cycles for which to remain low
 
-0x0024: Sequencer channel 0 high count (RW)
+0x002b: Sequencer channel 0 high count (RW)
         Gives the number of cycles for which to remain high
 
-0x0025: Sequencer channel 1 configuration (RW)
-0x0026: Sequencer channel 1 low count (RW)
-0x0027: Sequencer channel 1 high count (RW)
+0x0030: Sequencer channel 1 configuration (RW)
+0x0031: Sequencer channel 1 initial count (RW)
+0x0032: Sequencer channel 1 low count (RW)
+0x0033: Sequencer channel 1 high count (RW)
 
-0x0028: Sequencer channel 2 configuration (RW)
-0x0029: Sequencer channel 2 low count (RW)
-0x002a: Sequencer channel 2 high count (RW)
+0x0038: Sequencer channel 2 configuration (RW)
+0x0039: Sequencer channel 2 initial count (RW)
+0x003a: Sequencer channel 2 low count (RW)
+0x003b: Sequencer channel 2 high count (RW)
 
-0x002b: Sequencer channel 3 configuration (RW)
-0x002c: Sequencer channel 3 low count (RW)
-0x002d: Sequencer channel 3 high count (RW)
+0x0040: Sequencer channel 3 configuration (RW)
+0x0041: Sequencer channel 3 initial count (RW)
+0x0042: Sequencer channel 3 low count (RW)
+0x0043: Sequencer channel 3 high count (RW)
 
 
 Reset procedure:

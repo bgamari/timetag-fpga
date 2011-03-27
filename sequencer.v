@@ -15,7 +15,7 @@ output out;
 
 input reg_clk;
 input [15:0] reg_addr;
-input [31:0] reg_data;
+inout [31:0] reg_data;
 input reg_wr;
 
 reg out;
@@ -31,25 +31,34 @@ register #(.ADDR(REGBASE+0)) config_reg(
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
-		  .clk(clk),
+	.clk(clk),
 	.value(config_value)
 );
-wire [31:0] low_count;
-register #(.ADDR(REGBASE+1)) low_count_reg(
+wire [31:0] initial_count;
+register #(.ADDR(REGBASE+1)) initial_count_reg(
 	.reg_clk(reg_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
-		  .clk(clk),
+	.clk(clk),
+	.value(initial_count)
+);
+wire [31:0] low_count;
+register #(.ADDR(REGBASE+2)) low_count_reg(
+	.reg_clk(reg_clk),
+	.reg_addr(reg_addr),
+	.reg_data(reg_data),
+	.reg_wr(reg_wr),
+	.clk(clk),
 	.value(low_count)
 );
 wire [31:0] high_count;
-register #(.ADDR(REGBASE+2)) high_count_reg(
+register #(.ADDR(REGBASE+3)) high_count_reg(
 	.reg_clk(reg_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
-		  .clk(clk),
+	.clk(clk),
 	.value(high_count)
 );
 
@@ -58,7 +67,7 @@ begin
 	if (reset)
 	begin
 		out <= initial_state;
-		counter <= initial_state ? high_count : low_count;
+		counter <= initial_count;
 	end
 	else if (counter == 0)
 	begin
@@ -83,7 +92,7 @@ output [3:0] outputs;
 
 input reg_clk;
 input [15:0] reg_addr;
-input [31:0] reg_data;
+inout [31:0] reg_data;
 input reg_wr;
 
 wire [31:0] config_value;
@@ -94,7 +103,7 @@ register #(.ADDR(8'h20)) config_reg(
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
-		  .clk(clk),
+	.clk(clk),
 	.value(config_value)
 );
 
@@ -106,7 +115,7 @@ readonly_register #(.ADDR(8'h21)) clockrate_reg(
 	.value(`SEQ_CLOCKRATE)
 );
 
-seq_channel #(.REGBASE(8'h22)) seq_ch0(
+seq_channel #(.REGBASE(8'h28)) seq_ch0(
 	.clk(clk),
 	.reset(reset),
 	.operate(operate),
@@ -117,7 +126,7 @@ seq_channel #(.REGBASE(8'h22)) seq_ch0(
 	.reg_wr(reg_wr)
 );
 
-seq_channel #(.REGBASE(8'h25)) seq_ch1(
+seq_channel #(.REGBASE(8'h30)) seq_ch1(
 	.clk(clk),
 	.reset(reset),
 	.operate(operate),
@@ -128,7 +137,7 @@ seq_channel #(.REGBASE(8'h25)) seq_ch1(
 	.reg_wr(reg_wr)
 );
 
-seq_channel #(.REGBASE(8'h28)) seq_ch2(
+seq_channel #(.REGBASE(8'h38)) seq_ch2(
 	.clk(clk),
 	.reset(reset),
 	.operate(operate),
@@ -139,7 +148,7 @@ seq_channel #(.REGBASE(8'h28)) seq_ch2(
 	.reg_wr(reg_wr)
 );
 
-seq_channel #(.REGBASE(8'h2b)) seq_ch3(
+seq_channel #(.REGBASE(8'h40)) seq_ch3(
 	.clk(clk),
 	.reset(reset),
 	.operate(operate),
