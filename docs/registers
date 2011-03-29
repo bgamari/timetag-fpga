@@ -42,12 +42,15 @@ Access types:
 
 addr  description
 ----  -----------
+
+== General ==
 0x0001: Version register (RO)
         Gives the hardware version number
 
 0x0002: Clockrate register (RO)
         Gives the clockrate in Hertz
 
+== Timetagging engine ==
 0x0003: Capture control (RW)
   bit   name                    description
   0     capture_operate         Enable registration of input events
@@ -69,7 +72,8 @@ addr  description
         Gives the number of records dropped (e.g. due to buffer overflow) since
         the last reset
 
-0x0020: Sequencer configuration (RW)
+== Sequencer ==
+0x0020: Global sequencer configuration (RW)
   bit   name                    description
   0     operate                 Enable operation of sequencer
   1     reset                   Reset counter and initial states
@@ -79,7 +83,7 @@ addr  description
 
 0x0028: Sequencer channel 0 configuration (RW)
   bit   name                    description
-  0     enabled                 Enable operation
+  0     operate                 Enable operation
   1     initial_state           The state to start in
 
 0x0029: Sequencer channel 0 initial count (RW)
