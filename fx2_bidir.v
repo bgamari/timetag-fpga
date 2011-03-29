@@ -90,7 +90,10 @@ assign fx2_fd = fifo_dataout_oe ? fifo_dataout : 8'hZZ;
  */
 
 /*
- * state[3:2]: fidoadr
+ * state[3:2]: FIFOADR
+ *             00: fifo2: Command from PC
+ *             10: fifo6: Data
+ *             11: fifo8: Command reply
  */
 reg [3:0] state;
 
@@ -112,7 +115,7 @@ case(state)
 		else if (fifo2_data_available)				//   If host is sending something, handle it first
 			state <= 4'b0001;
 		else if (fifo6_full)					//   fifo is full, go to idle
-			state <=4'b1001;
+			state <= 4'b1001;
 		     
 	// Command receive path:
 	4'b0001: state <= 4'b0011;					// Wait for turnaround to read from PC
@@ -141,7 +144,8 @@ assign fifo_datain_oe = (state[3:2] == 2'b00);
 wire can_xmit_sample = (state==4'b1011) && sample_rdy && fifo2_empty && fifo6_ready_to_accept_data;
 assign sample_ack = can_xmit_sample;
 
-assign fifo_dataout = (state==4'b1011) ? sample : reply;
+assign fifo_dataout = (state==4'b1011) ? sample : 
+		      (state==4'b1110) ? reply : 8'bX;
 
 assign fifo_wr = can_xmit_sample || (state==4'b1110);
 
