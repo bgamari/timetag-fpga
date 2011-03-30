@@ -63,20 +63,22 @@ register #(.ADDR(REGBASE+3)) high_count_reg(
 );
 
 always @(posedge clk)
-if (enabled && operate)
 begin
 	if (reset)
 	begin
 		out <= initial_state;
 		counter <= initial_count;
 	end
-	else if (counter == 0)
-	begin
-		out <= !out;
-		counter <= out ? low_count : high_count;
-	end
-	else
-		counter <= counter - operate;
+        else if (enabled && operate)
+        begin
+                if (counter == 0)
+                begin
+                        out <= !out;
+                        counter <= out ? low_count : high_count;
+                end
+                else
+                        counter <= counter - operate;
+        end
 end
 endmodule
 
