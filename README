@@ -27,12 +27,13 @@ by default supports up to four channels in strobe mode and four channels in
 delta mode, although these numbers are fairly easy to change. By default, the
 delta channels are driven by the sequencer outputs.
 
-The sequencer is capable of triggering state changes in a binary output after a
-specified length of time. The output starts in the state given by the
+The sequencer triggers state changes in a set of four binary output channels
+according to a specified program. Each output starts in the state given by its
 initial_state register. After waiting initial_time, the output transitions to
 !initial_state, where it remains for high_time or low_time depending upon the
 state. The device then transitions to initial_state again, again waiting
-high_time or low_time. The state transitions continue in this way.
+high_time or low_time.  The state transitions continue in this way.
+
 
      Initial state = high
 
