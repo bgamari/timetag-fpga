@@ -100,7 +100,7 @@ assign reg_wr = (state==8) && wants_wr;
 assign reply_out = (state==9)  ? reg_data[7:0] : 
 		   (state==10)	? reg_data[15:8] :
 		   (state==11) ? reg_data[23:16] :
-		   (state==12) ? reg_data[31:24] : 32'hZZZZZZZZ;
+		   (state==12) ? reg_data[31:24] : 8'hZZZZZZZZ;
 assign reply_rdy = state==9 || state==10 || state==11 || state==12;
 assign reply_end = state==12;
 
