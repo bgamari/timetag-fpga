@@ -12,7 +12,6 @@ wire [2:0] flags;
 wire [1:0] fifoadr;
 wire sloe, slrd, slwr, pktend;
 
-reg [3:0] delta_in;
 reg [3:0] strobe_in;
 
 wire [35:0] counter = uut.tagger.apdtimer.tagger.timer;
@@ -200,9 +199,10 @@ initial begin
 	#1000;
 
 	$display($time, "  Setting up sequencer");
-	reg_cmd(1, 16'h22, 31'h03); // Enable channel 0, initial_state=1
-	reg_cmd(1, 16'h23, 31'd40); // Channel 0 low count
-	reg_cmd(1, 16'h24, 31'd80); // Channel 0 high count
+	reg_cmd(1, 16'h28, 31'h03); // Enable channel 0, initial_state=1
+	reg_cmd(1, 16'h29, 31'd40); // Channel 0 initial count
+	reg_cmd(1, 16'h2a, 31'd80); // Channel 0 low count
+	reg_cmd(1, 16'h2b, 31'd60); // Channel 0 high count
 	reg_cmd(1, 16'h20, 31'h02); // Reset
 	reg_cmd(1, 16'h20, 31'h01); // Operate
 
