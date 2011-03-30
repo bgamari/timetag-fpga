@@ -62,7 +62,8 @@ register #(.ADDR(REGBASE+3)) high_count_reg(
 	.value(high_count)
 );
 
-always @(posedge clk && enabled && operate)
+always @(posedge clk)
+if (enabled && operate)
 begin
 	if (reset)
 	begin
