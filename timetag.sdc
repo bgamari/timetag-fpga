@@ -24,8 +24,10 @@ set_output_delay -clock fx2_clk -max 9ns [get_ports {fx2_pktend*}]
 set_output_delay -clock fx2_clk -min 0ns [get_ports {fx2_pktend*}]
 
 # Constrain input ports
-set_input_delay -clock sample_clk -max 2ns [get_ports {strobe_in*}]
-set_input_delay -clock sample_clk -min 0ns [get_ports {strobe_in*}]
+# Try setting a minimum delay with a maximum delay in hopes that this
+# gives the fitter more flexibility
+set_input_delay -clock sample_clk -max 5ns [get_ports {strobe_in*}]
+set_input_delay -clock sample_clk -min 2ns [get_ports {strobe_in*}]
 
 # LED timing doesn't matter
 set_output_delay -clock fx2_clk -max 0ns [get_ports {led*}]

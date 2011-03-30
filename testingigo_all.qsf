@@ -174,10 +174,10 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 # end ENTITY(fx2_timetag)
 # -----------------------
 set_global_assignment -name MISC_FILE "/home/bgamari/trees/timetag-fpga/testingigo_all.dpf"
-set_location_assignment PIN_73 -to strobe_in[3]
-set_location_assignment PIN_88 -to strobe_in[2]
-set_location_assignment PIN_89 -to strobe_in[1]
-set_location_assignment PIN_74 -to strobe_in[0]
+set_location_assignment PIN_74 -to strobe_in[3]
+set_location_assignment PIN_73 -to strobe_in[2]
+set_location_assignment PIN_70 -to strobe_in[1]
+set_location_assignment PIN_69 -to strobe_in[0]
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name PHYSICAL_SYNTHESIS_ASYNCHRONOUS_SIGNAL_PIPELINING ON
@@ -213,8 +213,8 @@ set_global_assignment -name QIP_FILE sample_fifo.qip
 set_global_assignment -name SDC_FILE timetag.sdc
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS_NO_OUTPUT_GND "AS INPUT TRI-STATED"
-set_location_assignment PIN_75 -to delta_chs[0]
-set_location_assignment PIN_79 -to delta_chs[1]
-set_location_assignment PIN_97 -to delta_chs[2]
-set_location_assignment PIN_92 -to delta_chs[3]
+set_location_assignment PIN_79 -to delta_chs[0]
+set_location_assignment PIN_92 -to delta_chs[1]
+set_location_assignment PIN_93 -to delta_chs[2]
+set_location_assignment PIN_97 -to delta_chs[3]
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
