@@ -5,27 +5,30 @@ Hardware: KNJN Xylo EM
 
 This is an adaptation of the FPGA time-tagging platform written at NIST by
 Polyakov, Migdall, and Nam[1]. The code was cleaned up, modularized, and a
-register interface was added for configuration. The device consists of two
-distinct functional units. A timetagging engine record timestamps of both
-strobe and level (known as delta events) events. Additionally, the device has
-four programmable two-state function generators (similar to pulse-width
-modulators) for controlling external devices (known as sequencers).  These
-sequencers can drive the delta inputs of the tagging engine, allowing output
-state change events to be recorded.
+register interface was added for configuration. In addition, an event
+sequencing module was added for controlling external instrumentation with high
+temporal resolution.
+
+The device consists of two distinct functional units. A timetagging engine
+record timestamps of both strobe and level (known as delta events) events.
+Additionally, the device has four programmable two-state function generators
+(similar to pulse-width modulators) for controlling external devices (known as
+sequencers).  These sequencers can drive the delta inputs of the tagging
+engine, allowing output state change events to be recorded.
 
 The tagging engine has two types of inputs, strobe channels and delta (level)
 channels.  A strobe channel can be equated to a standard edge trigger,
 registering an event on the rising edge of the input signal. This can be used,
 for instance, to register photon counts from a PMT.
 
-Delta channels register any change
-(low-to-high or high-to-low) of the input, recording the new state of the input
-in the record. These are generally used to record sequencer output state
-transitions. Each record includes a 36-bit timestamp and several flags. See
-docs/timetag-format for a detailed description of the data format. The design
-by default supports up to four channels in strobe mode and four channels in
-delta mode, although these numbers are fairly easy to change. By default, the
-delta channels are driven by the sequencer outputs.
+Delta channels register any change (low-to-high or high-to-low) of the input,
+recording the new state of the input in the record. These are generally used to
+record sequencer output state transitions. Each record includes a 36-bit
+timestamp and several flags. See docs/timetag-format for a detailed description
+of the data format. The design by default supports up to four channels in
+strobe mode and four channels in delta mode, although these numbers are fairly
+easy to change. By default, the delta channels are driven by the sequencer
+outputs.
 
 The sequencer triggers state changes in a set of four binary output channels
 according to a specified program. Each output starts in the state given by its
