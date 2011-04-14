@@ -8,7 +8,7 @@ Data flow:
               │
               ↓
       ┌─────────────────┐
-      │   sample_fifo   │               ~2000 sample buffer
+      │   sample_fifo   │               2048 sample buffer
       └───────┬─────────┘
               │
               │
