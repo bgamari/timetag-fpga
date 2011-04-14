@@ -65,7 +65,7 @@ initial reset = 0;
 
 always @(posedge increment_clk)
 begin
-	my_value <= reset ? 0 : my_value + 1;
+	my_value <= reset ? 0 : my_value + increment;
 end
 
 always @(posedge reg_clk)
