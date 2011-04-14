@@ -70,14 +70,13 @@ readonly_register #(.ADDR(16'h02)) clockrate_reg(
 
 // Sequencer
 sequencer seq(
-	.clk(fx2_clk),
+	.clk(clk),
 	.outputs(delta_chs),
 	.reg_clk(fx2_clk),
 	.reg_addr(reg_addr),
 	.reg_data(reg_data),
 	.reg_wr(reg_wr)
 );
-
 
 wire	[47:0] record;
 wire	record_rdy;

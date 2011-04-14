@@ -95,7 +95,7 @@ module altpll0 (
 	defparam
 		altpll_component.clk0_divide_by = 1,
 		altpll_component.clk0_duty_cycle = 50,
-		altpll_component.clk0_multiply_by = 5,
+		altpll_component.clk0_multiply_by = 4,
 		altpll_component.clk0_phase_shift = "0",
 		altpll_component.compensate_clock = "CLK0",
 		altpll_component.gate_lock_signal = "NO",
