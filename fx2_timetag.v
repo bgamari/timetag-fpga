@@ -47,6 +47,7 @@ wire	reply_end;
 
 
 `ifdef USE_EXT_CLK
+wire pll_locked;
 altpll0 b2v_inst2(
 	.inclk0(ext_clk),
 	.c0(clk),
