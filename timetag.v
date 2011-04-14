@@ -111,7 +111,7 @@ counter_register #(.ADDR(16'h07)) rec_lost_counter(
 	.reg_data(reg_data),
 	.reg_wr(reg_wr),
 	.increment_clk(clk),
-	.increment(reg_lost)
+	.increment(record_rdy && rec_buf_full)
 );
 
 always @(posedge clk)
