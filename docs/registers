@@ -40,75 +40,89 @@ Access types:
   RW=Read/Write
   RR=Read/Reset (any write will reset the value to 0)
 
-addr  description
-----  -----------
 
 == General ==
-0x0001: Version register (RO)
-        Gives the hardware version number
+  Self-explanatory.
 
-0x0002: Clockrate register (RO)
-        Gives the clockrate in Hertz
+  addr  description
+  ----  -----------
+  0x0001: Version register (RO)
+          Gives the hardware version number
+  
 
 == Timetagging engine ==
-0x0003: Capture control (RW)
-  bit   name                    description
-  0     capture_operate         Enable registration of input events
-  1     counter_operate         Start/stop timestamp counter
-  2     reset_counter           Reset counter to zero; counter will
-                                remain at zero until this bit is manually
-                                cleared
+  These configure the timetagging engine, which consists of a counter, trigger,
+  and event generation logic.
+  
+  addr  description
+  ----  -----------
+  0x0002: Clockrate register (RO)
+          Gives the clockrate in Hertz
+  
+  0x0003: Capture control (RW)
+    bit   name                    description
+    0     capture_operate         Enable registration of input events
+    1     counter_operate         Start/stop timestamp counter
+    2     reset_counter           Reset counter to zero; counter will
+                                  remain at zero until this bit is manually
+                                  cleared
+  
+  0x0004: Strobe channel control (RW)
+          Each bit enables/disables the corresponding strobe channel
+  
+  0x0005: Delta channel control (RW)
+          Each bit enables/disables the corresponding delta channel
+  
+  0x0006: Record counter (RR)
+          Gives the number of records passed to the host since the last reset
+  
+  0x0007: Lost record counter (RR)
+          Gives the number of records dropped (e.g. due to buffer overflow) since
+          the last reset
 
-0x0004: Strobe channel control (RW)
-        Each bit enables/disables the corresponding strobe channel
-
-0x0005: Delta channel control (RW)
-        Each bit enables/disables the corresponding delta channel
-
-0x0006: Record counter (RR)
-        Gives the number of records passed to the host since the last reset
-
-0x0007: Lost record counter (RR)
-        Gives the number of records dropped (e.g. due to buffer overflow) since
-        the last reset
 
 == Sequencer ==
-0x0020: Global sequencer configuration (RW)
-  bit   name                    description
-  0     operate                 Enable operation of sequencer
-  1     reset                   Reset counter and initial states
-
-0x0021: Sequencer clockrate (RO)
-        Gives the clockrate of the sequencer module in Hertz
-
-0x0028: Sequencer channel 0 configuration (RW)
-  bit   name                    description
-  0     operate                 Enable operation
-  1     initial_state           The state to start in
-
-0x0029: Sequencer channel 0 initial count (RW)
-	Gives the number of cycles for which to remain in initial_state
-
-0x002a: Sequencer channel 0 low count (RW)
-        Gives the number of cycles for which to remain low
-
-0x002b: Sequencer channel 0 high count (RW)
-        Gives the number of cycles for which to remain high
-
-0x0030: Sequencer channel 1 configuration (RW)
-0x0031: Sequencer channel 1 initial count (RW)
-0x0032: Sequencer channel 1 low count (RW)
-0x0033: Sequencer channel 1 high count (RW)
-
-0x0038: Sequencer channel 2 configuration (RW)
-0x0039: Sequencer channel 2 initial count (RW)
-0x003a: Sequencer channel 2 low count (RW)
-0x003b: Sequencer channel 2 high count (RW)
-
-0x0040: Sequencer channel 3 configuration (RW)
-0x0041: Sequencer channel 3 initial count (RW)
-0x0042: Sequencer channel 3 low count (RW)
-0x0043: Sequencer channel 3 high count (RW)
+  These registers configure the timetagging engine, which consists of a
+  counter, trigger, and event generation logic.
+  
+  addr  description
+  ----  -----------
+  0x0020: Global sequencer configuration (RW)
+    bit   name                    description
+    0     operate                 Enable operation of sequencer
+    1     reset                   Reset counter and initial states
+  
+  0x0021: Sequencer clockrate (RO)
+          Gives the clockrate of the sequencer module in Hertz
+  
+  0x0028: Sequencer channel 0 configuration (RW)
+    bit   name                    description
+    0     operate                 Enable operation
+    1     initial_state           The state to start in
+  
+  0x0029: Sequencer channel 0 initial count (RW)
+  	Gives the number of cycles for which to remain in initial_state
+  
+  0x002a: Sequencer channel 0 low count (RW)
+          Gives the number of cycles for which to remain low
+  
+  0x002b: Sequencer channel 0 high count (RW)
+          Gives the number of cycles for which to remain high
+  
+  0x0030: Sequencer channel 1 configuration (RW)
+  0x0031: Sequencer channel 1 initial count (RW)
+  0x0032: Sequencer channel 1 low count (RW)
+  0x0033: Sequencer channel 1 high count (RW)
+  
+  0x0038: Sequencer channel 2 configuration (RW)
+  0x0039: Sequencer channel 2 initial count (RW)
+  0x003a: Sequencer channel 2 low count (RW)
+  0x003b: Sequencer channel 2 high count (RW)
+  
+  0x0040: Sequencer channel 3 configuration (RW)
+  0x0041: Sequencer channel 3 initial count (RW)
+  0x0042: Sequencer channel 3 low count (RW)
+  0x0043: Sequencer channel 3 high count (RW)
 
 
 Reset procedure:
@@ -122,16 +136,16 @@ sane values. Below is the recommended reset procedure,
   3) 0x0003 =   0x0004              Reset counter and event generation
   4) 0x0003 =   0x0000              Unassert reset_counter
 
-To then begin taking data, one might do the following,
+To then begin capturing events, one might do the following,
 
      Reg        Value
   5) 0x0004 =   0x0007              Enable all strobe channels
   6) 0x0005 =   0x0007              Enable all delta channels
-  7) 0x0003 =   0x0002              Start counter
-  8) 0x0003 =   0x0003              Start event generation
+  7) 0x0003 =   0x0003              Start counter and event generation
 
-To then stop data acquisition, one might,
+To then stop data acquisition, one might use the following,
 
      Reg        Value
-  9) 0x0003 =   0x0002              Disable event generation
+  8) 0x0003 =   0x0002              Disable event generation and reset counter
+  9) 0x0003 =   0x0000              Unassert reset_counter
 
