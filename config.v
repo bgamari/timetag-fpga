@@ -1,7 +1,7 @@
 // Configuration options:
 
 // Increment for any major change
-`define HWVERSION 32'd5
+`define HWVERSION 32'd6
 // Use external clock as acquisition clocksource
 `define USE_EXT_CLK
 // Acquisition clockrate: Make sure you account for PLL parameters as well
