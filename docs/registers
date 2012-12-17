@@ -79,6 +79,10 @@ Access types:
           Gives the number of records dropped (e.g. due to buffer overflow) since
           the last reset
 
+  0x0008: Record FIFO control (RW)
+    bit   name                    description
+    0     clear                   Clear the record FIFO. This bit must be
+                                  cleared manually
 
 == Sequencer ==
   These registers configure the timetagging engine, which consists of a

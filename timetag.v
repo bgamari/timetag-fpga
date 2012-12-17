@@ -131,6 +131,7 @@ counter_register #(.ADDR(16'h06)) rec_counter(
 	.increment(record_rdy && !rec_buf_full)
 );
 
+wire [31:0] fifo_reg;
 sample_fifo rec_buf(
 	.wrclk(clk),
 	.wrreq(record_rdy && !rec_buf_full),
@@ -140,7 +141,8 @@ sample_fifo rec_buf(
 	.rdclk(fx2_clk),
 	.rdreq(rec_buf_rdnext),
 	.rdempty(rec_buf_empty),
-	.q(rec_buf_out)
+	.q(rec_buf_out),
+	.aclr(fifo_reg[0])
 );
 
 sample_multiplexer mux(
@@ -152,6 +154,15 @@ sample_multiplexer mux(
 	.data_rdy(data_rdy),
 	.data(data),
 	.data_ack(data_ack)
+);
+
+register #(.ADDR(8'h08)) rec_fifo_reg(
+	.reg_clk(fx2_clk),
+	.reg_addr(reg_addr),
+	.reg_data(reg_data),
+	.reg_wr(reg_wr),
+	.clk(clk),
+	.value(fifo_reg)
 );
 
 endmodule
